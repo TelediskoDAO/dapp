@@ -1,8 +1,6 @@
 # Teledisko Improvement Proposals
 
 Teledisko Improvement Proposals (TIPs) describe standards for the Teledisko DAO, including protocol specifications, APIs, and much more.
-A TIP
-
 
 ## Current TIPs
 
