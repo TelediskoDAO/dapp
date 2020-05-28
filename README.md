@@ -12,9 +12,6 @@ Teledisko is a combination of **rules** and **tools**.
 
 Teledisko DAO is an attempt to formalize the rules into code so they are unambiguous, transparent, fair, and enforceable without relying on a third party. (For all details about vision, values, and rules, refer to [DAO Wuschwelt](./tips/1), by Benjamin Uphues.)
 
-In order to formalize the rules,
-
-
 ## Components
 
 Teledisko DAO combines:
