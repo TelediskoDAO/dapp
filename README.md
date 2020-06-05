@@ -34,9 +34,9 @@ Note that the list of features is in continuous evolution.
 
 The development process strives to be as transparent as the DAO itself, and it is regulated by *improvement proposals*. Improvement (or enhancement) proposals are a methodology widely used in the tech industry to define protocols (see [IETF RFC][rfc]), develop programming languages (see [EEP][eep], [PEP][pep], [Rust RFC][rustrfc]), define blockchain protocols (see [EIP][eip], [BIP][bip]).
 
-The process of writing down a proposal
+TIPs also function as the knowledge base of the project, and make **onboarding** of new contributors easier: everything that should be known is written down.
 
-They also function as the knowledge base of the project, and make **onboarding** of new contributors easier: everything that should be known is written down. There is less space to ambiguity
+Writing gives less space to ambiguity, improves the quality of the code and of the project in general. To knwo more about this topic check [Why We Should Build Software Like We Build Houses][lamport].
 
 ## Directory structure
 
@@ -51,3 +51,4 @@ They also function as the knowledge base of the project, and make **onboarding**
 [rustrfc]: https://rust-lang.github.io/rfcs/
 [eip]: https://eips.ethereum.org/
 [bip]: https://github.com/bitcoin/bips
+[lamport]: https://gist.github.com/vrde/cae338a51d4e21683304756b08569d7c
