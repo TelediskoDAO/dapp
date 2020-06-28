@@ -1,5 +1,7 @@
 import * as fs from "fs";
+import path from "path";
 import json from "@rollup/plugin-json";
+import alias from "@rollup/plugin-alias";
 import replace from "@rollup/plugin-replace";
 import svelte from "rollup-plugin-svelte";
 import copy from "rollup-plugin-copy";
@@ -11,28 +13,43 @@ import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 
 const production = !process.env.ROLLUP_WATCH;
-const dedupe = importee =>
+const dedupe = (importee) =>
   importee === "svelte" || importee.startsWith("svelte/");
+
+function setAlias() {
+  const projectRootDir = path.resolve(__dirname);
+  return alias({
+    resolve: [".svelte", ".js"],
+    entries: [
+      {
+        find: "src",
+        replacement: path.resolve(projectRootDir, "src"),
+      },
+    ],
+  });
+}
 
 export default {
   input: "src/index.js",
   output: {
     file: "build/bundle.js",
     format: "iife",
-    sourcemap: true
+    sourcemap: true,
   },
   plugins: [
     replace({
       __buildEnv__: JSON.stringify({
         production,
-        date: new Date()
-      })
+        date: new Date(),
+      }),
     }),
     copy({ targets: [{ src: "public/index.html", dest: "build" }] }),
     svelte({
       dev: !production,
-      css: css => css.write("build/bundle.css")
+      emitCss: true,
+      //css: (css) => css.write("build/bundle.css"),
     }),
+    setAlias(),
     json(),
     // rollup-plugin-node-resolve embeds external dependecies in the bundle,
     // more info here:
@@ -46,21 +63,21 @@ export default {
         [
           "sass",
           {
-            includePaths: ["./src/theme", "./node_modules"]
-          }
-        ]
-      ]
+            includePaths: ["./src/theme", "./node_modules"],
+          },
+        ],
+      ],
     }),
     // https://github.com/thgh/rollup-plugin-serve
     !production &&
       serve({ contentBase: "build", open: true, host: "0.0.0.0", port: 4000 }),
     !production && livereload("build"),
-    production && terser()
+    production && terser(),
   ],
   watch: {
     clearScreen: true,
     chokidar: {
-      usePolling: true
-    }
-  }
+      usePolling: true,
+    },
+  },
 };

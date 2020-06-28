@@ -2,8 +2,12 @@
   import CONFIG from "./config";
 
   import Router from "svelte-spa-router";
+
+  // Pages
+  import PageIndex from "./pages/Index.svelte";
+  import PageConnectOdoo from "./pages/connect/odoo/Index.svelte";
+
   import Home from "./Home.svelte";
-  import Hello from "./Hello.svelte";
   import NotFound from "./NotFound.svelte";
   import { FixedAdjust } from "@smui/top-app-bar";
 
@@ -13,16 +17,22 @@
   import { clock } from "./state";
 
   const routes = {
-    "/": Tokenholders,
-    "/hello/:name": Hello,
+    "/": PageConnectOdoo,
     "*": NotFound,
   };
 </script>
 
+<style>
+main {
+  max-width: 1024px;
+  padding: calc(64px + 24px) 0;
+  margin: 0 auto;
+}
+</style>
+
 <TopAppBar />
 
-<div use:FixedAdjust>
+<main use:FixedAdjust>
   <Router {routes} />
-  <hr />
-  <footer>production: {CONFIG.production}, built on: {CONFIG.date}</footer>
-</div>
+  <!--footer>production: {CONFIG.production}, built on: {CONFIG.date}</footer-->
+</main>
