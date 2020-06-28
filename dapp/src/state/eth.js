@@ -18,11 +18,11 @@ export async function authenticate() {
   return provider;
 }
 
-export const provider = writable(undefined, set => {
+export const provider = writable(undefined, (set) => {
   if (window.ethereum && window.ethereum.selectedAddress) {
     set(new ethers.providers.Web3Provider(window.ethereum));
   }
-  return _ => 0;
+  return (_) => 0;
 });
 
 export const address = derived(
@@ -54,7 +54,7 @@ export const contributors = derived(
         "0x264e5682ae928f66651570b17c4b3ffcca7afb76": null,
         "0x962396715b093b10882f6dd7cc990b382ad6b3c2": null,
         "0x3685437a87d200950bf26846c154354442e3f7f7": null,
-        "0xaaa9871fb9f6a9ad6fa72ec92ed47fd027bd1cc7": "Axel"
+        "0xaaa9871fb9f6a9ad6fa72ec92ed47fd027bd1cc7": "Axel",
       };
       const contract = new ethers.Contract(
         contractAddress,
@@ -67,7 +67,7 @@ export const contributors = derived(
           balance: (await contract.balanceOf(holderAddress))
             .toString()
             .slice(0, -18),
-          name: holders[holderAddress]
+          name: holders[holderAddress],
         };
       }
       set(parsed);

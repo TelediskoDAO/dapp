@@ -3,7 +3,7 @@
     Row,
     Section,
     Title,
-    FixedAdjust
+    FixedAdjust,
   } from "@smui/top-app-bar";
   import Button, { Group, GroupItem, Label, Icon } from "@smui/button";
   import IconButton from "@smui/icon-button";

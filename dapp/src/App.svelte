@@ -15,7 +15,7 @@
   const routes = {
     "/": Tokenholders,
     "/hello/:name": Hello,
-    "*": NotFound
+    "*": NotFound,
   };
 </script>
 
