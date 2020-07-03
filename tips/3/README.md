@@ -29,6 +29,53 @@ This TIP discusses what's the best approach to create, read, update, and delete 
 
 Odoo exposes an external [RPC API][external-api] that can be used to extend the functionality of the system. The RPC API implement a JSON and an XML interface. Both interfaces are easily accessible from a variety of programming languages.
 
+## 3.1 Project management models
+
+We use three Odoo models for project management, `project`, `task`, and `duration`.
+
+### 3.1.1 The "project" model
+
+
+### 3.1.2 The "task" and model
+
+Fields:
+
+- Model name: `project.task`.
+- Id: `id: <task_id>`.
+- Type: `task` or `subtask`.
+  - `task` if `is_subtask == false`, `task_id == false`.
+  - `subtask` if `is_subtask == true`, `task_id == [<parent_task_id>, <parent_task_name>]`.
+- Parent:
+  - Tasks and subtasks belong to a project: `project_id: [<project_id>, <project_name>]`.
+  - Subtasks belongs also to a task: `task_id: [<parent_task_id>, <parent_task_name>]`.
+- Children:
+  - If the task has subtasks: `subtask_ids: [<task_id>, ... ]`
+- Title: `name: <name>`.
+- Description: `description: <description>`.
+- Customer/read only view: `access_url`.
+- Assegnee: `user_id: [<user_id>, <user_name>]`.
+- Supervisor: `controller: [<user_id>, <user_name>]`.
+- Deadline: `date_deadline: "YYYY-MM-DD"`.
+- Created: `create_date: "2020-06-04 14:45:48`.
+- Last write: `write_date: "2020-06-04 14:45:48`.
+- Kanban state: `stage_id: [<stage_id>, <stage_name>]`.
+  - If the task has been created, then `stage_id: [1, 'Created']`.
+  - If the task is in progress, then `stage_id: [5, 'In Progress']`.
+  - If the task is done, then `stage_id: [2, 'Done']`.
+  - If the task has been approved by the controller, then `stage_id: [3, 'Approved']`.
+- Durations: `duration_entry: [<duration_id>, ...]`.
+
+
+### 3.1.3 The "duration" model
+
+- Model name: `project.task.duration`.
+- Id: `id: <duration_id>`.
+- Parent task: `task: [<task_id>, <task_name>]`.
+- Creator: `create_uid: [<user_id>, <user_name>]`.
+- Hours: `value: <duration_hours>`.
+- Start: `start: YYYY-MM-DD hh-mm-ss`.
+- End: `end: YYYY-MM-DD hh-mm-ss`.
+
 ## 4 Rationale
 
 Accessing the Odoo API is a common issue, and has been tackled by custom modules like [MUK REST][mukrest] and [Odoo REST API][restapi].

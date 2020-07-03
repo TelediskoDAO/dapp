@@ -6,10 +6,10 @@
   // Pages
   import PageIndex from "./pages/Index.svelte";
   import PageConnectOdoo from "./pages/connect/odoo/Index.svelte";
+  import PageTaskList from "./pages/task/List.svelte";
 
   import Home from "./Home.svelte";
   import NotFound from "./NotFound.svelte";
-  import { FixedAdjust } from "@smui/top-app-bar";
 
   import TopAppBar from "./components/TopAppBar.svelte";
   import Tokenholders from "./components/Tokenholders.svelte";
@@ -17,22 +17,15 @@
   import { clock } from "./state";
 
   const routes = {
-    "/": PageConnectOdoo,
+    "/": PageIndex,
+    "/task/list": PageTaskList,
+    "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
 </script>
 
-<style>
-main {
-  max-width: 1024px;
-  padding: calc(64px + 24px) 0;
-  margin: 0 auto;
-}
-</style>
-
 <TopAppBar />
 
-<main use:FixedAdjust>
+<main>
   <Router {routes} />
-  <!--footer>production: {CONFIG.production}, built on: {CONFIG.date}</footer-->
 </main>

@@ -7,7 +7,6 @@ import svelte from "rollup-plugin-svelte";
 import copy from "rollup-plugin-copy";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import postcss from "rollup-plugin-postcss";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
@@ -43,11 +42,10 @@ export default {
         date: new Date(),
       }),
     }),
-    copy({ targets: [{ src: "public/index.html", dest: "build" }] }),
+    copy({ targets: [{ src: "public/*", dest: "build" }] }),
     svelte({
       dev: !production,
-      emitCss: true,
-      //css: (css) => css.write("build/bundle.css"),
+      css: (css) => css.write("build/bundle.css"),
     }),
     setAlias(),
     json(),
@@ -56,18 +54,6 @@ export default {
     // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
     resolve({ browser: true, dedupe }),
     commonjs(),
-    postcss({
-      extract: true,
-      minimize: true,
-      use: [
-        [
-          "sass",
-          {
-            includePaths: ["./src/theme", "./node_modules"],
-          },
-        ],
-      ],
-    }),
     // https://github.com/thgh/rollup-plugin-serve
     !production &&
       serve({ contentBase: "build", open: true, host: "0.0.0.0", port: 4000 }),

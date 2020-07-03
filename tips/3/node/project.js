@@ -1,8 +1,22 @@
 async function myTasks(s) {
   const tasks = await s.r("project.task", { user_id: s.uid });
   for (let task of tasks) {
-    console.log(task.id, task.name);
+    console.log(JSON.stringify(task, null, 2));
+    // console.log(task.id, task.name);
   }
+}
+
+async function tasksByProject(s, projectId) {
+  const tasks = await s.r("project.task", { project_id: projectId });
+  for (let task of tasks) {
+    console.log(JSON.stringify(task, null, 2));
+    // console.log(task.id, task.name);
+  }
+}
+
+async function durations(s) {
+  const durations = await s.r("project.task.duration", { create_uid: s.uid });
+  console.log(JSON.stringify(durations, null, 2));
 }
 
 async function myTrackings(s) {
@@ -32,4 +46,6 @@ async function myTrackings(s) {
 module.exports = {
   myTasks,
   myTrackings,
+  durations,
+  tasksByProject,
 };

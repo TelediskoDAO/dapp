@@ -8,8 +8,10 @@ async function main() {
   const username = process.env.ODOO_USERNAME;
   const password = process.env.ODOO_PASSWORD;
   const s = await session(url, db, username, password);
-  //await myTasks(s);
-  await project.myTrackings(s);
+  // await project.myTasks(s);
+  await project.durations(s);
+  //await project.tasksByProject(s, 84);
+  //await project.myTrackings(s);
   //const r = await s.r("project.task", { user_id: s.uid });
   //console.log(JSON.stringify(r, null, 2));
 }

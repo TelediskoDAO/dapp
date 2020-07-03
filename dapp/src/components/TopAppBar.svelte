@@ -1,13 +1,4 @@
 <script>
-  import TopAppBar, {
-    Row,
-    Section,
-    Title,
-    FixedAdjust,
-  } from "@smui/top-app-bar";
-  import Button, { Group, GroupItem, Label, Icon } from "@smui/button";
-  import IconButton from "@smui/icon-button";
-
   import { authenticate, provider, address, addressShort } from "../state/eth";
 
   const title = "Home";
@@ -17,22 +8,21 @@
 
 </style>
 
-<TopAppBar>
-  <Row>
-    <Section>
-      <!--IconButton class="material-icons">menu</IconButton-->
-      <Title>Teledisko DAO: {title}</Title>
-    </Section>
-    <Section align="end" toolbar>
+<nav>
+  <ul>
+    <li>
+      <a href="#">Teledisko DAO</a>
+    </li>
+    <li class="float-right">
       {#if $provider}
-        <Button on:click={authenticate}>
-          <Label>{$addressShort}</Label>
-        </Button>
+        <a on:click={authenticate}>
+          {$addressShort}
+        </a>
       {:else}
-        <Button on:click={authenticate}>
-          <Label>Login</Label>
-        </Button>
+        <a on:click={authenticate}>
+          Login
+        </a>
       {/if}
-    </Section>
-  </Row>
-</TopAppBar>
+    </li>
+  </ul>
+</nav>

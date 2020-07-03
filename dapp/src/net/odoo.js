@@ -1,12 +1,11 @@
-const uuid = require("uuid");
-const fetch = require("node-fetch");
+import { v4 as uuidv4 } from "uuid";
 
 async function jsonRpc(url, method, params) {
   const data = {
     jsonrpc: "2.0",
     method: method,
     params: params,
-    id: uuid.v4(),
+    id: uuidv4(),
   };
 
   const response = await fetch(url, {
@@ -43,15 +42,15 @@ function tuplify(query = {}) {
   return params;
 }
 
-async function session(url, db, username, password) {
+export async function session(url, db, username, password) {
   const uid = await call(url, "common", "login", db, username, password);
   const model = call.bind(null, url, "object", "execute_kw", db, uid, password);
   return {
-    c: async (name, object) => model(name, "create", [object]),
-    r: async (name, query) => model(name, "search_read", [tuplify(query)]),
-    u: async (name, id, object) => model(name, "write", [[id], object]),
+    create: async (name, object) => model(name, "create", [object]),
+    read: async (name, ids) => model(name, "read", [ids]),
+    search: async (name, query) => model(name, "search_read", [tuplify(query)]),
+    update: async (name, id, object) => model(name, "write", [[id], object]),
+    remove: async (name, ids) => model(name, "unlink", [ids]),
     uid,
   };
 }
-
-module.exports = session;

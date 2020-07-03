@@ -1,61 +1,51 @@
 <script>
-  import Textfield from '@smui/textfield';
-  import HelperText from '@smui/textfield/helper-text/index';
+  import {username, password, agent} from "src/state/odoo";
 
-  import Button, { Label } from "@smui/button";
-  import Paper, { Title, Subtitle, Content } from "@smui/paper";
-
-  let username = '';
-  let password = '';
+  let connect;
+  let _username = '';
+  let _password = '';
 
   function handleConnect() {
-
+    $username = _username;
+    $password = _password;
   }
 
-
-  function handleSubmit() {
+  function handleDisconnect() {
+    $username = '';
+    $password = '';
   }
+
 </script>
 
-<style>
-  .paper {
-    width: 500px;
-    max-width: 80%;
-    margin: 50px auto;
-  }
-</style>
-
 <section>
-  <Paper class="paper">
-    <Title>Odoo Integration</Title>
-    <Content>
-      Connect to Odoo to:
-      <ul>
-        <li>Manage your projects and tasks.</li>
-        <li>Time track your activities.</li>
-      </ul>
-      You are <strong>not connected</strong>.
-      <Button variant="raised" on:click={handleConnect}>
-        <Label style="color: white">Connect</Label>
-      </Button>
+    <h2>Odoo Integration</h2>
+    {#if $username && $password}
+    <p>
+      You are connected already.
+    </p>
+      <button on:click={handleDisconnect}>
+        Disconnect
+      </button>
+    {:else}
+    <p>
+      Connect to Odoo using your credentials.
+    </p>
+    <form on:submit|preventDefault={handleConnect}>
+      <p>
+        <label>Odoo Username<br/>
+          <input bind:value={_username} required />
+        </label>
+      </p>
+      <p>
+        <label>Odoo Password<br/>
+          <input type="password" bind:value={_password} required />
+        </label>
+      </p>
 
-      <form>
-        <div>
-          <Textfield variant="outlined" bind:value={username} label="Username" input$aria-controls="username-input" input$aria-describedby="username-input" />
-          <HelperText id="username-input">Your Odoo username</HelperText>
-        </div>
+      <button type="submit">
+        Connect
+      </button>
+    </form>
+    {/if}
 
-        <div>
-            <Textfield variant="outlined" bind:value={password} label="password" input$aria-controls="password-input" input$aria-describedby="password-input" />
-            <HelperText id="password-input">Your Odoo password</HelperText>
-        </div>
-
-        <Button variant="raised" on:click={handleSubmit}>
-          <Label style="color: white">Submit</Label>
-        </Button>
-      </form>
-
-    </Content>
-
-  </Paper>
 </section>

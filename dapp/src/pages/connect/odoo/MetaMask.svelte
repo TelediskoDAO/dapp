@@ -1,6 +1,4 @@
 <script>
-  import Button, { Label } from "@smui/button";
-  import Paper, { Title, Subtitle, Content } from "@smui/paper";
   import { sign } from "../state/eth";
   const _sign = () =>
     sign(
@@ -17,13 +15,13 @@
 </style>
 
 <section>
-  <Paper class="paper" style="width: 500px; max-width: 80%; margin: 50px auto;">
-    <Title>Connect to Odoo</Title>
-    <Content>
+  <div="paper">
+    <h2>Connect to Odoo</h2>
+    <p>
       Allow this website to synchronize your tasks with odoo.teledisko.com.
-    </Content>
-    <Button style="margin-top: 10px" variant="raised" on:click={_sign}>
-      <Label style="color: white">Connect</Label>
-    </Button>
-  </Paper>
+    </p>
+    <button style="margin-top: 10px" variant="raised" on:click={_sign}>
+      Connect
+    </button>
+  </div>
 </section>
