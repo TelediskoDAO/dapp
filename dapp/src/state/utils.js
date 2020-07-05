@@ -42,11 +42,3 @@ export function derivable(stores, callback, initial) {
     return () => unsubscribeFuncs.forEach((f) => f());
   });
 }
-
-export function byKey(list) {
-  const d = {};
-  for (const item in list) {
-    d[item.id] = item;
-  }
-  return d;
-}

@@ -1,14 +1,16 @@
 <script>
-  import {tasks, taskById, durationById, durationsByTask, durationTotalsByTask, startDuration, stopDuration, removeDuration } from "src/state/odoo";
+  import { tasks, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, removeDuration } from "src/state/odoo";
 </script>
 
 <h1>Tasks</h1>
 
 <ul>
-  {#each $tasks.filter(task => !task.isSubtask) as task}
+  {#each $tasksBacklog as task}
   <li>
-    <p><button on:click={() => $startDuration(task.id)}>Start</button> {task.id}: {task.name}</p>
-    <p>Total time: {$durationTotalsByTask[task.id]} hours</p>
+    <p>
+      <button on:click={() => $startDuration(task.id)}>Start</button>
+      {task.id}: {task.name}</p>
+    <p>Total time: {$hoursByTask[task.id]} hours</p>
 
 
     {#if task.hasDurations}
@@ -19,15 +21,16 @@
           {duration}
         </td>
         <td>
-          {$durationById[duration] && $durationById[duration].start}
+          {$durations[duration].start}
         </td>
         <td>
-          {$durationById[duration] && $durationById[duration].end}
+          {$durations[duration].end}
         </td>
         <td>
-          {$durationById[duration] && $durationById[duration].hours}
+          {$durations[duration].hours}
         </td>
         <td>
+          <button on:click={() => $stopDuration(duration)}>Stop</button>
           <button on:click={() => $removeDuration(duration)}>Remove</button>
         </td>
       </tr>
@@ -39,23 +42,23 @@
     <ul>
     {#each task.subtaskIds as subtaskId}
       <li>
-        <p>{subtaskId}: {$taskById[subtaskId].name}</p>
-        <p>Total time: {$durationTotalsByTask[subtaskId]} hours</p>
-        {#if $taskById[subtaskId].hasDurations}
+        <p>{subtaskId}: {$tasks[subtaskId].name}</p>
+        <p>Total time: {$hoursByTask[subtaskId]} hours</p>
+        {#if $tasks[subtaskId].hasDurations}
         <table>
-          {#each $taskById[subtaskId].durations as duration}
+          {#each $tasks[subtaskId].durations as duration}
           <tr>
             <td>
               {duration}
             </td>
             <td>
-              {$durationById[duration] && $durationById[duration].start}
+              {$durations[duration] && $durations[duration].start}
             </td>
             <td>
-              {$durationById[duration] && $durationById[duration].end}
+              {$durations[duration] && $durations[duration].end}
             </td>
             <td>
-              {$durationById[duration] && $durationById[duration].hours}
+              {$durations[duration] && $durations[duration].hours}
             </td>
             <td>
               <button on:click={() => $removeDuration(duration)}>Remove</button>
