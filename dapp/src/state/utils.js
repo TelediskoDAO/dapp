@@ -24,3 +24,29 @@ export function persistable(key, fallback) {
   });
   return value;
 }
+
+export function derivable(stores, callback, initial) {
+  return writable(initial, (set) => {
+    let unpack;
+    if (!Array.isArray(stores)) {
+      stores = [stores];
+      unpack = true;
+    }
+    const values = new Array(stores.length);
+    const unsubscribeFuncs = stores.map((store, i) =>
+      store.subscribe((value) => {
+        values[i] = value;
+        callback(unpack ? values[0] : values, set);
+      })
+    );
+    return () => unsubscribeFuncs.forEach((f) => f());
+  });
+}
+
+export function byKey(list) {
+  const d = {};
+  for (const item in list) {
+    d[item.id] = item;
+  }
+  return d;
+}

@@ -1,5 +1,5 @@
 import { writable, derived } from "svelte/store";
-import { persistable } from "./utils";
+import { byKey, persistable, derivable } from "./utils";
 import { session } from "src/net/odoo";
 
 const URL = "https://odoo.teledisko.com/jsonrpc";
@@ -24,7 +24,7 @@ export const user = derived(agent, async ($agent, set) => {
   }
 });
 
-export const remoteTasks = derived(
+export const rawTasks = derivable(
   agent,
   async ($agent, set) => {
     if ($agent) {
@@ -35,9 +35,9 @@ export const remoteTasks = derived(
 );
 
 export const tasks = derived(
-  remoteTasks,
-  ($remoteTasks) =>
-    $remoteTasks.map((task) => ({
+  rawTasks,
+  ($rawTasks) =>
+    $rawTasks.map((task) => ({
       id: task.id,
       name: task.name,
       isSubtask: task.is_subtask,
@@ -54,17 +54,14 @@ export const tasks = derived(
 //  $tasks => $tasks.filter(
 //)
 
-export const remoteDurations = derived(
-  [agent, remoteTasks],
-  async ([$agent, $remoteTasks], set) => {
-    if ($agent && $remoteTasks) {
+export const rawDurations = derivable(
+  [agent, rawTasks],
+  async ([$agent, $rawTasks], set) => {
+    if ($agent && $rawTasks) {
       set(
         await $agent.read(
           "project.task.duration",
-          $remoteTasks.reduce(
-            (acc, curr) => acc.concat(curr.duration_entry),
-            []
-          )
+          $rawTasks.reduce((acc, curr) => acc.concat(curr.duration_entry), [])
         )
       );
     }
@@ -75,9 +72,9 @@ export const remoteDurations = derived(
 export const localDurations = writable([]);
 
 export const durations = derived(
-  [remoteDurations, localDurations],
-  ([$remoteDurations, $localDurations]) =>
-    $remoteDurations.map((duration) => ({
+  [rawDurations, localDurations],
+  ([$rawDurations, $localDurations]) =>
+    $rawDurations.concat($localDurations).map((duration) => ({
       id: duration.id,
       taskId: duration.task[0],
       start: duration.start,
@@ -143,14 +140,14 @@ function now() {
 }
 
 export const startDuration = derived(agent, ($agent) => async (taskId) => {
-  const task = {
+  const duration = {
     task: taskId,
     start: now(),
   };
-  const id = await $agent.create("project.task.duration", task);
-  task.id = id;
-  localDurations.update((d) => d.push(task));
-  console.log(result);
+  const id = await $agent.create("project.task.duration", duration);
+  const [newDuration] = await $agent.read("project.task.duration", [id]);
+  console.log(newDuration);
+  localDurations.update((d) => [...d, newDuration]);
 });
 
 export function stopDuration(taskId) {}
