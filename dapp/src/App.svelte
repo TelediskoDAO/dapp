@@ -6,7 +6,7 @@
   // Pages
   import PageIndex from "./pages/Index.svelte";
   import PageConnectOdoo from "./pages/connect/odoo/Index.svelte";
-  import PageTaskList from "./pages/task/List.svelte";
+  import PageTaskIndex from "./pages/task/Index.svelte";
 
   import Home from "./Home.svelte";
   import NotFound from "./NotFound.svelte";
@@ -18,7 +18,7 @@
 
   const routes = {
     "/": PageIndex,
-    "/task/list": PageTaskList,
+    "/tasks": PageTaskIndex,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };

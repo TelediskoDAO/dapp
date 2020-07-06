@@ -1,11 +1,10 @@
 <script>
   import { tasks, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, removeDuration } from "src/state/odoo";
+  export let list;
 </script>
 
-<h1>Tasks</h1>
-
 <ul>
-  {#each $tasksBacklog as task}
+  {#each list as task}
   <li>
     <p>
       <button on:click={() => $startDuration(task.id)}>Start</button>

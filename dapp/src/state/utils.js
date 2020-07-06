@@ -27,13 +27,14 @@ export function persistable(key, fallback) {
 
 export function derivable(stores, callback, initial) {
   return writable(initial, (set) => {
+    let _stores;
     let unpack;
     if (!Array.isArray(stores)) {
-      stores = [stores];
+      _stores = [stores];
       unpack = true;
     }
-    const values = new Array(stores.length);
-    const unsubscribeFuncs = stores.map((store, i) =>
+    const values = new Array(_stores.length);
+    const unsubscribeFuncs = _stores.map((store, i) =>
       store.subscribe((value) => {
         values[i] = value;
         callback(unpack ? values[0] : values, set);

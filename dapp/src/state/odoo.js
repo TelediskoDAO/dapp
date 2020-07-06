@@ -138,7 +138,6 @@ export const stopDuration = derived(agent, ($agent) => async (durationId) => {
     durationId,
     duration
   );
-  console.log("Update result", result);
   const [updatedDuration] = await $agent.read("project.task.duration", [
     durationId,
   ]);

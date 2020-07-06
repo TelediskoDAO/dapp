@@ -8,7 +8,7 @@
 
 <ul>
   <li><a href="#/connect/odoo">Connect</a> to Odoo using username and password.</li>
-  <li><a href="#/task/list">Visualize</a> your Odoo tasks.</li>
+  <li><a href="#/tasks">Visualize</a> your Odoo tasks.</li>
 </ul>
 
 <h2>What will be available in the future</h2>
