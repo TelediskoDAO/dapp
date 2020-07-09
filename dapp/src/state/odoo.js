@@ -1,5 +1,5 @@
 import { writable, derived } from "svelte/store";
-import { persistable, derivable } from "./utils";
+import { persistable, derivable, now } from "./utils";
 import { group, map } from "src/f";
 import { session } from "src/net/odoo";
 
@@ -8,10 +8,12 @@ const DB = "teledisko";
 
 export const username = persistable("odoo.username", "");
 export const password = persistable("odoo.password", "");
+export const upstreamCache = persistable("upstream");
 
 export const agent = derived(
   [username, password],
   async ([$username, $password], set) => {
+    return;
     if ($username && $password) {
       const s = await session(URL, DB, $username, $password);
       set(s);
@@ -25,24 +27,27 @@ export const user = derived(agent, async ($agent, set) => {
   }
 });
 
-export const upstream = derivable(
-  agent,
-  async ($agent, set) => {
-    if ($agent) {
-      const tasks = group(
-        await $agent.search("project.task", { user_id: $agent.uid })
-      );
-      const durationIds = Object.values(tasks).reduce(
-        (acc, curr) => acc.concat(curr.duration_entry),
-        []
-      );
-      const durations = group(
-        await $agent.read("project.task.duration", durationIds)
-      );
-      set({ tasks, durations });
-    }
-  },
-  []
+export const upstream = derivable(agent, async ($agent, set) => {
+  if ($agent) {
+    const tasks = group(
+      await $agent.search("project.task", { user_id: $agent.uid })
+    );
+    const durationIds = Object.values(tasks).reduce(
+      (acc, curr) => acc.concat(curr.duration_entry),
+      []
+    );
+    const durations = group(
+      await $agent.read("project.task.duration", durationIds)
+    );
+    upstreamCache.set({ tasks, durations });
+    set({ tasks, durations });
+  }
+});
+
+const data = derived(
+  [upstream, upstreamCache],
+  ([$upstream, $upstreamCache], set) => set($upstream || $upstreamCache),
+  {}
 );
 
 const STAGES = {
@@ -53,11 +58,12 @@ const STAGES = {
 };
 
 export const tasks = derived(
-  upstream,
-  ($upstream) =>
-    map($upstream.tasks, (task) => ({
+  data,
+  ($data) =>
+    map($data.tasks, (task) => ({
       id: task.id,
       name: task.name,
+      description: task.description,
       isSubtask: task.is_subtask,
       subtaskIds: task.subtask_ids,
       hasSubtasks: task.subtask_ids.length > 0,
@@ -69,9 +75,9 @@ export const tasks = derived(
 );
 
 export const durations = derived(
-  upstream,
-  ($upstream) =>
-    map($upstream.durations, (duration) => ({
+  data,
+  ($data) =>
+    map($data.durations, (duration) => ({
       id: duration.id,
       taskId: duration.task[0],
       start: duration.start,
@@ -81,15 +87,23 @@ export const durations = derived(
   {}
 );
 
-export const tasksBacklog = derived(
+export const taskList = derived(
   tasks,
-  ($tasks) => Object.values($tasks).filter(({ stage }) => stage === "backlog"),
+  ($tasks) => Object.values($tasks).filter(({ isSubtask }) => !isSubtask),
+  []
+);
+
+export const tasksBacklog = derived(
+  taskList,
+  ($taskList) =>
+    Object.values($taskList).filter(({ stage }) => stage === "backlog"),
   []
 );
 
 export const tasksProgress = derived(
-  tasks,
-  ($tasks) => Object.values($tasks).filter(({ stage }) => stage === "progress"),
+  taskList,
+  ($taskList) =>
+    Object.values($taskList).filter(({ stage }) => stage === "progress"),
   []
 );
 
@@ -103,17 +117,6 @@ export const hoursByTask = derived([tasks, durations], ([$tasks, $durations]) =>
   }, {})
 );
 
-function now() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = d.getMonth().toString().padStart(2, "0");
-  const day = d.getDate().toString().padStart(2, "0");
-  const hour = d.getHours().toString().padStart(2, "0");
-  const minute = d.getMinutes().toString().padStart(2, "0");
-  const second = d.getSeconds().toString().padStart(2, "0");
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-}
-
 export const startDuration = derived(agent, ($agent) => async (taskId) => {
   const duration = {
     task: taskId,
@@ -122,10 +125,10 @@ export const startDuration = derived(agent, ($agent) => async (taskId) => {
   const id = await $agent.create("project.task.duration", duration);
   const [updatedTask] = await $agent.read("project.task", [taskId]);
   const [newDuration] = await $agent.read("project.task.duration", [id]);
-  upstream.update(($upstream) => {
-    $upstream.tasks[taskId] = updatedTask;
-    $upstream.durations[id] = newDuration;
-    return $upstream;
+  data.update(($data) => {
+    $data.tasks[taskId] = updatedTask;
+    $data.durations[id] = newDuration;
+    return $data;
   });
 });
 

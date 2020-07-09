@@ -3,12 +3,15 @@
   import Tasks from "./Tasks.svelte";
 </script>
 
-<h1>Tasks</h1>
+<style>
+</style>
 
-<h2>In progress</h2>
+<h1>Project: <a href="#/project/1234">Aragon</a></h1>
+
+<h2>Tasks in progress</h2>
 
 <Tasks list={$tasksProgress} />
 
-<h2>Backlog</h2>
+<h2>Tasks in Backlog</h2>
 
 <Tasks list={$tasksBacklog} />
