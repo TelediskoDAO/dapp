@@ -56,7 +56,11 @@ export default {
     commonjs(),
     // https://github.com/thgh/rollup-plugin-serve
     !production &&
-      serve({ contentBase: "build", open: true, host: "0.0.0.0", port: 4000 }),
+      serve({
+        contentBase: "build",
+        /*open: true,*/ host: "0.0.0.0",
+        port: 4100,
+      }),
     !production && livereload("build"),
     production && terser(),
   ],

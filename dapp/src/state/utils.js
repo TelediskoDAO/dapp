@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 function get(key, fallback) {
   const value = localStorage.getItem(key);
-  return value === undefined ? fallback : JSON.parse(value);
+  return value === null ? fallback : JSON.parse(value);
 }
 
 function set(key, valueOrFunction, fallback) {

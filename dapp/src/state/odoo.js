@@ -8,12 +8,11 @@ const DB = "teledisko";
 
 export const username = persistable("odoo.username", "");
 export const password = persistable("odoo.password", "");
-export const upstreamCache = persistable("upstream");
+export const upstreamCache = persistable("upstream", []);
 
 export const agent = derived(
   [username, password],
   async ([$username, $password], set) => {
-    return;
     if ($username && $password) {
       const s = await session(URL, DB, $username, $password);
       set(s);
@@ -125,10 +124,10 @@ export const startDuration = derived(agent, ($agent) => async (taskId) => {
   const id = await $agent.create("project.task.duration", duration);
   const [updatedTask] = await $agent.read("project.task", [taskId]);
   const [newDuration] = await $agent.read("project.task.duration", [id]);
-  data.update(($data) => {
-    $data.tasks[taskId] = updatedTask;
-    $data.durations[id] = newDuration;
-    return $data;
+  upstream.update(($upstream) => {
+    $upstream.tasks[taskId] = updatedTask;
+    $upstream.durations[id] = newDuration;
+    return $upstream;
   });
 });
 
@@ -155,7 +154,7 @@ export const removeDuration = derived(agent, ($agent) => async (durationId) => {
   upstream.update(($upstream) => {
     const duration = $upstream.durations[durationId];
     const task = $upstream.tasks[duration.task[0]];
-    task.duration_entry.splice(task.duration_entry.indexOf(duration.id));
+    task.duration_entry.splice(task.duration_entry.indexOf(duration.id), 1);
     return $upstream;
   });
 });
