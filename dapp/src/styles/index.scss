@@ -1,0 +1,109 @@
+// # Variables
+:root {
+  --root-size: 16px;
+
+  --size-xs: 0.25rem;
+  --size-s: 1rem;
+  --size-m: 2rem;
+  --size-l: 4rem;
+
+  --z-low: 10;
+  --z-mid: 50;
+  --z-high: 100;
+
+  --max-width: 50rem;
+
+  --line-size: 1px;
+  --line-size-thick: var(--size-xs);
+  --line-color: black; //rgba(0, 0, 0, 1);
+
+  --color-primary: tomato;
+}
+
+// # Mixins
+@mixin border-box {
+  box-sizing: border-box;
+}
+
+@mixin button {
+
+}
+
+@mixin border {
+  border: var(--line-size) solid var(--line-color);
+}
+@mixin border-top {
+  border-top: var(--line-size) solid var(--line-color);
+}
+
+@mixin border-bottom {
+  border-bottom: var(--line-size) solid var(--line-color);
+}
+
+@mixin border-bottom-thick {
+  border-bottom: var(--line-size-thick) solid var(--line-color);
+}
+
+// # Basic
+
+html {
+  font-size: var(--root-size);
+  font-family: sans-serif;
+  color: black;
+}
+
+body {
+  @include border-box;
+  margin: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+nav {
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 var(--size-s) rgba(0, 0, 0, 0.3);
+  ul {
+    padding: var(--size-m) var(--size-s);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+main {
+  section {
+    padding: var(--size-s);
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+form {
+  margin-bottom: var(--size-m);
+}
+
+fieldset {
+  @include border
+}
+
+// # Theme

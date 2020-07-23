@@ -4,11 +4,22 @@
   export let list;
 </script>
 
-<style>
+<style type="text/scss">
+  @import 'src/styles/index';
+
   ul {
     list-style-type: none;
-    margin: 0;
+    margin: 0 0 var(--size-m) 0;
     padding: 0;
+  }
+
+  li {
+    background-color: rgba(255, 255, 255, 0.6);
+    margin-bottom: var(--size-m);
+    border-radius: var(--size-xs);
+    box-shadow: 0px 2px 3px rgba(0,0,0,0.1);
+    @include border;
+    border-top: none;
   }
 </style>
 

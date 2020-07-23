@@ -1,3 +1,4 @@
+import { clock } from "./clock";
 import { writable, derived } from "svelte/store";
 import { persistable, derivable, now } from "./utils";
 import { group, map } from "src/f";
@@ -115,6 +116,39 @@ export const hoursByTask = derived([tasks, durations], ([$tasks, $durations]) =>
     return acc;
   }, {})
 );
+
+export const currentDuration = derived(
+  durations,
+  ($durations) =>
+    Object.values($durations).filter((duration) => duration.end === false)[0]
+);
+
+export const currentTask = derived(
+  [tasks, currentDuration],
+  ([$tasks, $currentDuration]) =>
+    $tasks && $currentDuration && $tasks[$currentDuration.taskId]
+);
+
+export const currentHours = derived(
+  [currentDuration, clock],
+  ([$currentDuration, $clock]) =>
+    $currentDuration &&
+    (new Date() - new Date($currentDuration.start)) / (60 * 60 * 1000)
+);
+
+export const currentHoursTotal = derived(
+  [currentTask, currentDuration, hoursByTask],
+  ([$currentTask, $currentDuration, $hoursByTask]) =>
+    $currentTask &&
+    $currentDuration &&
+    hoursByTask &&
+    $hoursByTask[$currentTask.id] +
+      (new Date() - new Date($currentDuration.start)) / (60 * 60 * 1000)
+);
+
+/**
+ * Modifiers
+ */
 
 export const startDuration = derived(agent, ($agent) => async (taskId) => {
   const duration = {

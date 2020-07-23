@@ -9,19 +9,18 @@
   {#each durations as duration}
   <tr>
     <td>
-      {duration}
-    </td>
-    <td>
       {$d[duration].start}
     </td>
     <td>
-      {$d[duration].end}
+      →
+    </td>
+    <td>
+      {$d[duration].end || "tracking"}
     </td>
     <td>
       {toPrettyTime($d[duration].hours)}
     </td>
     <td>
-      <button on:click={() => $stopDuration(duration)}>Stop</button>
       <button on:click={() => $removeDuration(duration)}>Remove</button>
     </td>
   </tr>

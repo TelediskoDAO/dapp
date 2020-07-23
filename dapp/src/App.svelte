@@ -24,6 +24,11 @@
   };
 </script>
 
+<style type="text/scss">
+  /*@import 'src/styles/vars';*/
+</style>
+
+
 <TopAppBar />
 
 <main>

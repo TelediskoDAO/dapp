@@ -1,14 +1,17 @@
 import * as fs from "fs";
 import path from "path";
-import json from "@rollup/plugin-json";
+
 import alias from "@rollup/plugin-alias";
-import replace from "@rollup/plugin-replace";
-import svelte from "rollup-plugin-svelte";
-import copy from "rollup-plugin-copy";
-import resolve from "@rollup/plugin-node-resolve";
+import autoPreprocess from "svelte-preprocess";
 import commonjs from "@rollup/plugin-commonjs";
-import serve from "rollup-plugin-serve";
+import copy from "rollup-plugin-copy";
+import json from "@rollup/plugin-json";
 import livereload from "rollup-plugin-livereload";
+import replace from "@rollup/plugin-replace";
+import resolve from "@rollup/plugin-node-resolve";
+import scss from "rollup-plugin-scss";
+import serve from "rollup-plugin-serve";
+import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
 
 const production = !process.env.ROLLUP_WATCH;
@@ -45,7 +48,11 @@ export default {
     copy({ targets: [{ src: "public/*", dest: "build" }] }),
     svelte({
       dev: !production,
-      css: (css) => css.write("build/bundle.css"),
+      css: (css) => css.write("build/components.css"),
+      preprocess: autoPreprocess(),
+    }),
+    scss({
+      output: "build/style.css",
     }),
     setAlias(),
     json(),

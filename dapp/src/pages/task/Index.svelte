@@ -3,15 +3,23 @@
   import Tasks from "./Tasks.svelte";
 </script>
 
-<style>
+<style type="text/scss">
+  @import 'src/styles/index';
+
+  h2 {
+    @include border-bottom-thick;
+  }
+
 </style>
 
-<h1>Project: <a href="#/project/1234">Aragon</a></h1>
+<section>
+  <h1>Project: <a href="#/project/1234">Aragon</a></h1>
 
-<h2>Tasks in progress</h2>
+  <h2>Tasks in progress</h2>
 
-<Tasks list={$tasksProgress} />
+  <Tasks list={$tasksProgress} />
 
-<h2>Tasks in Backlog</h2>
+  <h2>Tasks in Backlog</h2>
 
-<Tasks list={$tasksBacklog} />
+  <Tasks list={$tasksBacklog} />
+</section>
