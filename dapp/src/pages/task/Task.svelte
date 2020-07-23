@@ -1,7 +1,7 @@
 <script>
 	import { slide } from 'svelte/transition';
   import { tasks, currentTask, currentDuration, currentHours, currentHoursTotal, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, removeDuration } from "src/state/odoo";
-  import { toPrettyTime } from "./utils";
+  import { toPrettyDuration } from "./utils";
   import Durations from "./Durations.svelte";
   export let task;
 
@@ -28,7 +28,30 @@
 <style type="text/scss">
   @import 'src/styles/index';
 
+/*
+  @keyframes pulse-red {
+    0% {
+      box-shadow: 0 0 4px 0 rgba(255, 82, 82, 0.7);
+    }
+
+    70% {
+      box-shadow: 0 0 4px 10px rgba(255, 82, 82, 0);
+    }
+
+    100% {
+      box-shadow: 0 0 4px 0 rgba(255, 82, 82, 0);
+    }
+  }
+
+  button.stop {
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
+    animation: pulse-red 2s infinite;
+  }
+*/
+
+
   .task {
+    border-radius: var(--size-xs);
     background: #ffffff;
     transition: all 1s;
     padding: var(--size-s);
@@ -86,6 +109,8 @@
   .header button {
     order: -1;
     margin-right: var(--size-s);
+    padding: var(--size-s);
+    display: block;
   }
 
   ul {
@@ -115,7 +140,7 @@
     </h3>
     {#if !task.hasSubtasks}
       {#if tracking}
-      <button on:click={() => handleStop()}>
+      <button class="stop" on:click={() => handleStop()}>
         <i class="material-icons">stop</i>
       </button>
       {:else}
@@ -138,9 +163,9 @@
     {:else}
       <p>
         {#if tracking}
-        Current session: {toPrettyTime($currentHours)}. Total time: {toPrettyTime($currentHoursTotal)}.
+        Current session: {toPrettyDuration($currentHours)}. Total time: {toPrettyDuration($currentHoursTotal)}.
         {:else}
-        Total time: {toPrettyTime($hoursByTask[task.id])}.
+        Total time: {toPrettyDuration($hoursByTask[task.id])}.
         {/if}
 
         {#if task.durations.length}

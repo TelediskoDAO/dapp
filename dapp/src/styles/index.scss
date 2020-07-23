@@ -25,6 +25,18 @@
   box-sizing: border-box;
 }
 
+@mixin elevation-low {
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+@mixin elevation-mid {
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+@mixin elevation-high {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
 @mixin button {
 
 }
@@ -103,7 +115,17 @@ form {
 }
 
 fieldset {
-  @include border
+  @include border;
+}
+
+button {
+  @include border;
+  background-color: white;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    @include elevation-low;
+  }
 }
 
 // # Theme

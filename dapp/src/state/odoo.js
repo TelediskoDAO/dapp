@@ -7,6 +7,10 @@ import { session } from "src/net/odoo";
 const URL = "https://odoo.teledisko.com/jsonrpc";
 const DB = "teledisko";
 
+function parseDate(s) {
+  return s === false ? false : new Date(s.replace(" ", "T") + "+02:00");
+}
+
 export const username = persistable("odoo.username", "");
 export const password = persistable("odoo.password", "");
 export const upstreamCache = persistable("upstream", []);
@@ -80,8 +84,8 @@ export const durations = derived(
     map($data.durations, (duration) => ({
       id: duration.id,
       taskId: duration.task[0],
-      start: duration.start,
-      end: duration.end,
+      start: parseDate(duration.start),
+      end: parseDate(duration.end),
       hours: duration.value,
     })),
   {}
@@ -117,6 +121,16 @@ export const hoursByTask = derived([tasks, durations], ([$tasks, $durations]) =>
   }, {})
 );
 
+export const tasksOpen = derived([tasks, durations], ([$tasks, $durations]) =>
+  Array.from(
+    new Set(
+      Object.values($durations)
+        .filter((duration) => duration.end === false)
+        .map((duration) => duration.taskId)
+    )
+  ).map((taskId) => $tasks[taskId])
+);
+
 export const currentDuration = derived(
   durations,
   ($durations) =>
@@ -132,8 +146,7 @@ export const currentTask = derived(
 export const currentHours = derived(
   [currentDuration, clock],
   ([$currentDuration, $clock]) =>
-    $currentDuration &&
-    (new Date() - new Date($currentDuration.start)) / (60 * 60 * 1000)
+    $currentDuration && (new Date() - $currentDuration.start) / (60 * 60 * 1000)
 );
 
 export const currentHoursTotal = derived(
@@ -143,7 +156,7 @@ export const currentHoursTotal = derived(
     $currentDuration &&
     hoursByTask &&
     $hoursByTask[$currentTask.id] +
-      (new Date() - new Date($currentDuration.start)) / (60 * 60 * 1000)
+      (new Date() - $currentDuration.start) / (60 * 60 * 1000)
 );
 
 /**

@@ -1,6 +1,6 @@
 <script>
   import { durations as d, stopDuration, removeDuration } from "src/state/odoo";
-  import { toPrettyTime } from "./utils";
+  import { toPrettyDuration, toPrettyTime } from "./utils";
   export let durations;
 </script>
 
@@ -9,16 +9,16 @@
   {#each durations as duration}
   <tr>
     <td>
-      {$d[duration].start}
+      {toPrettyTime($d[duration].start)}
     </td>
     <td>
       →
     </td>
     <td>
-      {$d[duration].end || "tracking"}
+      {$d[duration].end ? toPrettyTime($d[duration].end) : "tracking"}
     </td>
     <td>
-      {toPrettyTime($d[duration].hours)}
+      {toPrettyDuration($d[duration].hours)}
     </td>
     <td>
       <button on:click={() => $removeDuration(duration)}>Remove</button>
