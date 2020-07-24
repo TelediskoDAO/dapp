@@ -137,8 +137,10 @@ export const tasksOpen = derived([tasks, durations], ([$tasks, $durations]) =>
 );
 
 export const currentDuration = derived(
-  durations,
-  ($durations) =>
+  (tasksOpen, durations),
+  ($tasksOpen, $durations) =>
+    $tasksOpen &&
+    $tasksOpen.length === 1 &&
     Object.values($durations).filter((duration) => duration.end === false)[0]
 );
 

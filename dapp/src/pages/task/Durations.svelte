@@ -18,7 +18,7 @@
     <Duration duration={$d[duration]} />
   {/each}
 {:else}
-  <p>There are no durations for this task. You can either hit the button "<span class="material-icons">play</span>" to start tracking time, or create a new entry.
+  <p>There are no durations for this task. You can either hit the button "<span class="material-icons">play_arrow</span>" to start tracking time, or create a new entry.
 {/if}
 
 {#if create}

@@ -1,6 +1,6 @@
 <script>
   import { removeDuration, updateDuration, createDuration } from "src/state/odoo";
-  import { toPrettyDuration, toPrettyTime } from "./utils";
+  import { toPrettyDuration, toPrettyRange } from "./utils";
 
   export let handleDone = null;
   export let taskId = null;
@@ -22,17 +22,13 @@
     throw new Error("Set a duration or a taskId");
   }
 
-  console.log(start, end);
-
   function handleSubmit() {
     // If there is no `duration`, we create a new duration connected to `taskId`
 
     if (duration) {
-      console.log('update', start, end);
       $updateDuration(duration.id, start, end);
       edit = false;
     } else if (taskId) {
-      console.log('create', start, end);
       $createDuration(taskId, start, end);
       handleDone();
     }
@@ -74,15 +70,7 @@
   <table>
     <tr>
       <td>
-        {toPrettyTime(duration.start)}
-      </td>
-      <td>
-        <span class="material-icons">
-          arrow_forward
-        </span>
-      </td>
-      <td>
-        {duration.end ? toPrettyTime(duration.end) : "tracking"}
+        {toPrettyRange(duration.start, duration.end)}
       </td>
       <td>
         Session
