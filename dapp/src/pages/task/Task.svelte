@@ -12,7 +12,7 @@
     if ($currentTask === undefined) {
       $startDuration(task.id);
     } else {
-      const message = `You are tracking "${task.name}", wanna switch to "${$currentTask.name}" instead?`;
+      const message = `You are tracking "${$currentTask.name}", wanna switch to "${task.name}" instead?`;
       if (confirm(message)){
         $stopDuration($currentTask.id);
         $startDuration(task.id);
@@ -163,20 +163,18 @@
     {:else}
       <p>
         {#if tracking}
-        Current session: {toPrettyDuration($currentHours)}. Total time: {toPrettyDuration($currentHoursTotal)}.
+          Current session: {toPrettyDuration($currentHours)}. Total time: {toPrettyDuration($currentHoursTotal)}.
         {:else}
-        Total time: {toPrettyDuration($hoursByTask[task.id])}.
+          Total time: {toPrettyDuration($hoursByTask[task.id])}.
         {/if}
 
-        {#if task.durations.length}
         <button on:click={() => {details = !details}}>
           {details ? "Hide" : "Show"} Details
         </button>
-        {/if}
       </p>
       {#if details}
       <div transition:slide={{duration: 200}}>
-        <Durations durations={task.durations} />
+        <Durations taskId={task.id} durations={task.durations} />
       </div>
       {/if}
     {/if}

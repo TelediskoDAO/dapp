@@ -168,6 +168,25 @@ export const currentHoursTotal = derived(
  * Modifiers
  */
 
+export const createDuration = derived(
+  agent,
+  ($agent) => async (taskId, start, end) => {
+    const duration = {
+      task: taskId,
+      start,
+      end,
+    };
+    const id = await $agent.create("project.task.duration", duration);
+    const [updatedTask] = await $agent.read("project.task", [taskId]);
+    const [newDuration] = await $agent.read("project.task.duration", [id]);
+    upstream.update(($upstream) => {
+      $upstream.tasks[taskId] = updatedTask;
+      $upstream.durations[id] = newDuration;
+      return $upstream;
+    });
+  }
+);
+
 export const startDuration = derived(agent, ($agent) => async (taskId) => {
   const duration = {
     task: taskId,
@@ -211,3 +230,20 @@ export const removeDuration = derived(agent, ($agent) => async (durationId) => {
     return $upstream;
   });
 });
+
+export const updateDuration = derived(
+  agent,
+  ($agent) => async (durationId, start, end) => {
+    const result = await $agent.update("project.task.duration", durationId, {
+      start,
+      end,
+    });
+    const [updatedDuration] = await $agent.read("project.task.duration", [
+      durationId,
+    ]);
+    upstream.update(($upstream) => {
+      $upstream.durations[durationId] = updatedDuration;
+      return $upstream;
+    });
+  }
+);

@@ -13,7 +13,7 @@
 </style>
 
 <section>
-  <h1>Project: <a href="#/project/1234">Aragon</a></h1>
+  <h1>All your tasks</h1>
 
   {#if $tasksOpen.length > 1}
   <h2>Fix me: concurrent trackings found</h2>

@@ -1,29 +1,28 @@
 <script>
-  import { durations as d, stopDuration, removeDuration } from "src/state/odoo";
-  import { toPrettyDuration, toPrettyTime } from "./utils";
+  import { durations as d } from "src/state/odoo";
+  import Duration from "./Duration.svelte";
+
+  export let taskId;
   export let durations;
+
+  let create;
+
+  function handleDone() {
+    create = false;
+  }
+
 </script>
 
 {#if durations.length}
-<table>
   {#each durations as duration}
-  <tr>
-    <td>
-      {toPrettyTime($d[duration].start)}
-    </td>
-    <td>
-      →
-    </td>
-    <td>
-      {$d[duration].end ? toPrettyTime($d[duration].end) : "tracking"}
-    </td>
-    <td>
-      {toPrettyDuration($d[duration].hours)}
-    </td>
-    <td>
-      <button on:click={() => $removeDuration(duration)}>Remove</button>
-    </td>
-  </tr>
+    <Duration duration={$d[duration]} />
   {/each}
-</table>
+{:else}
+  <p>There are no durations for this task. You can either hit the button "<span class="material-icons">play</span>" to start tracking time, or create a new entry.
+{/if}
+
+{#if create}
+  <Duration {taskId} {handleDone} />
+{:else}
+  <button on:click={()=>create=true}>Create duration</button>
 {/if}
