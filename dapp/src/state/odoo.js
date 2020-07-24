@@ -26,32 +26,37 @@ export const agent = derived(
   null
 );
 
+export const uid = derivable(agent, ($agent) => $agent && $agent.uid);
+
 export const user = derived(agent, async ($agent, set) => {
   if ($agent) {
   }
 });
 
-export const upstream = derivable(agent, async ($agent, set) => {
-  if ($agent) {
-    const tasks = group(
-      await $agent.search("project.task", { user_id: $agent.uid })
-    );
-    const durationIds = Object.values(tasks).reduce(
-      (acc, curr) => acc.concat(curr.duration_entry),
-      []
-    );
-    const durations = group(
-      await $agent.read("project.task.duration", durationIds)
-    );
-    upstreamCache.set({ tasks, durations });
-    set({ tasks, durations });
-  }
-});
+export const upstream = derivable(
+  [agent, uid],
+  async ([$agent, $uid], set) => {
+    if ($agent && $uid) {
+      const tasks = group(
+        await $agent.search("project.task", { user_id: $uid })
+      );
+      const durationIds = Object.values(tasks).reduce(
+        (acc, curr) => acc.concat(curr.duration_entry),
+        []
+      );
+      const durations = group(
+        await $agent.read("project.task.duration", durationIds)
+      );
+      upstreamCache.set({ tasks, durations });
+      set({ tasks, durations });
+    }
+  },
+  { tasks: {}, durations: {} }
+);
 
 const data = derived(
   [upstream, upstreamCache],
-  ([$upstream, $upstreamCache], set) => set($upstream || $upstreamCache),
-  {}
+  ([$upstream, $upstreamCache], set) => set($upstream /*|| $upstreamCache*/)
 );
 
 const STAGES = {
@@ -200,6 +205,7 @@ export const removeDuration = derived(agent, ($agent) => async (durationId) => {
   await $agent.remove("project.task.duration", [durationId]);
   upstream.update(($upstream) => {
     const duration = $upstream.durations[durationId];
+    delete $upstream.durations[durationId];
     const task = $upstream.tasks[duration.task[0]];
     task.duration_entry.splice(task.duration_entry.indexOf(duration.id), 1);
     return $upstream;

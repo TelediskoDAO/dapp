@@ -16,7 +16,6 @@
   li {
     background-color: rgba(255, 255, 255, 0.6);
     margin-bottom: var(--size-m);
-    border-radius: var(--size-xs);
     box-shadow: 0px 2px 3px rgba(0,0,0,0.1);
     @include border;
     border-top: none;

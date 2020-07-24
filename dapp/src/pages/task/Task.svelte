@@ -51,7 +51,7 @@
 
 
   .task {
-    border-radius: var(--size-xs);
+    //border-radius: var(--size-xs);
     background: #ffffff;
     transition: all 1s;
     padding: var(--size-s);
