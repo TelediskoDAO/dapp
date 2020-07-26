@@ -1,5 +1,6 @@
 <script>
   import { removeDuration, updateDuration, createDuration } from "src/state/odoo";
+  import { clock } from "src/state/clock";
   import { toPrettyDuration, toPrettyRange } from "./utils";
 
   export let handleDone = null;
@@ -9,6 +10,10 @@
   let edit;
   let start;
   let end;
+  let action;
+
+  $: hours = duration && (duration.end === false ? ($clock - duration.start) / (60 * 60 * 1000) : duration.hours);
+  $: range = duration && toPrettyRange(duration.start, duration.end);
 
   if(duration) {
     edit = false;
@@ -36,50 +41,78 @@
 
 </script>
 
+<style type="text/scss">
+@import 'src/styles/index';
+
+.duration {
+  font-weight: bold;
+}
+
+.options {
+  text-align: right;
+}
+
+.timer {
+  animation: blink 1s infinite;
+}
+
+</style>
+
+<tr>
 {#if edit}
-  <form on:submit|preventDefault={handleSubmit}>
-    <table>
-      <tr>
-          <td>
-            <input bind:value={start} type="datetime-local" />
-          </td>
-          <td>
-            <span class="material-icons">
-              arrow_forward
-            </span>
-          </td>
-          <td>
-            <input
-              bind:value={end}
-              type="datetime-local"
-              min={start}
-            />
-          </td>
-          <td>
-            <button type="submit">Save</button>
-            {#if duration}
-              <button type="reset" on:click={() => edit = false}>Cancel</button>
-            {:else}
-              <button type="reset" on:click={() => confirm('Are you sure?') && handleDone()}>Cancel</button>
-            {/if}
-          </td>
-      </tr>
-    </table>
-  </form>
+  <td colspan="3">
+    <form on:submit|preventDefault={handleSubmit}>
+      <p>
+        <label>Start<br/>
+          <input bind:value={start} type="datetime-local" required />
+        </label>
+      </p>
+      <p>
+        <label>End<br/>
+          <input
+            bind:value={end}
+            type="datetime-local"
+            min={start}
+            required
+          />
+        </label>
+      </p>
+      <div class="buttons">
+        <button type="submit">Save</button>
+        {#if duration}
+          <button type="reset" on:click={() => edit = false}>Cancel</button>
+        {:else}
+          <button type="reset" on:click={() => confirm('Are you sure?') && handleDone()}>Cancel</button>
+        {/if}
+      </div>
+    </form>
+  </td>
 {:else}
-  <table>
-    <tr>
-      <td>
-        {toPrettyRange(duration.start, duration.end)}
-      </td>
-      <td>
-        Session
-        <strong>{toPrettyDuration(duration.hours)}</strong>
-      </td>
-      <td>
-        <button on:click={() => edit = true}>Edit</button>
-        <button on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>Remove</button>
-      </td>
-    </tr>
-  </table>
+  <td>
+    <span class="duration">{toPrettyDuration(hours)}</span>
+    {#if !range.end}
+    <i class="timer">timer</i>
+    {/if}
+  </td>
+  <td>
+    <span class="range">{range.start}–{#if range.end}{range.end}{:else}<strong class="timer">now</strong>{/if}</span>
+  </td>
+
+  <td class="options">
+
+    <div class="buttons">
+      <button on:click={() => edit = true}>
+      <i>edit</i>
+      </button><button on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>
+      <i>delete</i>
+      </button>
+    </div>
+
+    <!--select on:change={handleSelect} bind:value={action}>
+      <option selected>Action</option>
+      <option>Edit</option>
+      <option>Delete</option>
+    </select>
+  </td-->
 {/if}
+</tr>

@@ -3,7 +3,7 @@
   import Duration from "./Duration.svelte";
 
   export let taskId;
-  export let durations;
+  export let durationIds;
 
   let create;
 
@@ -11,18 +11,51 @@
     create = false;
   }
 
+  $: durations = durationIds.map(durationId => $d[durationId]);
+  $: activeDurations = durations.filter(duration => duration.end === false)
+      .sort((a, b) => b.start - a.start);
+  $: pastDurations = durations.filter(duration => duration.end !== false)
+      .sort((a, b) => b.start - a.start);
 </script>
 
-{#if durations.length}
-  {#each durations as duration}
-    <Duration duration={$d[duration]} />
+<style type="text/scss">
+  table {
+    margin-top: var(--size-m);
+    width: 100%;
+  }
+</style>
+
+<table>
+  <thead>
+    <tr>
+      <th>Duration</th>
+      <th>Range</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {#each activeDurations as duration}
+    <Duration duration={duration} />
   {/each}
-{:else}
-  <p>There are no durations for this task. You can either hit the button "<span class="material-icons">play_arrow</span>" to start tracking time, or create a new entry.
+  {#each pastDurations as duration}
+    <Duration duration={duration} />
+  {/each}
+  <tbody>
+</table>
+
+{#if !durations.length}
+  <p>The task has no time trackings. You can either hit the button "<i>play_arrow</i>" to start tracking time, or create a new entry.</p>
 {/if}
 
+<table>
 {#if create}
   <Duration {taskId} {handleDone} />
-{:else}
-  <button on:click={()=>create=true}>Create duration</button>
+{/if}
+</table>
+
+{#if !create}
+  <button on:click={()=>create=true}>
+    <i>more_time</i>
+    New time entry
+  </button>
 {/if}

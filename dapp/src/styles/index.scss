@@ -1,3 +1,5 @@
+@import "icons.scss";
+
 // # Variables
 :root {
   --root-size: 16px;
@@ -17,7 +19,8 @@
   --line-size-thick: var(--size-xs);
   --line-color: black; //rgba(0, 0, 0, 1);
 
-  --color-primary: tomato;
+  --color-warning-fg: black;
+  --color-warning-bg: #ff9800;
 }
 
 // # Mixins
@@ -99,15 +102,23 @@ main {
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 2rem;
 }
 
 h3 {
   font-size: 1.5rem;
+}
+
+details {
+  margin-bottom: var(--size-m);
+}
+
+summary {
+  font-weight: bold;
 }
 
 form {
@@ -118,13 +129,40 @@ fieldset {
   @include border;
 }
 
-button {
+button, select, input {
   @include border;
+  //border-radius: var(--size-xs);
+  padding: var(--size-xs) var(--size-xs);
   background-color: white;
   transition: box-shadow 0.2s;
 
-  &:hover {
-    @include elevation-low;
+  font-size: 1rem;
+
+  display: flex;
+  align-items: flex-end;
+
+  //&:hover {
+  //  @include elevation-low;
+  //}
+}
+
+.buttons {
+  display: flex;
+
+  button:not(:last-child) {
+    margin-right: var(--size-xs);
+  }
+}
+
+// # Animations
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
   }
 }
 

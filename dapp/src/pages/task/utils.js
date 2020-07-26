@@ -66,13 +66,16 @@ export function toPrettyRange(start, end) {
   const n = parse(new Date());
 
   if (!e) {
-    return `${s.month} ${s.day} ${s.time}–now`;
+    return { start: `${s.month} ${s.day} ${s.time}` };
   }
   // Most of the times a duration is within the same day.
   // This is the most common case, so the app handles only this for now.
   if (s.year === e.year && s.month === e.month && s.day === s.day) {
-    return `${s.month} ${s.day} ${s.time}–${e.time}`;
+    return { start: `${s.month} ${s.day} ${s.time}`, end: e.time };
   } else {
-    return `${s.month} ${s.day} ${s.time}–${e.month} ${e.day} ${e.time}`;
+    return {
+      start: `${s.month} ${s.day} ${s.time}`,
+      end: `${e.month} ${e.day} ${e.time}`,
+    };
   }
 }

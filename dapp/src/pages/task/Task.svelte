@@ -4,24 +4,24 @@
   import { toPrettyDuration } from "./utils";
   import Durations from "./Durations.svelte";
   export let task;
+  export let openDetails = false;
 
-  let details = false;
   $: tracking = $currentTask && $currentTask.id === task.id;
 
-  function handleStart() {
+  async function handleStart() {
     if ($currentTask === undefined) {
-      $startDuration(task.id);
+      await $startDuration(task.id);
     } else {
       const message = `You are tracking "${$currentTask.name}", wanna switch to "${task.name}" instead?`;
       if (confirm(message)){
-        $stopDuration($currentTask.id);
-        $startDuration(task.id);
+        await $stopDuration($currentDuration.id);
+        await $startDuration(task.id);
       }
     }
   }
 
-  function handleStop() {
-      $stopDuration($currentDuration.id);
+  async function handleStop() {
+      await $stopDuration($currentDuration.id);
   }
 </script>
 
@@ -80,6 +80,12 @@
   }
   .body {
     padding: 0;
+
+    p {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
   }
 
   .hasSubtasks {
@@ -141,11 +147,11 @@
     {#if !task.hasSubtasks}
       {#if tracking}
       <button class="stop" on:click={() => handleStop()}>
-        <i class="material-icons">stop</i>
+        <i>stop</i>
       </button>
       {:else}
       <button on:click={() => handleStart()}>
-        <i class="material-icons">play_arrow</i>
+        <i>play_arrow</i>
       </button>
       {/if}
     {/if}
@@ -168,13 +174,14 @@
           Total time: {toPrettyDuration($hoursByTask[task.id])}.
         {/if}
 
-        <button on:click={() => {details = !details}}>
-          {details ? "Hide" : "Show"} Details
+        <button on:click={() => {openDetails = !openDetails}}>
+          <i>date_range</i>
+          {openDetails ? "Hide" : "Show"} timesheet
         </button>
       </p>
-      {#if details}
+      {#if openDetails}
       <div transition:slide={{duration: 200}}>
-        <Durations taskId={task.id} durations={task.durations} />
+        <Durations taskId={task.id} durationIds={task.durations} />
       </div>
       {/if}
     {/if}

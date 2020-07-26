@@ -8,7 +8,7 @@ const URL = "https://odoo.teledisko.com/jsonrpc";
 const DB = "teledisko";
 
 function parseDate(s) {
-  return s === false ? false : new Date(s.replace(" ", "T") + "+02:00");
+  return s ? new Date(s.replace(" ", "T") + "+02:00") : false;
 }
 
 export const username = persistable("odoo.username", "");
@@ -137,11 +137,13 @@ export const tasksOpen = derived([tasks, durations], ([$tasks, $durations]) =>
 );
 
 export const currentDuration = derived(
-  (tasksOpen, durations),
-  ($tasksOpen, $durations) =>
-    $tasksOpen &&
-    $tasksOpen.length === 1 &&
-    Object.values($durations).filter((duration) => duration.end === false)[0]
+  [tasksOpen, durations],
+  ([$tasksOpen, $durations]) =>
+    $tasksOpen && $tasksOpen.length === 1
+      ? Object.values($durations).filter(
+          (duration) => duration.end === false
+        )[0]
+      : undefined
 );
 
 export const currentTask = derived(
@@ -153,7 +155,7 @@ export const currentTask = derived(
 export const currentHours = derived(
   [currentDuration, clock],
   ([$currentDuration, $clock]) =>
-    $currentDuration && (new Date() - $currentDuration.start) / (60 * 60 * 1000)
+    $currentDuration && ($clock - $currentDuration.start) / (60 * 60 * 1000)
 );
 
 export const currentHoursTotal = derived(
