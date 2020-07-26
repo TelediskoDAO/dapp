@@ -79,3 +79,21 @@ export function toPrettyRange(start, end) {
     };
   }
 }
+
+export function splitDate(date) {
+  function pad(number) {
+    if (number < 10) {
+      return "0" + number;
+    }
+    return number;
+  }
+  if (date === undefined) {
+    date = new Date();
+  }
+  return [
+    [date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join(
+      "-"
+    ),
+    [pad(date.getHours()), pad(date.getMinutes())].join(":"),
+  ];
+}

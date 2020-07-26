@@ -1,40 +1,41 @@
 <script>
   import { removeDuration, updateDuration, createDuration } from "src/state/odoo";
   import { clock } from "src/state/clock";
-  import { toPrettyDuration, toPrettyRange } from "./utils";
+  import { toPrettyDuration, toPrettyRange, splitDate } from "./utils";
 
   export let handleDone = null;
   export let taskId = null;
   export let duration = null;
 
   let edit;
-  let start;
-  let end;
   let action;
+
+  let startDate, startTime, endDate, endTime;
 
   $: hours = duration && (duration.end === false ? ($clock - duration.start) / (60 * 60 * 1000) : duration.hours);
   $: range = duration && toPrettyRange(duration.start, duration.end);
 
   if(duration) {
     edit = false;
-    start = duration.start.toISOString().slice(0, 16);
-    end = duration.end ? duration.end.toISOString().slice(0, 16) : "";
+    [startDate, startTime] = splitDate(duration.start);
+    [endDate, endTime] = splitDate(duration.end);
   } else if (taskId) {
     edit = true;
-    start = "";
-    end = "";
+    [startDate, startTime] = splitDate();
+    [endDate, endTime] = splitDate();
   } else {
     throw new Error("Set a duration or a taskId");
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     // If there is no `duration`, we create a new duration connected to `taskId`
-
+    let start = [startDate, startTime].join('T');
+    let end = [endDate, endTime].join('T');
     if (duration) {
-      $updateDuration(duration.id, start, end);
+      await $updateDuration(duration.id, start, end);
       edit = false;
     } else if (taskId) {
-      $createDuration(taskId, start, end);
+      await $createDuration(taskId, start, end);
       handleDone();
     }
   }
@@ -58,36 +59,8 @@
 
 </style>
 
+{#if duration}
 <tr>
-{#if edit}
-  <td colspan="3">
-    <form on:submit|preventDefault={handleSubmit}>
-      <p>
-        <label>Start<br/>
-          <input bind:value={start} type="datetime-local" required />
-        </label>
-      </p>
-      <p>
-        <label>End<br/>
-          <input
-            bind:value={end}
-            type="datetime-local"
-            min={start}
-            required
-          />
-        </label>
-      </p>
-      <div class="buttons">
-        <button type="submit">Save</button>
-        {#if duration}
-          <button type="reset" on:click={() => edit = false}>Cancel</button>
-        {:else}
-          <button type="reset" on:click={() => confirm('Are you sure?') && handleDone()}>Cancel</button>
-        {/if}
-      </div>
-    </form>
-  </td>
-{:else}
   <td>
     <span class="duration">{toPrettyDuration(hours)}</span>
     {#if !range.end}
@@ -107,12 +80,35 @@
       <i>delete</i>
       </button>
     </div>
-
-    <!--select on:change={handleSelect} bind:value={action}>
-      <option selected>Action</option>
-      <option>Edit</option>
-      <option>Delete</option>
-    </select>
-  </td-->
-{/if}
+  </td>
 </tr>
+{/if}
+
+{#if edit}
+<tr>
+  <td colspan="3">
+    <form on:submit|preventDefault={handleSubmit}>
+      <p>
+        <label>Start<br/>
+          <input bind:value={startDate} type="date" required />
+          <input bind:value={startTime} type="time" required />
+        </label>
+      </p>
+      <p>
+        <label>End<br/>
+          <input bind:value={endDate} type="date" min={startDate} required />
+          <input bind:value={endTime} type="time" min={startDate === endDate ? startTime : ""} required />
+        </label>
+      </p>
+      <div class="buttons">
+        <button type="submit">Save</button>
+        {#if duration}
+          <button type="reset" on:click={() => edit = false}>Cancel</button>
+        {:else}
+          <button type="reset" on:click={() => confirm('Are you sure?') && handleDone()}>Cancel</button>
+        {/if}
+      </div>
+    </form>
+  </td>
+</tr>
+{/if}
