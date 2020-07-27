@@ -1,6 +1,8 @@
 <script>
   import { user, username } from "src/state/odoo";
   import CONFIG from "./config";
+  import { slide } from 'svelte/transition';
+
 
   import Router from "svelte-spa-router";
 
@@ -26,11 +28,33 @@
 </script>
 
 <style type="text/scss">
-  /*@import 'src/styles/vars';*/
+  @import 'src/styles/index';
+
+  .loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+    z-index: 99999;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      animation: blink 1s infinite;
+    }
+  }
 </style>
 
 {#if $username && !$user}
-loading...
+<div out:slide class="loading">
+  <p>
+    loading...
+  </p>
+</div>
 {:else}
 <TopAppBar />
 
