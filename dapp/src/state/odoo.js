@@ -21,6 +21,8 @@ export const agent = derived(
     if ($username && $password) {
       const s = await session(URL, DB, $username, $password);
       set(s);
+    } else {
+      set(null);
     }
   },
   null
@@ -30,6 +32,14 @@ export const uid = derivable(agent, ($agent) => $agent && $agent.uid);
 
 export const user = derived(agent, async ($agent, set) => {
   if ($agent) {
+    const [data] = await $agent.read("res.users", $agent.uid);
+    console.log("User's data", data);
+    set({
+      name: data.name,
+      image: data.image_medium,
+    });
+  } else {
+    set(null);
   }
 });
 
@@ -176,6 +186,15 @@ export const currentHoursTotal = derived(
 /**
  * Modifiers
  */
+
+export async function connectToOdoo(u, p) {
+  const s = await session(URL, DB, u, p);
+  if (s.uid === false) {
+    throw new Error("Login error");
+  }
+  username.set(u);
+  password.set(p);
+}
 
 export const createDuration = derived(
   agent,

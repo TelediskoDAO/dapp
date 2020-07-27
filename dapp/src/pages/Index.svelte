@@ -1,9 +1,12 @@
+<script>
+  import { user } from "src/state/odoo";
+</script>
+
 <style type="text/scss">
   @import 'src/styles/index';
 
   .apps {
     display: flex;
-    justify-content: space-around;
     flex-wrap: wrap;
 
     > div {
@@ -14,12 +17,8 @@
       }
 
       padding: var(--size-m);
-      margin-top: var(--size-m);
+      margin: var(--size-s);
       @include border;
-
-      :not(:last-child) {
-        margin-right: var(--size-s);
-      }
 
       &.disabled {
         opacity: 0.5;
@@ -41,16 +40,24 @@
 
   <div class="apps">
 
+    {#if !$user}
     <div>
       <h3><i>login</i> Login</h3>
-      <p>Login to Odoo to enable other applications.</p>
+      <p>Login to use the DAO applications.</p>
       <a class="button medium" href="#/connect/odoo">Login</a>
     </div>
+    {/if}
 
-    <div class="disabled">
+    <div class:disabled={!$user}>
       <h3><i>timer</i> Time Tracking</h3>
-      <p>Track your time and manage your timesheets, directly on your odoo task.</p>
+      <p>Track the time you work on tasks.</p>
       <a class="button medium" href="#/tasks">Track Time</a>
+    </div>
+
+    <div class:disabled={!$user}>
+      <h3><i>settings</i> Settings</h3>
+      <p>Details about your account.</p>
+      <a class="button medium" href="#/connect/odoo">Settings</a>
     </div>
 
   </div>
@@ -58,8 +65,7 @@
   <h2>What will be available in the future</h2>
 
   <ul>
-    <li>Login to Odoo using MetaMask.</li>
-    <li>Track time for your Odoo tasks.</li>
+    <li>Login using MetaMask.</li>
     <li>Check the balance of your Teledisko tokens.</li>
     <li>Create and vote on polls created by other contributors.</li>
     <li>Sell your tokens.</li>

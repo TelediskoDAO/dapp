@@ -1,4 +1,5 @@
 <script>
+  import { user, username } from "src/state/odoo";
   import CONFIG from "./config";
 
   import Router from "svelte-spa-router";
@@ -28,9 +29,12 @@
   /*@import 'src/styles/vars';*/
 </style>
 
-
+{#if $username && !$user}
+loading...
+{:else}
 <TopAppBar />
 
 <main>
   <Router {routes} />
 </main>
+{/if}

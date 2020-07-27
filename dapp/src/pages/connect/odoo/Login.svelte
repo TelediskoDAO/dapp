@@ -1,26 +1,38 @@
 <script>
-  import {username, password, agent} from "src/state/odoo";
+  import { connectToOdoo, user, username, password } from "src/state/odoo";
+  import { push } from 'svelte-spa-router'
 
-  let connect;
+  let loginError;
   let _username = '';
   let _password = '';
 
-  function handleConnect() {
-    $username = _username;
-    $password = _password;
+  async function handleConnect() {
+    try {
+      await connectToOdoo(_username, _password);
+      push('/');
+    } catch(e) {
+      loginError = true;
+    }
   }
 
   function handleDisconnect() {
     $username = '';
     $password = '';
+    push('/');
   }
 
 </script>
 
+<style>
+  details {
+    margin-top: var(--size-l);
+  }
+</style>
+
 <section>
 
-    <h2>Odoo Integration</h2>
-    {#if $username && $password}
+    <h2>Odoo Login</h2>
+    {#if $user}
     <p>
       You are connected already.
     </p>
@@ -30,7 +42,7 @@
     {:else}
     <form on:submit|preventDefault={handleConnect}>
       <fieldset>
-        <legend>Connect to Odoo using your credentials.</legend>
+        <legend>Connect using your Odoo credentials.</legend>
         <p>
           <label>Odoo Username<br/>
             <input bind:value={_username} required />
@@ -42,13 +54,16 @@
           </label>
         </p>
 
+        {#if loginError}
+        <p class="error">Login error, please check your username and password.</p>
+        {/if}
+
         <button type="submit">
           Connect
         </button>
       </fieldset>
     </form>
     {/if}
-
 
     <details>
       <summary>Is it secure?</summary>

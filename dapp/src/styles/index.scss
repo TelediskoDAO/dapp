@@ -96,6 +96,7 @@ nav {
   background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 0 var(--size-s) rgba(0, 0, 0, 0.3);
   ul {
+    align-items: center;
     padding: var(--size-m) var(--size-s);
     max-width: var(--max-width);
     margin: 0 auto;
