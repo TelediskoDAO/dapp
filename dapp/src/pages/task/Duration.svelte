@@ -109,7 +109,7 @@
         {#if duration}
           <button type="reset" on:click={() => edit = false}>Cancel</button>
         {:else}
-          <button type="reset" on:click={() => confirm('Are you sure?') && handleDone()}>Cancel</button>
+          <button type="reset" on:click={() => handleDone()}>Cancel</button>
         {/if}
       </div>
     </form>

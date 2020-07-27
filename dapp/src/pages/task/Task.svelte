@@ -6,7 +6,16 @@
   export let task;
   export let openDetails = false;
 
+  import { afterUpdate } from 'svelte';
+
+	afterUpdate(() => {
+		console.log('the component just updated', task);
+	});
+
+
   $: tracking = $currentTask && $currentTask.id === task.id;
+  $: currentHoursProxy = tracking ? currentHours : null;
+  $: currentHoursTotalProxy = tracking ? currentHoursTotal : null;
 
   async function handleStart() {
     if ($currentTask === undefined) {
@@ -169,7 +178,7 @@
     {:else}
       <p>
         {#if tracking}
-          Current session: {toPrettyDuration($currentHours)}. Total time: {toPrettyDuration($currentHoursTotal)}.
+          Current session: {toPrettyDuration($currentHoursProxy)}. Total time: {toPrettyDuration($currentHoursTotalProxy)}.
         {:else}
           Total time: {toPrettyDuration($hoursByTask[task.id])}.
         {/if}

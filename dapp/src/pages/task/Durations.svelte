@@ -13,10 +13,13 @@
   }
 
   $: {
+    console.log('new durations ids', durationIds);
     durations = durationIds.map(durationId => $d[durationId]);
-    activeDurations = durations.filter(duration => duration.end === false)
+    console.log('new durations', durations);
+    // FIXME:
+    activeDurations = durations.filter(duration => duration && duration.end === false)
       .sort((a, b) => b.start - a.start);
-    pastDurations = durations.filter(duration => duration.end !== false)
+    pastDurations = durations.filter(duration => duration && duration.end !== false)
       .sort((a, b) => b.start - a.start);
   }
 </script>
