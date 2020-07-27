@@ -7,24 +7,24 @@
   export let taskId = null;
   export let duration = null;
 
-  let edit;
+  let edit = duration ? false : true;
   let action;
 
-  let startDate, startTime, endDate, endTime;
+  let startDate, startTime, endDate, endTime, range, hours;
 
-  $: hours = duration && (duration.end === false ? ($clock - duration.start) / (60 * 60 * 1000) : duration.hours);
-  $: range = duration && toPrettyRange(duration.start, duration.end);
-
-  if(duration) {
-    edit = false;
-    [startDate, startTime] = splitDate(duration.start);
-    [endDate, endTime] = splitDate(duration.end);
-  } else if (taskId) {
-    edit = true;
+  if (taskId) {
     [startDate, startTime] = splitDate();
     [endDate, endTime] = splitDate();
-  } else {
-    throw new Error("Set a duration or a taskId");
+  }
+
+  $: {
+    range = duration && toPrettyRange(duration.start, duration.end);
+    hours = duration && (duration.end === false ? ($clock - duration.start) / (60 * 60 * 1000) : duration.hours);
+
+    if(!edit) {
+      [startDate, startTime] = splitDate(duration.start);
+      [endDate, endTime] = splitDate(duration.end);
+    }
   }
 
   async function handleSubmit() {
@@ -57,6 +57,10 @@
   animation: blink 1s infinite;
 }
 
+.buttons {
+  justify-content: flex-end;
+}
+
 </style>
 
 {#if duration}
@@ -75,9 +79,9 @@
 
     <div class="buttons">
       <button on:click={() => edit = true}>
-      <i>edit</i>
+        <i>edit</i>
       </button><button on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>
-      <i>delete</i>
+        <i>delete</i>
       </button>
     </div>
   </td>

@@ -87,7 +87,7 @@ export function splitDate(date) {
     }
     return number;
   }
-  if (date === undefined) {
+  if (!date) {
     date = new Date();
   }
   return [

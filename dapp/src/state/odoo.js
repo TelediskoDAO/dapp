@@ -136,6 +136,11 @@ export const tasksOpen = derived([tasks, durations], ([$tasks, $durations]) =>
   ).map((taskId) => $tasks[taskId])
 );
 
+//export const durationsOverlap = derived(durations, ($durations) =>
+//  $durations.sort((a, b) => a.start - b.start).((duration, i, array) =>
+//  )
+//);
+
 export const currentDuration = derived(
   [tasksOpen, durations],
   ([$tasksOpen, $durations]) =>

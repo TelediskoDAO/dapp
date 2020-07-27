@@ -13,7 +13,7 @@
     <li>
       <a href="#">Teledisko DAO</a>
     </li>
-    <li class="float-right">
+    <!--li class="float-right">
       {#if $provider}
         <a on:click={authenticate}>
           {$addressShort}
@@ -23,6 +23,6 @@
           Login
         </a>
       {/if}
-    </li>
+    </li-->
   </ul>
 </nav>

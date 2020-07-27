@@ -34,7 +34,7 @@ export function derivable(stores, callback, initial) {
       unpack = true;
     }
     const values = new Array(_stores.length);
-    const unsubscribeFuncs = _stores.map((store, i) => {
+    const unsubscribeFuncs = _stores.map((store, i) =>
       store.subscribe((value) => {
         values[i] = value;
         let setCalled = false;
@@ -46,8 +46,8 @@ export function derivable(stores, callback, initial) {
         if (!setCalled) {
           set(result);
         }
-      });
-    });
+      })
+    );
     return () => unsubscribeFuncs.forEach((f) => f());
   });
 }

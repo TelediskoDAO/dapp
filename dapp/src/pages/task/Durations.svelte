@@ -6,16 +6,19 @@
   export let durationIds;
 
   let create;
+  let durations, activeDurations, pastDurations;
 
   function handleDone() {
     create = false;
   }
 
-  $: durations = durationIds.map(durationId => $d[durationId]);
-  $: activeDurations = durations.filter(duration => duration.end === false)
+  $: {
+    durations = durationIds.map(durationId => $d[durationId]);
+    activeDurations = durations.filter(duration => duration.end === false)
       .sort((a, b) => b.start - a.start);
-  $: pastDurations = durations.filter(duration => duration.end !== false)
+    pastDurations = durations.filter(duration => duration.end !== false)
       .sort((a, b) => b.start - a.start);
+  }
 </script>
 
 <style type="text/scss">
