@@ -26,7 +26,7 @@
   <h1>All your tasks</h1>
 
   {#if $tasksToFix.length}
-  <h2><i class="warning">warning</i> Fix me: {$tasksToFix.length} problems found</h2>
+  <h2><i class="warning">warning</i> Fix me: problems found in {$tasksToFix.length} task{$tasksToFix.length > 1 ? "s" : ""}</h2>
 
   <p>
     <strong>Problem:</strong> some time entries have incorrect values, or you are tracking multiple tasks at the same time.

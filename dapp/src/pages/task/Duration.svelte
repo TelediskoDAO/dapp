@@ -1,5 +1,6 @@
 <script>
-  import { removeDuration, updateDuration, createDuration } from "src/state/odoo";
+  // FIXME durationsOpen should not be here.
+  import { durationsOpen, removeDuration, updateDuration, createDuration } from "src/state/odoo";
   import { clock } from "src/state/clock";
   import { toPrettyDuration, toPrettyRange, splitDate } from "./utils";
 
@@ -92,7 +93,7 @@
   {:else}
   <tr>
     <td>
-      {#if hours < 0}
+      {#if hours < 0 || ($durationsOpen.length > 1 && !range.end)}
         <i class="warning">warning</i>
       {/if}
       <span class="duration">{toPrettyDuration(hours)}</span>
@@ -105,7 +106,6 @@
     </td>
 
     <td class="options">
-
       <div class="buttons">
         <button on:click={() => edit = true}>
           <i>edit</i>

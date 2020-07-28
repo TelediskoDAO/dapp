@@ -142,31 +142,25 @@ export const hoursByTask = derived([tasks, durations], ([$tasks, $durations]) =>
   }, {})
 );
 
-export const tasksOpen = derived([tasks, durations], ([$tasks, $durations]) =>
-  Array.from(
-    new Set(
-      Object.values($durations)
-        .filter((duration) => duration.start && duration.end === false)
-        .map((duration) => duration.taskId)
+// Should be 0 or 1, otherwise the user is tracking multiple tasks at the same time
+export const durationsOpen = derived(
+  [tasks, durations],
+  ([$tasks, $durations]) =>
+    Object.values($durations).filter(
+      (duration) => duration.start && duration.end === false
     )
-  ).map((taskId) => $tasks[taskId])
 );
 
 export const tasksToFix = derived(
-  [tasks, durations],
-  ([$tasks, $durations]) => {
+  [tasks, durations, durationsOpen],
+  ([$tasks, $durations, $durationsOpen]) => {
     let fixme = new Set(
       Object.values($durations)
         .filter((duration) => duration.start === false || duration.hours < 0)
         .map((duration) => duration.taskId)
     );
-    let tasksOpen = new Set(
-      Object.values($durations)
-        .filter((duration) => duration.end === false)
-        .map((duration) => duration.taskId)
-    );
-    if (tasksOpen.length > 1) {
-      fixme = [...fixme, ...tasksOpen];
+    if (durationsOpen.length > 1) {
+      fixme = [...fixme, ...durationsOpen.map((duration) => duration.taskId)];
     }
 
     return Array.from(fixme).map((taskId) => $tasks[taskId]);
@@ -179,9 +173,9 @@ export const tasksToFix = derived(
 //);
 
 export const currentDuration = derived(
-  [tasksOpen, durations],
-  ([$tasksOpen, $durations]) =>
-    $tasksOpen && $tasksOpen.length === 1
+  [durationsOpen, durations],
+  ([$durationsOpen, $durations]) =>
+    $durationsOpen && $durationsOpen.length === 1
       ? Object.values($durations).filter(
           (duration) => duration.end === false
         )[0]
