@@ -27,6 +27,10 @@
     margin-top: var(--size-m);
     width: 100%;
   }
+
+  .new-entry{
+    text-align: right;
+  }
 </style>
 
 <table>
@@ -44,7 +48,17 @@
   {#each pastDurations as duration}
     <Duration duration={duration} />
   {/each}
-  <tbody>
+  {#if !create}
+    <tr>
+      <td colspan="3" class="new-entry">
+        <button on:click={()=>create=true}>
+          <i>more_time</i>
+          New entry
+        </button>
+      </td>
+    </tr>
+  {/if}
+  </tbody>
 </table>
 
 {#if !durations.length}
@@ -56,10 +70,3 @@
   <Duration {taskId} {handleDone} />
 {/if}
 </table>
-
-{#if !create}
-  <button on:click={()=>create=true}>
-    <i>more_time</i>
-    New time entry
-  </button>
-{/if}

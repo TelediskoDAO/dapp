@@ -184,14 +184,25 @@
         {/if}
 
         <button on:click={() => {openDetails = !openDetails}}>
-          <i>date_range</i>
-          {openDetails ? "Hide" : "Show"} timesheet
+          {#if openDetails}
+            <i>unfold_less</i>
+          {:else}
+            <i>unfold_more</i>
+          {/if}
+          Details
         </button>
       </p>
+
       {#if openDetails}
-      <div transition:slide={{duration: 200}}>
-        <Durations taskId={task.id} durationIds={task.durations} />
-      </div>
+        <!--h4>Description</h4>
+        <div>
+          {@html task.description}
+        </div-->
+
+        <div transition:slide={{duration: 200}}>
+          <a href="https://odoo.teledisko.com/web#model=project.task&id={task.id}&view_type=form" target="_blank">Open in Odoo <i>open_in_new</i></a>
+          <Durations taskId={task.id} durationIds={task.durations} />
+        </div>
       {/if}
     {/if}
   </div>
