@@ -1,6 +1,7 @@
 import { clock } from "./clock";
 import { writable, derived } from "svelte/store";
-import { persistable, derivable, now } from "./utils";
+import { utc } from "src/utils";
+import { persistable, derivable } from "./utils";
 import { group, map } from "src/f";
 import { session } from "src/net/odoo";
 
@@ -8,7 +9,7 @@ const URL = "https://odoo.teledisko.com/jsonrpc";
 const DB = "teledisko";
 
 function parseDate(s) {
-  return s ? new Date(s.replace(" ", "T") + "+02:00") : false;
+  return s ? new Date(s.replace(" ", "T") + "Z") : false;
 }
 
 export const username = persistable("odoo.username", "");
@@ -256,7 +257,7 @@ export const startDuration = derived(
   ([$agent, $tasks]) => async (taskId) => {
     const duration = {
       task: taskId,
-      start: now(),
+      start: utc(),
     };
 
     // If the task is in backlog or done, put it in progress.
@@ -282,7 +283,7 @@ export const startDuration = derived(
 
 export const stopDuration = derived(agent, ($agent) => async (durationId) => {
   const duration = {
-    end: now(),
+    end: utc(),
   };
   const result = await $agent.update(
     "project.task.duration",

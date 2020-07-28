@@ -3,6 +3,7 @@
   import { durationsOpen, removeDuration, updateDuration, createDuration } from "src/state/odoo";
   import { clock } from "src/state/clock";
   import { toPrettyDuration, toPrettyRange, splitDate } from "./utils";
+  import { utc } from "src/utils";
 
   export let handleDone = null;
   export let taskId = null;
@@ -19,8 +20,9 @@
   }
 
   $: {
+    let currentTime = Math.max($clock, Date.now());
     range = duration && toPrettyRange(duration.start, duration.end);
-    hours = duration && (duration.end === false ? ($clock - duration.start) / (60 * 60 * 1000) : duration.hours);
+    hours = duration && (duration.end === false ? (currentTime - duration.start) / (60 * 60 * 1000) : duration.hours);
 
     if(!edit) {
       [startDate, startTime] = splitDate(duration.start);
@@ -30,8 +32,8 @@
 
   async function handleSubmit() {
     // If there is no `duration`, we create a new duration connected to `taskId`
-    let start = [startDate, startTime].join('T');
-    let end = [endDate, endTime].join('T');
+    let start = utc(new Date([startDate, startTime].join(' ')));
+    let end = utc(new Date([endDate, endTime].join(' ')));
     if (duration) {
       await $updateDuration(duration.id, start, end);
       edit = false;
