@@ -152,6 +152,27 @@ export const tasksOpen = derived([tasks, durations], ([$tasks, $durations]) =>
   ).map((taskId) => $tasks[taskId])
 );
 
+export const tasksToFix = derived(
+  [tasks, durations],
+  ([$tasks, $durations]) => {
+    let fixme = new Set(
+      Object.values($durations)
+        .filter((duration) => duration.start === false || duration.hours < 0)
+        .map((duration) => duration.taskId)
+    );
+    let tasksOpen = new Set(
+      Object.values($durations)
+        .filter((duration) => duration.end === false)
+        .map((duration) => duration.taskId)
+    );
+    if (tasksOpen.length > 1) {
+      fixme = [...fixme, ...tasksOpen];
+    }
+
+    return Array.from(fixme).map((taskId) => $tasks[taskId]);
+  }
+);
+
 //export const durationsOverlap = derived(durations, ($durations) =>
 //  $durations.sort((a, b) => a.start - b.start).((duration, i, array) =>
 //  )

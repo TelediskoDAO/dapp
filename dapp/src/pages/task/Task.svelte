@@ -12,7 +12,6 @@
 	//	console.log('the component just updated', task);
 	//});
 
-
   $: tracking = $currentTask && $currentTask.id === task.id;
   $: currentHoursProxy = tracking ? currentHours : null;
   $: currentHoursTotalProxy = tracking ? currentHoursTotal : null;
@@ -170,9 +169,11 @@
     {#if task.hasSubtasks}
       <ul>
       {#each task.subtaskIds as subtaskId}
-        <li>
-        <svelte:self task={$tasks[subtaskId]} />
-        </li>
+        {#if $tasks[subtaskId]}
+          <li>
+            <svelte:self task={$tasks[subtaskId]} />
+          </li>
+        {/if}
       {/each}
       </ul>
     {:else}

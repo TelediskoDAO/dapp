@@ -61,31 +61,61 @@
   justify-content: flex-end;
 }
 
+.warning {
+  color: var(--color-warning-fg);
+  background-color: var(--color-warning-bg);
+  padding: var(--size-xs);
+}
+
 </style>
 
 {#if duration}
-<tr>
-  <td>
-    <span class="duration">{toPrettyDuration(hours)}</span>
-    {#if !range.end}
-    <i class="timer">timer</i>
-    {/if}
-  </td>
-  <td>
-    <span class="range">{range.start}–{#if range.end}{range.end}{:else}<strong class="timer">now</strong>{/if}</span>
-  </td>
+  {#if !range.start}
+  <tr>
+    <td>
+      <span class="duration">
+        <i class="warning">warning</i>
+      </span>
+    </td>
+    <td>
+      Empty interval!
+    </td>
 
-  <td class="options">
+    <td class="options">
+      <div class="buttons">
+        <button on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>
+          <i>delete</i>
+        </button>
+      </div>
+    </td>
+  </tr>
+  {:else}
+  <tr>
+    <td>
+      {#if hours < 0}
+        <i class="warning">warning</i>
+      {/if}
+      <span class="duration">{toPrettyDuration(hours)}</span>
+      {#if !range.end}
+        <i class="timer">timer</i>
+      {/if}
+    </td>
+    <td>
+      <span class="range">{range.start}–{#if range.end}{range.end}{:else}<strong class="timer">now</strong>{/if}</span>
+    </td>
 
-    <div class="buttons">
-      <button on:click={() => edit = true}>
-        <i>edit</i>
-      </button><button on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>
-        <i>delete</i>
-      </button>
-    </div>
-  </td>
-</tr>
+    <td class="options">
+
+      <div class="buttons">
+        <button on:click={() => edit = true}>
+          <i>edit</i>
+        </button><button on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>
+          <i>delete</i>
+        </button>
+      </div>
+    </td>
+  </tr>
+  {/if}
 {/if}
 
 {#if edit}

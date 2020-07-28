@@ -61,6 +61,10 @@ export function toPrettyRange(start, end) {
     );
   }
 
+  if (!start) {
+    return {};
+  }
+
   const s = parse(start);
   const e = parse(end);
   const n = parse(new Date());

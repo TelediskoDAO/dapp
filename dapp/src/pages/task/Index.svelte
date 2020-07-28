@@ -1,5 +1,5 @@
 <script>
-  import { tasksOpen, tasksBacklog, tasksProgress } from "src/state/odoo";
+  import { tasksToFix, tasksBacklog, tasksProgress } from "src/state/odoo";
   import Tasks from "./Tasks.svelte";
 </script>
 
@@ -25,15 +25,15 @@
 <section>
   <h1>All your tasks</h1>
 
-  {#if $tasksOpen.length > 1}
-  <h2><i class="warning">warning</i> Fix me: {$tasksOpen.length} concurrent trackings found</h2>
+  {#if $tasksToFix.length > 1}
+  <h2><i class="warning">warning</i> Fix me: {$tasksToFix.length} problems found</h2>
 
   <p>
-    <strong>Problem:</strong> You are time tracking multiple tasks at the same time.
+    <strong>Problem:</strong> some time entries have incorrect values, or you are tracking multiple tasks at the same time.
   </p>
 
   <p>
-    <strong>Solution:</strong> In the tasks below, edit or delete the time entries that are <strong><i class="timer">timer</i> active</strong>.
+    <strong>Solution:</strong> In the tasks below, edit or delete the time entries marked with the <i class="warning">warning</i> sign.
   </p>
 
   <details>
@@ -41,12 +41,12 @@
 
     <p>
       If you use the <em>Time Management</em> feature in Odoo, you might have
-      some time entries that have a <strong>start</strong> but don't specify an
-      <strong>end</strong>.
+      multiple time entries <strong>start</strong> but don't specify an
+      <strong>end</strong>, or just have wrong time entries.
     </p>
   </details>
 
-  <Tasks list={$tasksOpen} openDetails={true} />
+  <Tasks list={$tasksToFix} openDetails={true} />
   {/if}
 
   {#if $tasksProgress.length}
