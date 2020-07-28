@@ -159,8 +159,12 @@ export const tasksToFix = derived(
         .filter((duration) => duration.start === false || duration.hours < 0)
         .map((duration) => duration.taskId)
     );
-    if (durationsOpen.length > 1) {
-      fixme = [...fixme, ...durationsOpen.map((duration) => duration.taskId)];
+    console.log("durationsopen", $durationsOpen);
+    if ($durationsOpen.length > 1) {
+      fixme = new Set([
+        ...fixme,
+        ...$durationsOpen.map((duration) => duration.taskId),
+      ]);
     }
 
     return Array.from(fixme).map((taskId) => $tasks[taskId]);
