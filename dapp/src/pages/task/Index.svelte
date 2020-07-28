@@ -49,12 +49,15 @@
   <Tasks list={$tasksOpen} openDetails={true} />
   {/if}
 
-  <div>
-  <h2>Tasks in progress</h2>
+  {#if $tasksProgress.length}
+    <h2>Tasks in progress</h2>
 
-  <Tasks list={$tasksProgress} />
+    <Tasks list={$tasksProgress} />
+  {/if}
 
-  <h2>Tasks in Backlog</h2>
+  {#if $tasksBacklog.length}
+    <h2>Tasks in Backlog</h2>
 
-  <Tasks list={$tasksBacklog} />
+    <Tasks list={$tasksBacklog} />
+  {/if}
 </section>

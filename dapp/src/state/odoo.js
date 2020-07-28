@@ -33,7 +33,6 @@ export const uid = derivable(agent, ($agent) => $agent && $agent.uid);
 export const user = derived(agent, async ($agent, set) => {
   if ($agent) {
     const [data] = await $agent.read("res.users", $agent.uid);
-    console.log("User's data", data);
     set({
       name: data.name,
       image: data.image_medium,
@@ -86,7 +85,6 @@ const STAGES_TO_ID = {
 export const tasks = derived(
   data,
   ($data) =>
-    console.log("update tasks") ||
     map($data.tasks, (task) => ({
       id: task.id,
       name: task.name,
@@ -104,7 +102,6 @@ export const tasks = derived(
 export const durations = derived(
   data,
   ($data) =>
-    console.log("update durations") ||
     map($data.durations, (duration) => ({
       id: duration.id,
       taskId: duration.task[0],
@@ -302,7 +299,6 @@ export const removeDuration = derived(
       const duration = $upstream.durations[durationId];
       $upstream.tasks[taskId] = updatedTask;
       delete $upstream.durations[durationId];
-      console.log("new upstream task id", taskId, durationId, $upstream);
       return $upstream;
     });
   }

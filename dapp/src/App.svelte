@@ -3,6 +3,8 @@
   import CONFIG from "./config";
   import { slide } from 'svelte/transition';
 
+  import TopAppBar from "./components/TopAppBar.svelte";
+  import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
   import Router from "svelte-spa-router";
 
@@ -13,11 +15,6 @@
 
   import Home from "./Home.svelte";
   import NotFound from "./NotFound.svelte";
-
-  import TopAppBar from "./components/TopAppBar.svelte";
-  import Tokenholders from "./components/Tokenholders.svelte";
-
-  import { clock } from "./state";
 
   const routes = {
     "/": PageIndex,
@@ -57,6 +54,8 @@
 </div>
 {:else}
 <TopAppBar />
+
+<RuntimeErrors />
 
 <main>
   <Router {routes} />

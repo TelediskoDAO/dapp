@@ -146,6 +146,7 @@ button, select, input, .button {
   @include border;
   //border-radius: var(--size-xs);
   padding: var(--size-xs) var(--size-xs);
+  color: black;
   background-color: white;
   transition: box-shadow 0.2s;
 
@@ -156,14 +157,18 @@ button, select, input, .button {
   //display: flex;
   align-items: flex-end;
 
-  //&:hover {
-  //  @include elevation-low;
-  //}
+  &:hover {
+    @include elevation-mid;
+  }
 
   &.medium {
     font-size: 1.5rem;
     padding: var(--size-xs) var(--size-s);
   }
+}
+
+button, .button {
+  cursor: pointer;
 }
 
 .buttons {

@@ -94,8 +94,8 @@
     <form on:submit|preventDefault={handleSubmit}>
       <p>
         <label>Start<br/>
-          <input bind:value={startDate} type="date" required />
-          <input bind:value={startTime} type="time" required />
+          <input bind:value={startDate} on:change={()=>endDate=startDate} type="date" required />
+          <input bind:value={startTime} on:change={()=>endTime=startTime} type="time" required />
         </label>
       </p>
       <p>

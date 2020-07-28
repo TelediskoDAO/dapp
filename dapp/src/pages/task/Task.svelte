@@ -8,9 +8,9 @@
 
   import { afterUpdate } from 'svelte';
 
-	afterUpdate(() => {
-		console.log('the component just updated', task);
-	});
+	//afterUpdate(() => {
+	//	console.log('the component just updated', task);
+	//});
 
 
   $: tracking = $currentTask && $currentTask.id === task.id;
