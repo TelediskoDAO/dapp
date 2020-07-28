@@ -146,7 +146,7 @@ export const tasksOpen = derived([tasks, durations], ([$tasks, $durations]) =>
   Array.from(
     new Set(
       Object.values($durations)
-        .filter((duration) => duration.end === false)
+        .filter((duration) => duration.start && duration.end === false)
         .map((duration) => duration.taskId)
     )
   ).map((taskId) => $tasks[taskId])

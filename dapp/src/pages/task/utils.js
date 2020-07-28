@@ -74,7 +74,7 @@ export function toPrettyRange(start, end) {
   }
   // Most of the times a duration is within the same day.
   // This is the most common case, so the app handles only this for now.
-  if (s.year === e.year && s.month === e.month && s.day === s.day) {
+  if (s.year === e.year && s.month === e.month && s.day === e.day) {
     return { start: `${s.month} ${s.day} ${s.time}`, end: e.time };
   } else {
     return {

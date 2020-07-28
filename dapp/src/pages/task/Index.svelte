@@ -25,7 +25,7 @@
 <section>
   <h1>All your tasks</h1>
 
-  {#if $tasksToFix.length > 1}
+  {#if $tasksToFix.length}
   <h2><i class="warning">warning</i> Fix me: {$tasksToFix.length} problems found</h2>
 
   <p>
