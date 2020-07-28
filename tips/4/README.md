@@ -44,7 +44,7 @@ Implementation of [TIP-2: Public Key authentication Protocol](../2).
 
 ### Stage 2: Time tracking
 
-The dApp (hosted under https://dao.teledisko.com) allows contributors to see all their tasks. Contributors can do time tracking on specific tasks by clicking on the start/stop button. Each time they track time, a new "duration" is created and attached to the task (See [TIP-3: API access to Odoo models]).
+The dApp (hosted under https://dao.teledisko.com) allows contributors to see all their tasks. Contributors can do time tracking on specific tasks by clicking on the start/stop button. Each time they track time, a new "duration" is created and attached to the task (See [TIP-3: API access to Odoo models](../3)).
 
 Creating new durations is also reflected in the Odoo UI.
 
