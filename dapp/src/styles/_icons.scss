@@ -1,9 +1,8 @@
-/* fallback */
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/materialicons/v53/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+  src: url(fonts/material-icons.woff2) format('woff2');
 }
 
 i {
@@ -25,4 +24,21 @@ i {
 
 button i {
   font-size: 24px;
+}
+
+.icon {
+  max-width: 12px;
+}
+
+i.medium {
+  font-size: 28px;
+}
+
+.icon.medium {
+  max-width: 20px;
+}
+
+p i,
+p .icon {
+  vertical-align: text-bottom;
 }

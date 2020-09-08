@@ -1,5 +1,6 @@
 <script>
   import { user } from "src/state/odoo";
+  import { platform } from "src/state/runtime";
 </script>
 
 <style type="text/scss">
@@ -36,9 +37,25 @@
     This web application allows contributors to interact with the <strong>Teledisko DAO</strong>. You can use it both from your laptop and from your smartphone.
   </p>
 
+
   <h2>What you can do now</h2>
 
   <div class="apps">
+    {#if $platform.isStandalone === false}
+      {#if $platform.isAndroid}
+        <div>
+          <h3><i>phone_android</i> Install the App</h3>
+          <p>On your browser, tap on the <i class="medium">more_vert</i> icon, then <em>Add to Home Screen</em>.</p>
+        </div>
+      {/if}
+
+      {#if $platform.isIOS}
+        <div>
+          <h3><i>phone_iphone</i> Install the App</h3>
+          <p>On your browser, tap on the <img class="icon medium" alt="iOS share icon" src="images/icons/ios-share.png" /> icon, then <em>Add to Home Screen</em>.</p>
+        </div>
+      {/if}
+    {/if}
 
     {#if !$user}
     <div>
@@ -48,7 +65,7 @@
     </div>
     {/if}
 
-    <div class:disabled={!$user}>
+    <div>
       <h3><i>timer</i> Time Tracking</h3>
       <p>Track the time you work on tasks.</p>
       <a class="button medium" href="#/tasks">Track Time</a>

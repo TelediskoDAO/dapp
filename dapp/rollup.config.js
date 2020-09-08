@@ -31,50 +31,87 @@ function setAlias() {
   });
 }
 
-export default {
-  input: "src/index.js",
-  output: {
-    file: "build/bundle.js",
-    format: "iife",
-    sourcemap: true,
-  },
-  plugins: [
-    replace({
-      __buildEnv__: JSON.stringify({
-        production,
-        date: new Date(),
+export default [
+  {
+    input: "src/index.js",
+    output: {
+      file: "build/bundle.js",
+      format: "iife",
+      sourcemap: true,
+    },
+    plugins: [
+      replace({
+        __buildEnv__: JSON.stringify({
+          production,
+          date: Date.now(),
+        }),
       }),
-    }),
-    copy({ targets: [{ src: "public/*", dest: "build" }] }),
-    svelte({
-      dev: !production,
-      css: (css) => css.write("build/components.css"),
-      preprocess: autoPreprocess(),
-    }),
-    scss({
-      output: "build/style.css",
-    }),
-    setAlias(),
-    json(),
-    // rollup-plugin-node-resolve embeds external dependecies in the bundle,
-    // more info here:
-    // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
-    resolve({ browser: true, dedupe }),
-    commonjs(),
-    // https://github.com/thgh/rollup-plugin-serve
-    !production &&
-      serve({
-        contentBase: "build",
-        /*open: true,*/ host: "0.0.0.0",
-        port: 4100,
+      copy({ targets: [{ src: "public/*", dest: "build" }] }),
+      copy({
+        targets: [{ src: "service-workers/*", dest: "build/service-workers" }],
       }),
-    !production && livereload("build"),
-    production && terser(),
-  ],
-  watch: {
-    clearScreen: true,
-    chokidar: {
-      usePolling: true,
+      svelte({
+        dev: !production,
+        css: (css) => css.write("build/components.css"),
+        preprocess: autoPreprocess(),
+      }),
+      scss({
+        output: "build/style.css",
+      }),
+      setAlias(),
+      json(),
+      // rollup-plugin-node-resolve embeds external dependecies in the bundle,
+      // more info here:
+      // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
+      resolve({ browser: true, dedupe }),
+      commonjs(),
+      // https://github.com/thgh/rollup-plugin-serve
+      !production &&
+        serve({
+          contentBase: "build",
+          /*open: true,*/ host: "0.0.0.0",
+          port: 4100,
+        }),
+      !production && livereload("build"),
+      production && terser(),
+    ],
+    watch: {
+      clearScreen: true,
+      chokidar: {
+        usePolling: true,
+      },
     },
   },
-};
+
+  {
+    input: "service-workers/index.js",
+    output: {
+      file: "build/service-workers.js",
+      format: "iife",
+      sourcemap: true,
+    },
+    plugins: [
+      replace({
+        __buildEnv__: JSON.stringify({
+          production,
+          date: Date.now(),
+        }),
+      }),
+      setAlias(),
+      json(),
+      // rollup-plugin-node-resolve embeds external dependecies in the bundle,
+      // more info here:
+      // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
+      resolve({ browser: true, dedupe }),
+      commonjs(),
+      //!production && livereload("build"),
+      production && terser(),
+    ],
+    watch: {
+      clearScreen: true,
+      chokidar: {
+        usePolling: true,
+      },
+    },
+  },
+];
