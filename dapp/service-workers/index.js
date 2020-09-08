@@ -25,8 +25,7 @@ const contentToCache = [
   "components.css",
   "index.html",
   "manifest.webmanifest",
-  "style.css",
-  "theme.css",
+  "style.css"
 ];
 
 async function addToCache() {
