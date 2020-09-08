@@ -20,12 +20,11 @@ const contentToCache = [
   "images/splash-2048.png",
   "images/splash-640.jpg",
   "images/splash-750.jpg",
-  "bundle.css",
   "bundle.js",
   "components.css",
   "index.html",
   "manifest.webmanifest",
-  "style.css"
+  "style.css",
 ];
 
 async function addToCache() {
