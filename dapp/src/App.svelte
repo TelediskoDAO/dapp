@@ -4,6 +4,7 @@
   import { slide } from 'svelte/transition';
 
   import TopAppBar from "./components/TopAppBar.svelte";
+  import CurrentTask from "./components/CurrentTask.svelte";
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
   import Router from "svelte-spa-router";
@@ -55,9 +56,10 @@
 {:else}
 <TopAppBar />
 
-<RuntimeErrors />
-
 <main>
   <Router {routes} />
 </main>
+
+<CurrentTask />
+<RuntimeErrors />
 {/if}

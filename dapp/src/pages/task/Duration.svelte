@@ -2,7 +2,7 @@
   // FIXME durationsOpen should not be here.
   import { durationsOpen, removeDuration, updateDuration, createDuration } from "src/state/odoo";
   import { clock } from "src/state/clock";
-  import { toPrettyDuration, toPrettyRange, splitDate } from "./utils";
+  import { toPrettyDuration, toPrettyRange, splitDate } from "src/utils";
   import { utc } from "src/utils";
 
   export let handleDone = null;

@@ -1,4 +1,5 @@
 @import "icons.scss";
+@import "headroom.scss";
 
 // # Variables
 :root {
@@ -21,6 +22,8 @@
 
   --color-warning-fg: black;
   --color-warning-bg: #ff9800;
+
+  --color-blue: #5ab4bd;
 }
 
 // # Mixins
@@ -82,6 +85,7 @@ html {
 body {
   @include border-box;
   margin: 0;
+  margin-bottom: 50px;
 }
 
 *, *:before, *:after {
@@ -94,7 +98,7 @@ a {
 
 nav {
   background-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 var(--size-s) rgba(0, 0, 0, 0.3);
+  @include elevation-high;
   ul {
     align-items: center;
     padding: var(--size-m) var(--size-s);

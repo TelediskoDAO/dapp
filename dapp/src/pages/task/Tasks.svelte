@@ -1,8 +1,22 @@
 <script>
-  import { tasks, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, removeDuration } from "src/state/odoo";
+  import { parse } from 'qs';
+  import { afterUpdate } from 'svelte';
+  import { replace, querystring } from 'svelte-spa-router';
+  import { tasks, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, removeDuration, currentTask } from "src/state/odoo";
   import Task from "./Task.svelte";
+
   export let list;
   export let openDetails = false;
+
+	afterUpdate(() => {
+    if ($currentTask && scrollToCurrent) {
+      const elem = document.getElementById("task:" + $currentTask.id);
+      elem && elem.scrollIntoView({behavior: "smooth"});
+    }
+    replace("#/tasks");
+	});
+
+  $: scrollToCurrent = "scrollToCurrent" in parse($querystring);
 </script>
 
 <style type="text/scss">

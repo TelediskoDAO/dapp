@@ -1,16 +1,11 @@
 <script>
 	import { slide } from 'svelte/transition';
   import { tasks, currentTask, currentDuration, currentHours, currentHoursTotal, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, removeDuration } from "src/state/odoo";
-  import { toPrettyDuration } from "./utils";
+  import { toPrettyDuration } from "src/utils";
   import Durations from "./Durations.svelte";
+
   export let task;
   export let openDetails = false;
-
-  import { afterUpdate } from 'svelte';
-
-	//afterUpdate(() => {
-	//	console.log('the component just updated', task);
-	//});
 
   $: tracking = $currentTask && $currentTask.id === task.id;
   $: currentHoursProxy = tracking ? currentHours : null;
@@ -147,7 +142,7 @@
 
 </style>
 
-<div class="task" class:tracking class:hasSubtasks={task.hasSubtasks} class:isSubtask={task.isSubtask}>
+<div id="task:{task.id}" class="task" class:tracking class:hasSubtasks={task.hasSubtasks} class:isSubtask={task.isSubtask}>
   <div class="header">
     <h3>
       {task.name}
