@@ -1,8 +1,13 @@
 import CONFIG from "./config";
 
-console.log("[Service Worker] Build date", new Date(CONFIG.date));
+console.log(
+  "[Service Worker] Version:",
+  CONFIG.version,
+  "Build date:",
+  new Date(CONFIG.date)
+);
 
-const cacheName = new Date(CONFIG.date).toISOString().substr(0, 19);
+const cacheName = CONFIG.version;
 const contentToCache = [
   "fonts/material-icons.woff2",
   "images/icons/ios-share.png",

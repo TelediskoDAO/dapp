@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Task list now allows to navigate through tasks that are "To Do", "Done", and "Approved".
 - Tasks in backlog are now integrated in a more generic "To Do" page, displaying both new tasks and tasks that are in progress.
 
+### Fixed
+
+- Bug in service worker update routine.
+
 ## [0.2.0] 2020-09-08
 
 ### Added

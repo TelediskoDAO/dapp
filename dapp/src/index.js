@@ -8,25 +8,22 @@ import { errors, platform } from "src/state/runtime";
 console.log("Config is", CONFIG);
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("service-workers.js")
-    .then((registration) => {
-      console.log("[Client] service worker registered");
-      registration.addEventListener("updatefound", () => {
-        console.log("[Client] update found");
-        let newWorker = registration.installing;
-        newWorker.addEventListener("statechange", () => {
-          // Has service worker state changed?
-          if (
-            newWorker.state === "installed" &&
-            navigator.serviceWorker.controller
-          ) {
-            confirm("A new version of the app is available, refresh?") &&
-              newWorker.postMessage({ action: "skipWaiting" });
-          }
-        });
+  navigator.serviceWorker.register("service-worker.js").then((registration) => {
+    console.log("[Client] service worker registered");
+    registration.addEventListener("updatefound", () => {
+      console.log("[Client] update found");
+      let newWorker = registration.installing;
+      newWorker.addEventListener("statechange", () => {
+        if (
+          newWorker.state === "installed" &&
+          navigator.serviceWorker.controller
+        ) {
+          confirm("A new version of the app is available, refresh?") &&
+            newWorker.postMessage({ action: "skipWaiting" });
+        }
       });
     });
+  });
 
   let refreshing;
   navigator.serviceWorker.addEventListener("controllerchange", function () {

@@ -85,9 +85,9 @@ export default [
   },
 
   {
-    input: "service-workers/index.js",
+    input: "service-worker/index.js",
     output: {
-      file: "build/service-workers.js",
+      file: "build/service-worker.js",
       format: "iife",
       sourcemap: true,
     },
