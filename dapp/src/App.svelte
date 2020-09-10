@@ -20,6 +20,7 @@
   const routes = {
     "/": PageIndex,
     "/tasks": PageTaskIndex,
+    "/tasks/:stage": PageTaskIndex,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };

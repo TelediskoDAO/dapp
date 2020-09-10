@@ -3,8 +3,8 @@
   import { durationsOpen, removeDuration, updateDuration, createDuration } from "src/state/odoo";
   import { clock } from "src/state/clock";
   import { toPrettyDuration, toPrettyRange, splitDate } from "src/utils";
-  import { utc } from "src/utils";
 
+  export let editable = true;
   export let handleDone = null;
   export let taskId = null;
   export let duration = null;
@@ -32,8 +32,8 @@
 
   async function handleSubmit() {
     // If there is no `duration`, we create a new duration connected to `taskId`
-    let start = utc(new Date([startDate, startTime].join(' ')));
-    let end = utc(new Date([endDate, endTime].join(' ')));
+    let start = new Date([startDate, startTime].join(' '));
+    let end = new Date([endDate, endTime].join(' '));
     if (duration) {
       await $updateDuration(duration.id, start, end);
       edit = false;
@@ -108,6 +108,7 @@
     </td>
 
     <td class="options">
+      {#if editable}
       <div class="buttons">
         <button on:click={() => edit = true}>
           <i>edit</i>
@@ -115,6 +116,7 @@
           <i>delete</i>
         </button>
       </div>
+      {/if}
     </td>
   </tr>
   {/if}

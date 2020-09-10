@@ -7,7 +7,6 @@
   let headroom;
 
   $: {
-    console.log('element is', element);
     if (!element && headroom) {
       headroom.destroy();
     }

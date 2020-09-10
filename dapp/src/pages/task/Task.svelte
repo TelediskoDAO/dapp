@@ -1,11 +1,13 @@
 <script>
 	import { slide } from 'svelte/transition';
-  import { tasks, currentTask, currentDuration, currentHours, currentHoursTotal, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, removeDuration } from "src/state/odoo";
+  import { tasks, currentTask, currentDuration, currentHours, currentHoursTotal, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, markAsDone } from "src/state/odoo";
   import { toPrettyDuration } from "src/utils";
   import Durations from "./Durations.svelte";
 
   export let task;
   export let openDetails = false;
+
+  let createTimeEntry = false;
 
   $: tracking = $currentTask && $currentTask.id === task.id;
   $: currentHoursProxy = tracking ? currentHours : null;
@@ -26,6 +28,17 @@
   async function handleStop() {
       await $stopDuration($currentDuration.id);
   }
+
+  async function handleMarkAsDone() {
+      const message = "Mark the task as done?";
+      if (confirm(message)){
+        if(tracking) {
+          await $stopDuration($currentDuration.id);
+        }
+        await $markAsDone(task.id);
+      }
+  }
+
 </script>
 
 <style type="text/scss">
@@ -128,6 +141,10 @@
     padding: 0;
   }
 
+  .buttons {
+    margin-top: var(--size-s);
+  }
+
   .task:not(.tracking):first-child {
     @include border-top;
   }
@@ -140,20 +157,30 @@
     border-bottom: none;
   }
 
+  .task--stage-done h3 {
+    text-decoration: line-through;
+  }
+
 </style>
 
-<div id="task:{task.id}" class="task" class:tracking class:hasSubtasks={task.hasSubtasks} class:isSubtask={task.isSubtask}>
+<div
+  id="task:{task.id}"
+  class="task task--stage-{task.stage}"
+  class:tracking
+  class:hasSubtasks={task.hasSubtasks}
+  class:isSubtask={task.isSubtask}>
   <div class="header">
     <h3>
       {task.name}
     </h3>
-    {#if !task.hasSubtasks}
+
+    {#if !task.hasSubtasks && task.stage !== "done" && task.stage !== "approved"}
       {#if tracking}
-      <button class="stop" on:click={() => handleStop()}>
+      <button class="stop" on:click={handleStop}>
         <i>stop</i>
       </button>
       {:else}
-      <button on:click={() => handleStart()}>
+      <button on:click={handleStart}>
         <i>play_arrow</i>
       </button>
       {/if}
@@ -174,7 +201,8 @@
     {:else}
       <p>
         {#if tracking}
-          Current session: {toPrettyDuration($currentHoursProxy)}. Total time: {toPrettyDuration($currentHoursTotalProxy)}.
+          Current session: {toPrettyDuration($currentHoursProxy)}. <br/>
+          Total time: {toPrettyDuration($currentHoursTotalProxy)}.
         {:else}
           Total time: {toPrettyDuration($hoursByTask[task.id])}.
         {/if}
@@ -196,8 +224,41 @@
         </div-->
 
         <div transition:slide={{duration: 200}}>
-          <a href="https://odoo.teledisko.com/web#model=project.task&id={task.id}&view_type=form" target="_blank">Open in Odoo <i>open_in_new</i></a>
-          <Durations taskId={task.id} durationIds={task.durations} />
+
+          <div class="buttons">
+            {#if task.stage === "done"}
+            <button on:click={handleStart}>
+              <i>play_arrow</i>
+              Track time
+            </button>
+            {:else if task.stage !== "approved"}
+            <button
+              on:click={handleMarkAsDone}
+              disabled={!task.hasDurations}>
+              <i>done</i>
+              Mark as done
+            </button>
+            {/if}
+
+            <a href="https://odoo.teledisko.com/web#model=project.task&id={task.id}&view_type=form" target="_blank" class="button">
+              <i>open_in_new</i> Open in Odoo
+            </a>
+
+            {#if task.stage !== "approved"}
+            <button on:click={()=>createTimeEntry=true}>
+              <i>more_time</i>
+              New time entry
+            </button>
+            {/if}
+          </div>
+
+          <Durations
+            taskId={task.id}
+            editable={task.stage !== "approved"}
+            durationIds={task.durations}
+            {createTimeEntry}
+            onCreateTimeEntryDone={()=>createTimeEntry=false}
+            />
         </div>
       {/if}
     {/if}

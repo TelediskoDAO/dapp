@@ -24,6 +24,7 @@
   --color-warning-bg: #ff9800;
 
   --color-blue: #5ab4bd;
+  --color-green: #b5d63d;
 }
 
 // # Mixins
@@ -149,7 +150,7 @@ fieldset {
 
 button, select, input, .button {
   @include border;
-  //border-radius: var(--size-xs);
+  border-radius: var(--size-xs);
   padding: var(--size-xs) var(--size-xs);
   color: black;
   background-color: white;
@@ -172,13 +173,19 @@ button, select, input, .button {
   }
 }
 
-button, .button {
+button,
+.button {
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
   cursor: pointer;
 }
 
 .buttons {
   display: flex;
 
+  .button:not(:last-child),
   button:not(:last-child) {
     margin-right: var(--size-xs);
   }

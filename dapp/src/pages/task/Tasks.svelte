@@ -12,8 +12,8 @@
     if ($currentTask && scrollToCurrent) {
       const elem = document.getElementById("task:" + $currentTask.id);
       elem && elem.scrollIntoView({behavior: "smooth"});
+      replace("#/tasks");
     }
-    replace("#/tasks");
 	});
 
   $: scrollToCurrent = "scrollToCurrent" in parse($querystring);
@@ -37,6 +37,7 @@
   }
 </style>
 
+{#if list.length}
 <ul>
   {#each list as task}
   <li>
@@ -44,3 +45,6 @@
   </li>
   {/each}
 </ul>
+{:else}
+  <p>No tasks.</p>
+{/if}

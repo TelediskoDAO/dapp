@@ -1,12 +1,14 @@
 <script>
-  import { tasksToFix, tasksBacklog, tasksProgress } from "src/state/odoo";
+  import active from 'svelte-spa-router/active'
+  import { tasksToFix, tasksBacklog, tasksProgress, tasksDone, tasksApproved } from "src/state/odoo";
   import Tasks from "./Tasks.svelte";
+  export let params = {};
 </script>
 
 <style type="text/scss">
   @import 'src/styles/index';
 
-  h2 {
+  h1 {
     @include border-bottom-thick;
   }
 
@@ -20,10 +22,25 @@
     animation: blink 1s infinite;
   }
 
+  a {
+    padding: var(--size-xs) var(--size-s);
+  }
+
+  :global(a.active) {
+    color: white !important;
+    background: black;
+  }
 </style>
 
 <section>
-  <h1>All your tasks</h1>
+
+  <div>
+    <a href="#/tasks" use:active>To Do</a>
+    /
+    <a href="#/tasks/done" use:active>Done</a>
+    /
+    <a href="#/tasks/approved" use:active>Approved</a>
+  </div>
 
   {#if $tasksToFix.length}
   <h2><i class="warning">warning</i> Fix me: problems found in {$tasksToFix.length} task{$tasksToFix.length > 1 ? "s" : ""}</h2>
@@ -49,15 +66,17 @@
   <Tasks list={$tasksToFix} openDetails={true} />
   {/if}
 
-  {#if $tasksProgress.length}
-    <h2>Tasks in progress</h2>
-
+  {#if params.stage === "done"}
+    <h1>Tasks Done</h1>
+    <Tasks list={$tasksDone} />
+  {:else if params.stage === "approved"}
+    <h1>Tasks Approved</h1>
+    <Tasks list={$tasksApproved} />
+  {:else}
+    <h1>Tasks To Do</h1>
     <Tasks list={$tasksProgress} />
-  {/if}
-
-  {#if $tasksBacklog.length}
-    <h2>Tasks in Backlog</h2>
-
-    <Tasks list={$tasksBacklog} />
+    {#if $tasksBacklog.length}
+      <Tasks list={$tasksBacklog} />
+    {/if}
   {/if}
 </section>

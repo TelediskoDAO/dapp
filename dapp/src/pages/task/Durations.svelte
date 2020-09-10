@@ -3,14 +3,12 @@
   import Duration from "./Duration.svelte";
 
   export let taskId;
+  export let editable;
   export let durationIds;
+  export let createTimeEntry;
+  export let onCreateTimeEntryDone;
 
-  let create;
   let durations, activeDurations, pastDurations;
-
-  function handleDone() {
-    create = false;
-  }
 
   $: {
     durations = durationIds.map(durationId => $d[durationId]);
@@ -33,6 +31,13 @@
   }
 </style>
 
+{#if createTimeEntry}
+<table>
+  <Duration {taskId} handleDone={onCreateTimeEntryDone} />
+</table>
+{/if}
+
+{#if durations.length}
 <table>
   <thead>
     <tr>
@@ -43,30 +48,15 @@
   </thead>
   <tbody>
   {#each activeDurations as duration}
-    <Duration duration={duration} />
+    <Duration {editable} duration={duration} />
   {/each}
   {#each pastDurations as duration}
-    <Duration duration={duration} />
+    <Duration {editable} duration={duration} />
   {/each}
-  {#if !create}
-    <tr>
-      <td colspan="3" class="new-entry">
-        <button on:click={()=>create=true}>
-          <i>more_time</i>
-          New entry
-        </button>
-      </td>
-    </tr>
-  {/if}
   </tbody>
 </table>
+{/if}
 
 {#if !durations.length}
-  <p>The task has no time trackings. You can either hit the button "<i>play_arrow</i>" to start tracking time, or create a new entry.</p>
+  <p>The task has no time trackings. You need to have at least one time entry to mark the task as done. You can either hit the button "<i>play_arrow</i>" to start tracking time, or create a new entry.</p>
 {/if}
-
-<table>
-{#if create}
-  <Duration {taskId} {handleDone} />
-{/if}
-</table>

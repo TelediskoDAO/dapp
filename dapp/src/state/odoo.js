@@ -94,6 +94,7 @@ export const tasks = derived(
       subtaskIds: task.subtask_ids,
       hasSubtasks: task.subtask_ids.length > 0,
       hasDurations: task.duration_entry.length > 0,
+      parentId: task.task_id ? task.task_id[0] : null,
       durations: task.duration_entry,
       stage: STAGES[task.stage_id[0]],
     })),
@@ -133,6 +134,20 @@ export const tasksProgress = derived(
   []
 );
 
+export const tasksDone = derived(
+  taskList,
+  ($taskList) =>
+    Object.values($taskList).filter(({ stage }) => stage === "done"),
+  []
+);
+
+export const tasksApproved = derived(
+  taskList,
+  ($taskList) =>
+    Object.values($taskList).filter(({ stage }) => stage === "approved"),
+  []
+);
+
 export const hoursByTask = derived([tasks, durations], ([$tasks, $durations]) =>
   Object.keys($tasks).reduce((acc, taskId) => {
     acc[taskId] = $tasks[taskId].durations.reduce(
@@ -160,7 +175,6 @@ export const tasksToFix = derived(
         .filter((duration) => duration.start === false || duration.hours < 0)
         .map((duration) => duration.taskId)
     );
-    console.log("durationsopen", $durationsOpen);
     if ($durationsOpen.length > 1) {
       fixme = new Set([
         ...fixme,
@@ -222,28 +236,59 @@ export async function connectToOdoo(u, p) {
   password.set(p);
 }
 
+export const markAsDone = derived(
+  [agent, tasks, hoursByTask],
+  ([$agent, $tasks, $hoursByTask]) => async (taskId) => {
+    const task = $tasks[taskId];
+    const result = await $agent.update("project.task", taskId, {
+      stage_id: STAGES_TO_ID["done"],
+      duration: $hoursByTask[taskId],
+    });
+    const [updatedTask] = await $agent.read("project.task", [taskId]);
+    let updatedParentTask;
+    if (task.parentId) {
+      [updatedParentTask] = await $agent.read("project.task", [task.parentId]);
+    }
+    upstream.update(($upstream) => {
+      $upstream.tasks[taskId] = updatedTask;
+      if (updatedParentTask) {
+        $upstream.tasks[updatedParentTask.id] = updatedParentTask;
+      }
+      return $upstream;
+    });
+  }
+);
+
+function calculateHours(start, end) {
+  return start && end ? (end - start) / (60 * 60 * 1000) : 0;
+}
+
 export const createDuration = derived(
-  [agent, tasks],
-  ([$agent, $tasks]) => async (taskId, start, end) => {
+  [agent, tasks, hoursByTask],
+  ([$agent, $tasks, $hoursByTask]) => async (taskId, start, end) => {
     const duration = {
       task: taskId,
-      start,
-      end,
+      start: utc(start),
+      end: utc(end),
     };
-
+    const hours = $hoursByTask[taskId] + calculateHours(start, end);
+    const durationId = await $agent.create("project.task.duration", duration);
+    const [newDuration] = await $agent.read("project.task.duration", [
+      durationId,
+    ]);
     // If the task is in backlog, put it in progress.
     const task = $tasks[taskId];
     if (task.stage === "backlog") {
       await $agent.update("project.task", taskId, {
         stage_id: STAGES_TO_ID["progress"],
+        duration: hours,
+      });
+    } else {
+      await $agent.update("project.task", taskId, {
+        duration: hours,
       });
     }
-
-    const durationId = await $agent.create("project.task.duration", duration);
     const [updatedTask] = await $agent.read("project.task", [taskId]);
-    const [newDuration] = await $agent.read("project.task.duration", [
-      durationId,
-    ]);
     upstream.update(($upstream) => {
       $upstream.tasks[taskId] = updatedTask;
       $upstream.durations[durationId] = newDuration;
@@ -253,68 +298,95 @@ export const createDuration = derived(
 );
 
 export const startDuration = derived(
-  [agent, tasks],
-  ([$agent, $tasks]) => async (taskId) => {
+  [agent, tasks, hoursByTask],
+  ([$agent, $tasks, $hoursByTask]) => async (taskId) => {
     const duration = {
       task: taskId,
       start: utc(),
     };
-
-    // If the task is in backlog or done, put it in progress.
+    const hours = $hoursByTask[taskId];
+    const durationId = await $agent.create("project.task.duration", duration);
+    const [newDuration] = await $agent.read("project.task.duration", [
+      durationId,
+    ]);
+    let updatedParentTask;
+    // If the task is in backlog, put it in progress.
     const task = $tasks[taskId];
     if (task.stage === "backlog" || task.stage === "done") {
       await $agent.update("project.task", taskId, {
         stage_id: STAGES_TO_ID["progress"],
+        duration: hours,
+      });
+      if (task.parentId) {
+        [updatedParentTask] = await $agent.read("project.task", [
+          task.parentId,
+        ]);
+      }
+    } else {
+      await $agent.update("project.task", taskId, {
+        duration: hours,
       });
     }
-
-    const durationId = await $agent.create("project.task.duration", duration);
     const [updatedTask] = await $agent.read("project.task", [taskId]);
-    const [newDuration] = await $agent.read("project.task.duration", [
-      durationId,
-    ]);
     upstream.update(($upstream) => {
       $upstream.tasks[taskId] = updatedTask;
+      if (updatedParentTask) {
+        $upstream.tasks[updatedParentTask.id] = updatedParentTask;
+      }
       $upstream.durations[durationId] = newDuration;
       return $upstream;
     });
   }
 );
 
-export const stopDuration = derived(agent, ($agent) => async (durationId) => {
-  const duration = {
-    end: utc(),
-  };
-  const result = await $agent.update(
-    "project.task.duration",
-    durationId,
-    duration
-  );
-  const [updatedDuration] = await $agent.read("project.task.duration", [
-    durationId,
-  ]);
-  upstream.update(($upstream) => {
-    $upstream.durations[durationId] = updatedDuration;
-    return $upstream;
-  });
-});
+export const stopDuration = derived(
+  [agent, durations, hoursByTask],
+  ([$agent, $durations, $hoursByTask]) => async (durationId) => {
+    const now = new Date();
+    const duration = $durations[durationId];
+    const taskId = duration.taskId;
+    const hours = $hoursByTask[taskId] + calculateHours(duration.start, now);
+    const result = await $agent.update("project.task.duration", durationId, {
+      end: utc(now),
+    });
+    const [updatedDuration] = await $agent.read("project.task.duration", [
+      durationId,
+    ]);
+
+    await $agent.update("project.task", taskId, {
+      duration: hours,
+    });
+    const [updatedTask] = await $agent.read("project.task", [taskId]);
+
+    upstream.update(($upstream) => {
+      $upstream.tasks[taskId] = updatedTask;
+      $upstream.durations[durationId] = updatedDuration;
+      return $upstream;
+    });
+  }
+);
 
 export const removeDuration = derived(
-  [agent, tasks, durations],
-  ([$agent, $tasks, $durations]) => async (durationId) => {
-    const taskId = $durations[durationId].taskId;
+  [agent, tasks, durations, hoursByTask],
+  ([$agent, $tasks, $durations, $hoursByTask]) => async (durationId) => {
+    const duration = $durations[durationId];
+    const taskId = duration.taskId;
     await $agent.remove("project.task.duration", [durationId]);
-
+    const hours =
+      $hoursByTask[taskId] - calculateHours(duration.start, duration.end);
     // If the task has no durations, then move it to backlog.
     const task = $tasks[taskId];
     if (task.durations.length === 1) {
       await $agent.update("project.task", taskId, {
         stage_id: STAGES_TO_ID["backlog"],
+        duration: hours,
+      });
+    } else {
+      await $agent.update("project.task", taskId, {
+        duration: hours,
       });
     }
-
     const [updatedTask] = await $agent.read("project.task", [taskId]);
-
     upstream.update(($upstream) => {
       const duration = $upstream.durations[durationId];
       $upstream.tasks[taskId] = updatedTask;
@@ -325,16 +397,27 @@ export const removeDuration = derived(
 );
 
 export const updateDuration = derived(
-  agent,
-  ($agent) => async (durationId, start, end) => {
+  [agent, durations, hoursByTask],
+  ([$agent, $durations, $hoursByTask]) => async (durationId, start, end) => {
+    const duration = $durations[durationId];
+    const taskId = duration.taskId;
+    const hours =
+      $hoursByTask[taskId] -
+      calculateHours(duration.start, duration.end) +
+      calculateHours(start, end);
     const result = await $agent.update("project.task.duration", durationId, {
-      start,
-      end,
+      start: utc(start),
+      end: utc(end),
     });
     const [updatedDuration] = await $agent.read("project.task.duration", [
       durationId,
     ]);
+    await $agent.update("project.task", taskId, {
+      duration: hours,
+    });
+    const [updatedTask] = await $agent.read("project.task", [taskId]);
     upstream.update(($upstream) => {
+      $upstream.tasks[taskId] = updatedTask;
       $upstream.durations[durationId] = updatedDuration;
       return $upstream;
     });
