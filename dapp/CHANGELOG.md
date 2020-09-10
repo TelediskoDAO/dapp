@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add bar showing the active task. The bar hides when scrolling.
 - Add button to mark task as "done".
+- Cachebusting for cache preload.
+- Notification to update app when new version is out.
 
 ### Changed
 

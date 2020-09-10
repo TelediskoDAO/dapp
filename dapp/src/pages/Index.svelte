@@ -1,6 +1,9 @@
 <script>
+  import CONFIG from "src/config";
   import { user } from "src/state/odoo";
   import { platform } from "src/state/runtime";
+
+  const buildDate = new Date(CONFIG.date).toISOString().substr(0, 19).replace('T', ' ');
 </script>
 
 <style type="text/scss">
@@ -28,6 +31,9 @@
     }
   }
 
+  small {
+    color: #ccc;
+  }
 </style>
 
 <section>
@@ -87,4 +93,9 @@
     <li>Create and vote on polls created by other contributors.</li>
     <li>Sell your tokens.</li>
   </ul>
+</section>
+
+<section>
+  <small>Software version: {CONFIG.version}</small><br>
+  <small>Build date: {buildDate}</small>
 </section>

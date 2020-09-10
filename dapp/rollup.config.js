@@ -13,10 +13,13 @@ import scss from "rollup-plugin-scss";
 import serve from "rollup-plugin-serve";
 import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
+import packageJson from "./package.json";
 
 const production = !process.env.ROLLUP_WATCH;
 const dedupe = (importee) =>
   importee === "svelte" || importee.startsWith("svelte/");
+
+const now = Date.now();
 
 function setAlias() {
   const projectRootDir = path.resolve(__dirname);
@@ -43,13 +46,11 @@ export default [
       replace({
         __buildEnv__: JSON.stringify({
           production,
-          date: Date.now(),
+          date: now,
+          version: production ? packageJson.version : "dev",
         }),
       }),
       copy({ targets: [{ src: "public/*", dest: "build" }] }),
-      copy({
-        targets: [{ src: "service-workers/*", dest: "build/service-workers" }],
-      }),
       svelte({
         dev: !production,
         preprocess: sveltePreprocess(),
@@ -94,7 +95,8 @@ export default [
       replace({
         __buildEnv__: JSON.stringify({
           production,
-          date: Date.now(),
+          date: now,
+          version: production ? packageJson.version : "dev",
         }),
       }),
       setAlias(),
