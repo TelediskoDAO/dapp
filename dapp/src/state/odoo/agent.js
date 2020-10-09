@@ -13,6 +13,7 @@ export const agent = derived(
   async ([$username, $password], set) => {
     if ($username && $password) {
       const s = await session(URL, DB, $username, $password);
+      window.odooAgent = s;
       set(s);
     } else {
       set(null);

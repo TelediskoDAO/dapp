@@ -13,6 +13,7 @@
   import PageIndex from "./pages/Index.svelte";
   import PageConnectOdoo from "./pages/connect/odoo/Index.svelte";
   import PageTaskIndex from "./pages/task/Index.svelte";
+  import PageTimeline from "./pages/timeline/Index.svelte";
 
   import Home from "./Home.svelte";
   import NotFound from "./NotFound.svelte";
@@ -21,6 +22,7 @@
     "/": PageIndex,
     "/tasks": PageTaskIndex,
     "/tasks/:stage": PageTaskIndex,
+    "/timeline": PageTimeline,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
@@ -58,7 +60,7 @@
 <TopAppBar />
 
 <main>
-  <Router {routes} />
+  <Router {routes} restoreScrollState={true} />
 </main>
 
 <CurrentTask />

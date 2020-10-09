@@ -1,7 +1,14 @@
 import { derived } from "svelte/store";
 import { utc } from "src/utils";
-import { tasks, hoursByTask, durations } from "./objects";
+import { upstream, tasks, hoursByTask, durations } from "./objects";
 import { agent } from "../agent";
+
+const STAGES_TO_ID = {
+  backlog: 1,
+  progress: 5,
+  done: 2,
+  approved: 3,
+};
 
 export const markAsDone = derived(
   [agent, tasks, hoursByTask],

@@ -77,6 +77,12 @@
       <a class="button medium" href="#/tasks">Track Time</a>
     </div>
 
+    <div>
+      <h3><i>calendar_today</i> Timeline</h3>
+      <p>Display where you spend time.</p>
+      <a class="button medium" href="#/timeline">Timeline</a>
+    </div>
+
     <div class:disabled={!$user}>
       <h3><i>settings</i> Settings</h3>
       <p>Details about your account.</p>

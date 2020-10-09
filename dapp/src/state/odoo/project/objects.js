@@ -4,24 +4,7 @@ import { derivable } from "src/state/utils";
 import { group, map } from "src/f";
 import { agent } from "../agent";
 import { uid } from "../user";
-
-function parseDate(s) {
-  return s ? new Date(s.replace(" ", "T") + "Z") : false;
-}
-
-const STAGES = {
-  1: "backlog",
-  5: "progress",
-  2: "done",
-  3: "approved",
-};
-
-const STAGES_TO_ID = {
-  backlog: 1,
-  progress: 5,
-  done: 2,
-  approved: 3,
-};
+import { parseTask, parseDuration } from "./parsers";
 
 export const upstream = derivable(
   [agent, uid],
@@ -45,34 +28,11 @@ export const upstream = derivable(
 
 const data = derived(upstream, ($upstream, set) => set($upstream));
 
-export const tasks = derived(
-  data,
-  ($data) =>
-    map($data.tasks, (task) => ({
-      id: task.id,
-      name: task.name,
-      description: task.description,
-      isSubtask: task.is_subtask,
-      subtaskIds: task.subtask_ids,
-      hasSubtasks: task.subtask_ids.length > 0,
-      hasDurations: task.duration_entry.length > 0,
-      parentId: task.task_id ? task.task_id[0] : null,
-      durations: task.duration_entry,
-      stage: STAGES[task.stage_id[0]],
-    })),
-  {}
-);
+export const tasks = derived(data, ($data) => map($data.tasks, parseTask), {});
 
 export const durations = derived(
   data,
-  ($data) =>
-    map($data.durations, (duration) => ({
-      id: duration.id,
-      taskId: duration.task[0],
-      start: parseDate(duration.start),
-      end: parseDate(duration.end),
-      hours: duration.value,
-    })),
+  ($data) => map($data.durations, parseDuration),
   {}
 );
 
