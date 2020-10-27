@@ -1,9 +1,6 @@
 <script>
   import Activity from "./Activity.svelte";
   import { activityPerDay } from "src/state/odoo/project";
-
-  $: console.log($activityPerDay);
-
 </script>
 
 <style>

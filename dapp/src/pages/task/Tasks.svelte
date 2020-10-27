@@ -16,7 +16,6 @@
     ]
   }
 
-  console.log('list is', list);
   $: sorted = singleTasksFirst(list);
 
 	afterUpdate(() => {
