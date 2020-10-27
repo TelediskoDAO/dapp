@@ -10,17 +10,25 @@ function parseDate(s) {
 }
 
 export function parseTask(task) {
+  const stage = STAGES[task.stage_id[0]];
+  const stages = new Set([stage]);
+  if (stage === "backlog" || stage === "progress") {
+    stages.add("todo");
+  }
   return {
     id: task.id,
     name: task.name,
     description: task.description,
+    isParentTask: task.subtask_ids.length > 0 && !task.is_subtask,
+    isSingleTask: task.subtask_ids.length === 0 && !task.is_subtask,
     isSubtask: task.is_subtask,
     subtaskIds: task.subtask_ids,
     hasSubtasks: task.subtask_ids.length > 0,
     hasDurations: task.duration_entry.length > 0,
     parentId: task.task_id ? task.task_id[0] : null,
     durations: task.duration_entry,
-    stage: STAGES[task.stage_id[0]],
+    stage,
+    stages,
   };
 }
 

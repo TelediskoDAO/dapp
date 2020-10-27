@@ -28,7 +28,18 @@ export const upstream = derivable(
 
 const data = derived(upstream, ($upstream, set) => set($upstream));
 
-export const tasks = derived(data, ($data) => map($data.tasks, parseTask), {});
+export const tasks = derived(
+  data,
+  ($data) => {
+    const parsed = map($data.tasks, parseTask);
+    Object.values(parsed).forEach(
+      ({ parentId, stage }) =>
+        parentId !== null && parsed[parentId].stages.add(stage)
+    );
+    return parsed;
+  },
+  {}
+);
 
 export const durations = derived(
   data,
@@ -42,31 +53,24 @@ export const taskList = derived(
   []
 );
 
-export const tasksBacklog = derived(
+export const tasksToDo = derived(
   taskList,
   ($taskList) =>
-    Object.values($taskList).filter(({ stage }) => stage === "backlog"),
-  []
-);
-
-export const tasksProgress = derived(
-  taskList,
-  ($taskList) =>
-    Object.values($taskList).filter(({ stage }) => stage === "progress"),
+    Object.values($taskList).filter(({ stages }) => stages.has("todo")),
   []
 );
 
 export const tasksDone = derived(
   taskList,
   ($taskList) =>
-    Object.values($taskList).filter(({ stage }) => stage === "done"),
+    Object.values($taskList).filter(({ stages }) => stages.has("done")),
   []
 );
 
 export const tasksApproved = derived(
   taskList,
   ($taskList) =>
-    Object.values($taskList).filter(({ stage }) => stage === "approved"),
+    Object.values($taskList).filter(({ stages }) => stages.has("approved")),
   []
 );
 

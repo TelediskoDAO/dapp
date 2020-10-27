@@ -1,6 +1,6 @@
 <script>
   import active from 'svelte-spa-router/active'
-  import { tasksToFix, tasksBacklog, tasksProgress, tasksDone, tasksApproved } from "src/state/odoo";
+  import { tasksToFix, tasksToDo, tasksDone, tasksApproved } from "src/state/odoo";
   import Tasks from "./Tasks.svelte";
   export let params = {};
 </script>
@@ -68,15 +68,12 @@
 
   {#if params.stage === "done"}
     <h1>Tasks Done</h1>
-    <Tasks list={$tasksDone} />
+    <Tasks stage="done" list={$tasksDone} />
   {:else if params.stage === "approved"}
     <h1>Tasks Approved</h1>
-    <Tasks list={$tasksApproved} />
+    <Tasks stage="approved" list={$tasksApproved} />
   {:else}
     <h1>Tasks To Do</h1>
-    <Tasks list={$tasksProgress} />
-    {#if $tasksBacklog.length}
-      <Tasks list={$tasksBacklog} />
-    {/if}
+    <Tasks stage="todo" list={$tasksToDo} />
   {/if}
 </section>

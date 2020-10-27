@@ -1,10 +1,11 @@
 <script>
 	import { slide } from 'svelte/transition';
-  import { tasks, currentTask, currentDuration, currentHours, currentHoursTotal, durations, tasksBacklog, hoursByTask, startDuration, stopDuration, markAsDone } from "src/state/odoo";
+  import { tasks, currentTask, currentDuration, currentHours, currentHoursTotal, durations, hoursByTask, startDuration, stopDuration, markAsDone } from "src/state/odoo";
   import { toPrettyDuration } from "src/utils";
   import Durations from "./Durations.svelte";
 
   export let task;
+  export let stage = null;
   export let openDetails = false;
 
   let createTimeEntry = false;
@@ -66,11 +67,14 @@
 */
 
 
+  button.start,
+  button.stop {
+    border-radius: 100%;
+  }
+
   .task {
-    //border-radius: var(--size-xs);
     background: #ffffff;
     transition: all 1s;
-    padding: var(--size-s);
     &.hasSubtasks {
       padding: 0;
     }
@@ -79,15 +83,28 @@
   }
 
   .tracking {
-    margin: -10px;
-    border-radius: var(--size-xs);
-    box-shadow: 0px 0px 20px 3px rgba(0, 0, 0, 0.3);
-    position: relative;
-    @include border;
+    .stop {
+      background-color: var(--color-blue);
+    }
   }
 
   h3 {
     margin: 0;
+    font-size: 1rem;
+    flex-grow: 1;
+    font-weight: normal;
+  }
+
+  .isSingleTask {
+    margin-bottom: var(--size-s);
+  }
+
+  .isParentTask {
+    margin-top: var(--size-m);
+  }
+
+  .isParentTask > .header h3 {
+    font-weight: bold;
   }
 
   .header {
@@ -105,34 +122,32 @@
   }
 
   .hasSubtasks {
-    @include border-bottom;
     .header {
-      padding: var(--size-s);
-    }
-    .body {
-      padding: 0;
-      margin: 0;
+      margin-bottom: var(--size-s);
     }
   }
 
   .isSubtask {
-    padding: var(--size-s);
+    //padding: var(--size-s);
     .header {
       padding: 0;
-    }
-    .body {
-      padding: 0;
+
     }
     p {
-      margin-bottom: 0;
+      margin: 0;
     }
   }
 
-  .header button {
-    order: -1;
-    margin-right: var(--size-s);
-    padding: var(--size-s);
-    display: block;
+  .header {
+    .start, .stop{
+      order: -1;
+      margin-right: var(--size-s);
+      //padding: var(--size-s);
+      display: block;
+    }
+    .details {
+      border: none;
+    }
   }
 
   ul {
@@ -146,33 +161,39 @@
   }
 
   .task:not(.tracking):first-child {
-    @include border-top;
   }
 
   .task {
-    @include border-bottom;
   }
 
   .task:not(.tracking):last-child {
-    border-bottom: none;
-  }
-
-  .task--stage-done h3 {
-    text-decoration: line-through;
   }
 
 </style>
 
+{#if task.stages.has(stage)}
 <div
   id="task:{task.id}"
   class="task task--stage-{task.stage}"
   class:tracking
   class:hasSubtasks={task.hasSubtasks}
-  class:isSubtask={task.isSubtask}>
+  class:isSubtask={task.isSubtask}
+  class:isParentTask={task.isParentTask}
+  class:isSingleTask={task.isSingleTask}>
   <div class="header">
     <h3>
       {task.name}
     </h3>
+
+    {#if !task.hasSubtasks}
+    <button class="details" on:click={() => {openDetails = !openDetails}}>
+      {#if openDetails}
+        <i>unfold_less</i>
+      {:else}
+        <i>unfold_more</i>
+      {/if}
+    </button>
+    {/if}
 
     {#if !task.hasSubtasks && task.stage !== "done" && task.stage !== "approved"}
       {#if tracking}
@@ -180,7 +201,7 @@
         <i>stop</i>
       </button>
       {:else}
-      <button on:click={handleStart}>
+      <button class="start" on:click={handleStart}>
         <i>play_arrow</i>
       </button>
       {/if}
@@ -193,30 +214,12 @@
       {#each task.subtaskIds as subtaskId}
         {#if $tasks[subtaskId]}
           <li>
-            <svelte:self task={$tasks[subtaskId]} />
+            <svelte:self task={$tasks[subtaskId]} {stage} />
           </li>
         {/if}
       {/each}
       </ul>
     {:else}
-      <p>
-        {#if tracking}
-          Current session: {toPrettyDuration($currentHoursProxy)}. <br/>
-          Total time: {toPrettyDuration($currentHoursTotalProxy)}.
-        {:else}
-          Total time: {toPrettyDuration($hoursByTask[task.id])}.
-        {/if}
-
-        <button on:click={() => {openDetails = !openDetails}}>
-          {#if openDetails}
-            <i>unfold_less</i>
-          {:else}
-            <i>unfold_more</i>
-          {/if}
-          Details
-        </button>
-      </p>
-
       {#if openDetails}
         <!--h4>Description</h4>
         <div>
@@ -224,6 +227,10 @@
         </div-->
 
         <div transition:slide={{duration: 200}}>
+
+          <p>
+            Total time: {toPrettyDuration($hoursByTask[task.id])}.
+          </p>
 
           <div class="buttons">
             {#if task.stage === "done"}
@@ -264,3 +271,4 @@
     {/if}
   </div>
 </div>
+{/if}

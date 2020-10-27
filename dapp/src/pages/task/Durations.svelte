@@ -22,8 +22,9 @@
 
 <style type="text/scss">
   table {
-    margin-top: var(--size-m);
+    margin-top: var(--size-s);
     width: 100%;
+    padding-bottom: var(--size-m);
   }
 
   .new-entry{
@@ -37,8 +38,8 @@
 </table>
 {/if}
 
-{#if durations.length}
 <table>
+{#if durations.length}
   <thead>
     <tr>
       <th>Duration</th>
@@ -54,9 +55,5 @@
     <Duration {editable} duration={duration} />
   {/each}
   </tbody>
+{/if}
 </table>
-{/if}
-
-{#if !durations.length}
-  <p>The task has no time trackings. You need to have at least one time entry to mark the task as done. You can either hit the button "<i>play_arrow</i>" to start tracking time, or create a new entry.</p>
-{/if}
