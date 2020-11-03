@@ -27,6 +27,10 @@ export function parseTask(task) {
     hasDurations: task.duration_entry.length > 0,
     parentId: task.task_id ? task.task_id[0] : null,
     durations: task.duration_entry,
+    projectId: task.project_id[0],
+    projectName: task.project_id[1],
+    lastUpdate: parseDate(task.write_date),
+    lastActivity: 0,
     stage,
     stages,
   };

@@ -10,6 +10,7 @@ export const clock = writable(Date.now());
       clearInterval(intervalId);
       intervalId = undefined;
     } else if (visibility === "visible" && intervalId === undefined) {
+      clock.set(Date.now());
       intervalId = setInterval(() => clock.set(Date.now()), 10000);
     }
   }

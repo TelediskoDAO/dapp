@@ -6,6 +6,7 @@ import { agent } from "../agent";
 import { uid } from "../user";
 import { parseTask, parseDuration } from "./parsers";
 
+// Load data from Odoo
 export const upstream = derivable(
   [agent, uid],
   async ([$agent, $uid], set) => {
@@ -26,26 +27,66 @@ export const upstream = derivable(
   { tasks: {}, durations: {} }
 );
 
-const data = derived(upstream, ($upstream, set) => set($upstream));
+// Process data and create models for the app.
+const data = derived(upstream, ($upstream) => {
+  const tasks = map($upstream.tasks, parseTask);
+  const durations = map($upstream.durations, parseDuration);
+  const now = new Date();
 
-export const tasks = derived(
-  data,
-  ($data) => {
-    const parsed = map($data.tasks, parseTask);
-    Object.values(parsed).forEach(
-      ({ parentId, stage }) =>
-        parentId !== null && parsed[parentId].stages.add(stage)
+  Object.values(durations).forEach(({ taskId, end }) => {
+    tasks[taskId].lastActivity = Math.max(
+      tasks[taskId].lastActivity,
+      end === false ? now : end
     );
-    return parsed;
-  },
-  {}
-);
+  });
 
-export const durations = derived(
-  data,
-  ($data) => map($data.durations, parseDuration),
-  {}
-);
+  Object.values(tasks).forEach((task) => {
+    // Put all single tasks under a virtual "generic" parent task
+    if (task.isSingleTask) {
+      const virtualTaskId = "project:" + task.projectId;
+      if (!tasks[virtualTaskId]) {
+        tasks[virtualTaskId] = {
+          id: virtualTaskId,
+          name: "Other tasks",
+          isParentTask: true,
+          isSingleTask: false,
+          subtaskIds: [],
+          hasSubtasks: true,
+          hasDurations: false,
+          parentId: null,
+          durations: [],
+          projectId: task.projectId,
+          projectName: task.projectName,
+          stages: new Set(),
+          lastUpdate: 0,
+          lastActivity: 0,
+        };
+      }
+      tasks[virtualTaskId].subtaskIds.push(task.id);
+      task.parentId = virtualTaskId;
+      task.isSingleTask = false;
+      task.isSubtask = true;
+    }
+
+    if (task.parentId !== null) {
+      tasks[task.parentId].stages = new Set([
+        ...task.stages,
+        ...tasks[task.parentId].stages,
+      ]);
+      tasks[task.parentId].lastActivity = new Date(
+        Math.max(tasks[task.parentId].lastActivity, task.lastActivity)
+      );
+    }
+  });
+
+  //console.log(tasks);
+
+  return { tasks, durations };
+});
+
+export const tasks = derived(data, ($data) => $data.tasks, {});
+
+export const durations = derived(data, ($data) => $data.durations, {});
 
 export const taskList = derived(
   tasks,

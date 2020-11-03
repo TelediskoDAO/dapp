@@ -10,9 +10,11 @@
 
   let createTimeEntry = false;
 
+  $: subtasks = task.subtaskIds.map(id => $tasks[id]).filter(task => task).sort((a, b) => a.id - b.id)
   $: tracking = $currentTask && $currentTask.id === task.id;
   $: currentHoursProxy = tracking ? currentHours : null;
   $: currentHoursTotalProxy = tracking ? currentHoursTotal : null;
+
 
   async function handleStart() {
     if ($currentTask === undefined) {
@@ -44,28 +46,6 @@
 
 <style type="text/scss">
   @import 'src/styles/index';
-
-/*
-  @keyframes pulse-red {
-    0% {
-      box-shadow: 0 0 4px 0 rgba(255, 82, 82, 0.7);
-    }
-
-    70% {
-      box-shadow: 0 0 4px 10px rgba(255, 82, 82, 0);
-    }
-
-    100% {
-      box-shadow: 0 0 4px 0 rgba(255, 82, 82, 0);
-    }
-  }
-
-  button.stop {
-    box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
-    animation: pulse-red 2s infinite;
-  }
-*/
-
 
   button.start,
   button.stop {
@@ -100,7 +80,7 @@
   }
 
   .isParentTask {
-    margin-top: var(--size-m);
+    margin-bottom: var(--size-m);
   }
 
   .isParentTask > .header h3 {
@@ -171,6 +151,8 @@
 
 </style>
 
+<!--{task.id}, {task.name}, {task.lastUpdate}, {Array.from(task.stages).toString()}-->
+
 {#if task.stages.has(stage)}
 <div
   id="task:{task.id}"
@@ -211,12 +193,10 @@
   <div class="body" class:isSubtask={task.isSubtask}>
     {#if task.hasSubtasks}
       <ul>
-      {#each task.subtaskIds as subtaskId}
-        {#if $tasks[subtaskId]}
+      {#each subtasks as subtask}
           <li>
-            <svelte:self task={$tasks[subtaskId]} {stage} />
+            <svelte:self task={subtask} {stage} />
           </li>
-        {/if}
       {/each}
       </ul>
     {:else}
