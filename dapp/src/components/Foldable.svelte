@@ -3,7 +3,8 @@
   export let showOverride = null;
   export let show = false;
 
-  const storageKey = key !== null ? `widget:foldable:show:${key}` : null;
+  const storageKey = null;
+  //const storageKey = key !== null ? `widget:foldable:show:${key}` : null;
 
   if(storageKey) {
     const previousValue = JSON.parse(localStorage.getItem(storageKey));

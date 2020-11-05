@@ -10,19 +10,12 @@
   export let stage = null;
   export let openDetails = false;
 
-  //function singleTasksFirst(list) {
-  //  return [
-  //    ...list.filter(task => !task.hasSubtasks),
-  //    ...list.filter(task => task.hasSubtasks),
-  //  ]
-  //}
-
   $: sortedList = list.sort((a, b) => a.sequence - b.sequence);
 
 	afterUpdate(() => {
     if ($currentTask && scrollToCurrent) {
       const elem = document.getElementById("task:" + $currentTask.id);
-      elem && elem.scrollIntoView({behavior: "smooth"});
+      elem && window.setTimeout(() => elem.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'center'}), 0);
       replace("#/tasks");
     }
 	});
@@ -64,7 +57,7 @@
   <Foldable
     key={["project", stage, project.id].join(":")}
     show={false}
-    showOverride={project.isTracking ? true : null} >
+    showOverride={project.isTracking && stage === "todo" ? true : null} >
     <div slot="header" class="header" let:visible>
       <h2>{project.name}</h2>
       <button>
