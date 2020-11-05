@@ -2,15 +2,13 @@
   import { parse } from 'qs';
   import { afterUpdate } from 'svelte';
   import { replace, querystring } from 'svelte-spa-router';
-  import { tasks, durations, hoursByTask, startDuration, stopDuration, removeDuration, currentTask } from "src/state/odoo";
+  import { projects, tasks, durations, hoursByTask, startDuration, stopDuration, removeDuration, currentTask } from "src/state/odoo";
   import Task from "./Task.svelte";
   import Foldable from "src/components/Foldable.svelte";
 
   export let list;
   export let stage = null;
   export let openDetails = false;
-
-  let projects = [];
 
   //function singleTasksFirst(list) {
   //  return [
@@ -19,27 +17,7 @@
   //  ]
   //}
 
-  $: {
-    const objects = list.reduce((projects, task) => {
-      if(!projects[task.projectId]) {
-        projects[task.projectId] = {
-          id: task.projectId,
-          name: task.projectName,
-          tasks: []
-        }
-      }
-      projects[task.projectId].tasks.push(task);
-      return projects;
-    }, {});
-
-    Object.values(objects).forEach(project => {
-      //project.tasks = singleTasksFirst(project.tasks);
-      project.tasks.sort((a, b) => b.lastActivity - a.lastActivity);
-      project.lastActivity = project.tasks.reduce((acc, curr) => Math.max(acc, curr.lastActivity), 0);
-    });
-    projects = Object.values(objects);
-    projects.sort((a, b) => b.lastActivity - a.lastActivity);
-  }
+  $: sortedList = list.sort((a, b) => a.sequence - b.sequence);
 
 	afterUpdate(() => {
     if ($currentTask && scrollToCurrent) {
@@ -82,8 +60,11 @@
   }
 </style>
 
-{#each projects as project}
-  <Foldable key={["project", stage, project.id].join(":")}>
+{#each sortedList as project}
+  <Foldable
+    key={["project", stage, project.id].join(":")}
+    show={false}
+    showOverride={project.isTracking ? true : null} >
     <div slot="header" class="header" let:visible>
       <h2>{project.name}</h2>
       <button>
@@ -96,12 +77,14 @@
     </div>
 
     <div slot="body">
-      {#if project.tasks.length}
+      {#if project.taskIds.length}
       <ul>
-        {#each project.tasks as task}
+        {#each project.taskIds as taskId}
+        {#if $tasks[taskId] && $tasks[taskId].isParentTask}
         <li>
-          <Task {stage} {task} {openDetails} />
+          <Task {stage} task={$tasks[taskId]} {openDetails} />
         </li>
+        {/if}
         {/each}
       </ul>
       {:else}

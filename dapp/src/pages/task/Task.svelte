@@ -10,7 +10,7 @@
 
   let createTimeEntry = false;
 
-  $: subtasks = task.subtaskIds.map(id => $tasks[id]).filter(task => task).sort((a, b) => a.id - b.id)
+  $: subtasks = task.subtaskIds.map(id => $tasks[id]).filter(task => task);
   $: tracking = $currentTask && $currentTask.id === task.id;
   $: currentHoursProxy = tracking ? currentHours : null;
   $: currentHoursTotalProxy = tracking ? currentHoursTotal : null;

@@ -4,7 +4,7 @@ import { derivable } from "src/state/utils";
 import { group, map } from "src/f";
 import { agent } from "../agent";
 import { uid } from "../user";
-import { parseTask, parseDuration } from "./parsers";
+import { parseTask, parseDuration, parseProject } from "./parsers";
 
 // Load data from Odoo
 export const upstream = derivable(
@@ -21,23 +21,35 @@ export const upstream = derivable(
       const durations = group(
         await $agent.read("project.task.duration", durationIds)
       );
-      set({ tasks, durations });
+      const projectIds = Object.values(tasks).reduce(
+        (acc, curr) => acc.add(curr.project_id[0]),
+        new Set()
+      );
+      const projects = group(
+        await $agent.read("project.project", Array.from(projectIds))
+      );
+      set({ tasks, durations, projects });
     }
   },
-  { tasks: {}, durations: {} }
+  { tasks: {}, durations: {}, projcets: {} }
 );
 
 // Process data and create models for the app.
 const data = derived(upstream, ($upstream) => {
-  const tasks = map($upstream.tasks, parseTask);
-  const durations = map($upstream.durations, parseDuration);
   const now = new Date();
 
+  const tasks = map($upstream.tasks, parseTask);
+  const durations = map($upstream.durations, parseDuration);
+  const projects = map($upstream.projects, parseProject);
+
   Object.values(durations).forEach(({ taskId, end }) => {
-    tasks[taskId].lastActivity = Math.max(
-      tasks[taskId].lastActivity,
-      end === false ? now : end
-    );
+    const task = tasks[taskId];
+    const project = projects[task.projectId];
+    task.lastActivity = Math.max(task.lastActivity, end === false ? now : end);
+    if (end === false) {
+      task.isTracking = true;
+      project.isTracking = true;
+    }
   });
 
   Object.values(tasks).forEach((task) => {
@@ -66,6 +78,9 @@ const data = derived(upstream, ($upstream) => {
       task.parentId = virtualTaskId;
       task.isSingleTask = false;
       task.isSubtask = true;
+      if (!projects[task.projectId].taskIds.includes(virtualTaskId)) {
+        projects[task.projectId].taskIds.unshift(virtualTaskId);
+      }
     }
 
     if (task.parentId !== null) {
@@ -77,20 +92,45 @@ const data = derived(upstream, ($upstream) => {
         Math.max(tasks[task.parentId].lastActivity, task.lastActivity)
       );
     }
+    projects[task.projectId].stages = new Set([
+      ...task.stages,
+      ...projects[task.projectId].stages,
+    ]);
   });
 
-  //console.log(tasks);
-
-  return { tasks, durations };
+  return { tasks, durations, projects };
 });
 
 export const tasks = derived(data, ($data) => $data.tasks, {});
 
 export const durations = derived(data, ($data) => $data.durations, {});
 
+export const projects = derived(data, ($data) => $data.projects, {});
+
 export const taskList = derived(
   tasks,
   ($tasks) => Object.values($tasks).filter(({ isSubtask }) => !isSubtask),
+  []
+);
+
+export const projectsToDo = derived(
+  projects,
+  ($projects) =>
+    Object.values($projects).filter(({ stages }) => stages.has("todo")),
+  []
+);
+
+export const projectsDone = derived(
+  projects,
+  ($projects) =>
+    Object.values($projects).filter(({ stages }) => stages.has("done")),
+  []
+);
+
+export const projectsApproved = derived(
+  projects,
+  ($projects) =>
+    Object.values($projects).filter(({ stages }) => stages.has("approved")),
   []
 );
 

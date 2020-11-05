@@ -19,6 +19,7 @@ export function parseTask(task) {
     id: task.id,
     name: task.name,
     description: task.description,
+    isTracking: false,
     isParentTask: task.subtask_ids.length > 0 && !task.is_subtask,
     isSingleTask: task.subtask_ids.length === 0 && !task.is_subtask,
     isSubtask: task.is_subtask,
@@ -43,5 +44,16 @@ export function parseDuration(duration) {
     start: parseDate(duration.start),
     end: parseDate(duration.end),
     hours: duration.value,
+  };
+}
+
+export function parseProject(project) {
+  return {
+    id: project.id,
+    name: project.name,
+    sequence: project.sequence,
+    taskIds: project.task_ids,
+    isTracking: false,
+    stages: new Set(),
   };
 }

@@ -1,7 +1,7 @@
 <script>
   export let key = null;
   export let showOverride = null;
-  export let show = true;
+  export let show = false;
 
   const storageKey = key !== null ? `widget:foldable:show:${key}` : null;
 
