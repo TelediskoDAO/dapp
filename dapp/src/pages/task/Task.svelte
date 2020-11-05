@@ -9,6 +9,7 @@
   export let openDetails = false;
 
   let createTimeEntry = false;
+  let working = false;
 
   $: subtasks = task.subtaskIds.map(id => $tasks[id]).filter(task => task);
   $: tracking = $currentTask && $currentTask.id === task.id;
@@ -17,6 +18,7 @@
 
 
   async function handleStart() {
+    working = true;
     if ($currentTask === undefined) {
       await $startDuration(task.id);
     } else {
@@ -26,10 +28,13 @@
         await $startDuration(task.id);
       }
     }
+    working = false;
   }
 
   async function handleStop() {
-      await $stopDuration($currentDuration.id);
+    working = true;
+    await $stopDuration($currentDuration.id);
+    working = false;
   }
 
   async function handleMarkAsDone() {
@@ -179,11 +184,11 @@
 
     {#if !task.hasSubtasks && task.stage !== "done" && task.stage !== "approved"}
       {#if tracking}
-      <button class="stop" on:click={handleStop}>
+      <button class="stop" disabled={working} on:click={handleStop}>
         <i>stop</i>
       </button>
       {:else}
-      <button class="start" on:click={handleStart}>
+      <button class="start" disabled={working} on:click={handleStart}>
         <i>play_arrow</i>
       </button>
       {/if}
@@ -214,7 +219,7 @@
 
           <div class="buttons">
             {#if task.stage === "done"}
-            <button on:click={handleStart}>
+            <button disabled={working} on:click={handleStart}>
               <i>play_arrow</i>
               Track time
             </button>
