@@ -7,7 +7,7 @@ console.log(
   new Date(CONFIG.date)
 );
 
-const cacheName = CONFIG.version;
+const cacheName = CONFIG.version + "." + CONFIG.date;
 const contentToCache = [
   "fonts/material-icons.woff2",
   "images/icons/ios-share.png",
@@ -27,38 +27,39 @@ const contentToCache = [
   "images/splash-750.jpg",
   "bundle.js",
   "components.css",
-  "index.html",
+  "./",
   "manifest.webmanifest",
   "style.css",
 ];
 
-async function addToCache() {
+function addToCache() {
   console.log(`[Service Worker ${cacheName}] Caching app`);
-  const cache = await caches.open(cacheName);
-  await cache.addAll(contentToCache);
-
-  Promise.all(
-    contentToCache.map((url) =>
-      fetch(`${url}?${Math.random()}`).then((response) => {
-        if (!response.ok) {
-          console.error(`[Service Worker ${cacheName}] Cannot fetch`, url);
-          throw Error(`Cannot fetch ${url}`);
-        }
-        return cache.put(url, response);
-      })
+  return caches.open(cacheName).then((cache) =>
+    Promise.all(
+      contentToCache.map((url) =>
+        fetch(`${url}?${CONFIG.date}`).then((response) => {
+          if (!response.ok) {
+            console.error(`[Service Worker ${cacheName}] Cannot fetch`, url);
+            throw Error(`Cannot fetch ${url}`);
+          }
+          return cache.put(url, response);
+        })
+      )
     )
   );
 }
 
 async function retrieve({ request }) {
-  console.log(`[Service Worker ${cacheName}] Fetching resource`, request.url);
   let response = await caches.match(request);
   if (!response) {
+    console.log(`[Service Worker ${cacheName}] Fetch miss`, request.url);
     response = await fetch(request);
     // Don't cache responses for now.
     // const cache = await caches.open(cacheName);
     // console.log("[Service Worker] Caching new resource: " + request.url);
     // cache.put(request, response.clone());
+  } else {
+    console.log(`[Service Worker ${cacheName}] Fetch hit`, request.url);
   }
   return response;
 }
@@ -72,7 +73,9 @@ async function clearCaches() {
 function register() {
   if (CONFIG.production) {
     console.log(`[Service Worker ${cacheName}] Register Listener: install`);
-    self.addEventListener("install", addToCache);
+    self.addEventListener("install", (e) => {
+      e.waitUntil(addToCache());
+    });
 
     console.log(`[Service Worker ${cacheName}] Register Listener: fetch`);
     self.addEventListener("fetch", (e) => {
@@ -86,6 +89,7 @@ function register() {
     });
 
     self.addEventListener("message", function (event) {
+      console.log("[Service Worker] Message:", event);
       if (event.data.action === "skipWaiting") {
         self.skipWaiting();
       }

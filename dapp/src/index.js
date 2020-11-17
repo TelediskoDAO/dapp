@@ -1,5 +1,4 @@
 //import { version } from "../package.json";
-
 import CONFIG from "./config";
 import "src/styles/index.scss";
 import App from "./App.svelte";
@@ -14,19 +13,22 @@ if ("serviceWorker" in navigator) {
       console.log("[Client] update found");
       let newWorker = registration.installing;
       newWorker.addEventListener("statechange", () => {
+        console.log("[Client] State change", newWorker.state);
         if (
           newWorker.state === "installed" &&
           navigator.serviceWorker.controller
         ) {
-          confirm("A new version of the app is available, refresh?") &&
+          if (confirm("A new version of the app is available, refresh?")) {
             newWorker.postMessage({ action: "skipWaiting" });
+          }
         }
       });
     });
   });
 
   let refreshing;
-  navigator.serviceWorker.addEventListener("controllerchange", function () {
+  navigator.serviceWorker.addEventListener("controllerchange", function (e) {
+    console.log("[Client] Controller change", e);
     if (refreshing) return;
     window.location.reload();
     refreshing = true;
