@@ -64,6 +64,7 @@ Fields:
   - If the task is done, then `stage_id: [2, 'Done']`.
   - If the task has been approved by the controller, then `stage_id: [3, 'Approved']`.
 - Durations: `duration_entry: [<duration_id>, ...]`.
+- Tier: `tier: false | [<tier_id>, <tier_name>]`
 
 
 ### 3.1.3 The "duration" model
