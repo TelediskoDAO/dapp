@@ -221,11 +221,11 @@ export const currentHours = derived(
 );
 
 export const currentHoursTotal = derived(
-  [currentTask, currentDuration, hoursByTask],
-  ([$currentTask, $currentDuration, $hoursByTask]) =>
+  [currentTask, currentDuration, hoursByTask, clock],
+  ([$currentTask, $currentDuration, $hoursByTask, $clock]) =>
     $currentTask &&
     $currentDuration &&
-    hoursByTask &&
+    $hoursByTask &&
     $hoursByTask[$currentTask.id] +
       (new Date() - $currentDuration.start) / (60 * 60 * 1000)
 );

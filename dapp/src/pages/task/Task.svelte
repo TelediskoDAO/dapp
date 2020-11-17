@@ -14,8 +14,7 @@
   $: subtasks = task.subtaskIds.map(id => $tasks[id]).filter(task => task);
   $: tracking = $currentTask && $currentTask.id === task.id;
   $: currentHoursProxy = tracking ? currentHours : null;
-  $: currentHoursTotalProxy = tracking ? currentHoursTotal : null;
-
+  $: currentHoursTotalProxy = tracking ? currentHoursTotal : hoursByTask[task.id];
 
   async function handleStart() {
     working = true;
@@ -209,7 +208,7 @@
         <div transition:slide={{duration: 200}}>
 
           <p>
-            <strong>Total time:</strong> {toPrettyDuration($hoursByTask[task.id])}.
+            <strong>Total time:</strong> {toPrettyDuration($currentHoursTotalProxy)}.
             {#if task.tier}
             <strong>Tier:</strong> {task.tier}
             {/if}
