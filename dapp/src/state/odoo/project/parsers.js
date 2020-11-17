@@ -30,6 +30,7 @@ export function parseTask(task) {
     durations: task.duration_entry,
     projectId: task.project_id[0],
     projectName: task.project_id[1],
+    tier: task.tier && task.tier[1],
     lastUpdate: parseDate(task.write_date),
     lastActivity: 0,
     stage,

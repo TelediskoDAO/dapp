@@ -96,14 +96,9 @@
     display: flex;
     align-items: center;
   }
+
   .body {
     padding: 0;
-
-    p {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
   }
 
   .hasSubtasks {
@@ -214,7 +209,10 @@
         <div transition:slide={{duration: 200}}>
 
           <p>
-            Total time: {toPrettyDuration($hoursByTask[task.id])}.
+            <strong>Total time:</strong> {toPrettyDuration($hoursByTask[task.id])}.
+            {#if task.tier}
+            <strong>Tier:</strong> {task.tier}
+            {/if}
           </p>
 
           <div class="buttons">
