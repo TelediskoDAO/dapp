@@ -8,6 +8,7 @@
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
   import Router from "svelte-spa-router";
+  import { replace } from "svelte-spa-router";
 
   // Pages
   import PageIndex from "./pages/Index.svelte";
@@ -17,6 +18,12 @@
 
   import Home from "./Home.svelte";
   import NotFound from "./NotFound.svelte";
+
+  $: {
+    if($user) {
+      replace("/tasks");
+    }
+  }
 
   const routes = {
     "/": PageIndex,
