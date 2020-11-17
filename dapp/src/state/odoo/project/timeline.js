@@ -4,12 +4,18 @@ import { uid } from "../user";
 import { group, map } from "src/f";
 import { parseTask, parseDuration } from "./parsers";
 
+function midnight(d) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 function daysBetween(start, end) {
   if (!end) {
     end = new Date();
   }
   const days = [];
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+  const midnightStart = midnight(start);
+  const midnightEnd = midnight(end);
+  for (let d = midnightStart; d <= midnightEnd; d.setDate(d.getDate() + 1)) {
     days.push(new Date(d));
   }
   return days;
