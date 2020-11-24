@@ -1,0 +1,76 @@
+:root {
+  --sidebar-background-color: white;
+  --sidebar-transition-duration: 0.3s;
+  --sidebar-color-overlay: #000000aa;
+  --sidebar-width: 224px;
+}
+
+aside input[type=checkbox] {
+  display: none;
+}
+
+aside nav,
+aside .overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: all var(--sidebar-transition-duration);
+}
+
+aside nav {
+  transform: translateX(-100%);
+  z-index: 100;
+  width: var(--sidebar-width);
+  overflow: auto;
+}
+
+aside .overlay {
+  z-index: 10;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+aside input[type=checkbox]:checked ~ nav {
+  transform: translateX(0);
+}
+
+aside input[type=checkbox]:checked ~ .overlay {
+  background-color: var(--sidebar-color-overlay);
+  pointer-events: auto;
+}
+
+label[for=sidebar--toggle] {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media screen and (min-width: 1024px) {
+  aside nav {
+    position: sticky;
+    width: auto;
+    transform: translateX(0) !important;
+  }
+  label[for=sidebar--toggle] {
+    display: none;
+  }
+}
+
+header {
+  flex: 1 100%;
+}
+
+aside nav {
+  width: var(--sidebar-width);
+}
+
+aside nav {
+  background-color: var(--sidebar-background-color);
+}
+
+label[for=sidebar--toggle] {
+  font-size: 30px;
+  font-weight: bold;
+}

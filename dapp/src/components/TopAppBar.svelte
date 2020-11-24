@@ -4,47 +4,27 @@
 </script>
 
 <style>
+  section {
+    padding: 0 var(--size-s);
+    display: flex;
+    align-items: center;
+  }
 
-li {
-  display: flex;
-  align-items: center;
-}
+  label {
 
-img {
-  width: var(--size-m);
-  display: block;
-  margin-right: var(--size-xs);
-}
+  }
 
+  h1 {
+    font-size: var(--font-l);
+    flex: 1;
+    margin: 0;
+    text-align: center;
+  }
 </style>
 
-<nav>
-  <ul>
-    <li>
-      <a href="#">Teledisko DAO</a>
-    </li>
-
-    <li>
-      {#if $user}
-        <img src="data:image/jpeg;base64,{$user.image}" />
-        {$user.name}
-      {:else}
-        <a href="#/connect/odoo">
-          Login
-        </a>
-      {/if}
-    </li>
-
-    <!--li class="float-right">
-      {#if $provider}
-        <a on:click={authenticate}>
-          {$addressShort}
-        </a>
-      {:else}
-        <a on:click={authenticate}>
-          Login
-        </a>
-      {/if}
-    </li-->
-  </ul>
-</nav>
+<header>
+  <section>
+    <label for="sidebar--toggle">≡</label>
+    <h1>Teledisko DAO</h1>
+  </section>
+</header>

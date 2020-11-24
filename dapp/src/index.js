@@ -60,4 +60,8 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+window.addEventListener("hashchange", function (event) {
+  document.getElementById("sidebar--toggle").checked = false;
+});
+
 new App({ target: document.body });

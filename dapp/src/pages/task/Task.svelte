@@ -148,6 +148,10 @@
   .task:not(.tracking):last-child {
   }
 
+  i {
+    vertical-align: bottom;
+  }
+
 </style>
 
 <!--{task.id}, {task.name}, {task.lastUpdate}, {Array.from(task.stages).toString()}-->

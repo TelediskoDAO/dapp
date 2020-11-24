@@ -4,6 +4,7 @@
   import { slide } from 'svelte/transition';
 
   import TopAppBar from "./components/TopAppBar.svelte";
+  import Sidebar from "./components/Sidebar.svelte";
   import CurrentTask from "./components/CurrentTask.svelte";
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
@@ -64,12 +65,18 @@
   </p>
 </div>
 {:else}
+
+
 <TopAppBar />
+<div class="container">
+  <Sidebar />
+  <main>
+    <Router
+      {routes}
+      restoreScrollState={true}
+    />
+  </main>
+</div>
 
-<main>
-  <Router {routes} restoreScrollState={true} />
-</main>
-
-<CurrentTask />
 <RuntimeErrors />
 {/if}
