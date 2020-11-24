@@ -5,7 +5,7 @@
   import Durations from "./Durations.svelte";
 
   export let task;
-  export let stage = null;
+  export let stages = ['todo'];
   export let openDetails = false;
 
   let createTimeEntry = false;
@@ -51,6 +51,11 @@
 <style type="text/scss">
   @import 'src/styles/index';
 
+  button.done {
+    background-color: var(--color-green);
+  }
+
+  button.done,
   button.start,
   button.stop {
     border-radius: 100%;
@@ -118,7 +123,7 @@
   }
 
   .header {
-    .start, .stop{
+    .start, .stop, .done {
       order: -1;
       margin-right: var(--size-s);
       //padding: var(--size-s);
@@ -156,7 +161,7 @@
 
 <!--{task.id}, {task.name}, {task.lastUpdate}, {Array.from(task.stages).toString()}-->
 
-{#if task.stages.has(stage)}
+{#if stages.some(s => task.stages.has(s))}
 <div
   id="task:{task.id}"
   class="task task--stage-{task.stage}"
@@ -171,24 +176,30 @@
     </h3>
 
     {#if !task.hasSubtasks}
-    <button class="details" on:click={() => {openDetails = !openDetails}}>
-      {#if openDetails}
-        <i>unfold_less</i>
-      {:else}
-        <i>unfold_more</i>
-      {/if}
-    </button>
-    {/if}
+      <button class="details" on:click={() => {openDetails = !openDetails}}>
+        {#if openDetails}
+          <i>unfold_less</i>
+        {:else}
+          <i>unfold_more</i>
+        {/if}
+      </button>
 
-    {#if !task.hasSubtasks && task.stage !== "done" && task.stage !== "approved"}
-      {#if tracking}
-      <button class="stop" disabled={working} on:click={handleStop}>
-        <i>stop</i>
-      </button>
-      {:else}
-      <button class="start" disabled={working} on:click={handleStart}>
-        <i>play_arrow</i>
-      </button>
+      {#if task.stage !== "approved"}
+        {#if task.stage === "todo"}
+          {#if tracking}
+          <button class="stop" disabled={working} on:click={handleStop}>
+            <i>stop</i>
+          </button>
+          {:else}
+          <button class="start" disabled={working} on:click={handleStart}>
+            <i>play_arrow</i>
+          </button>
+          {/if}
+        {:else}
+          <button class="done" disabled={true}>
+            <i>done</i>
+          </button>
+        {/if}
       {/if}
     {/if}
   </div>
@@ -198,7 +209,7 @@
       <ul>
       {#each subtasks as subtask}
           <li>
-            <svelte:self task={subtask} {stage} />
+            <svelte:self task={subtask} {stages} />
           </li>
       {/each}
       </ul>

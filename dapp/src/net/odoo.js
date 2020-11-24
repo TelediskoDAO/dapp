@@ -35,6 +35,9 @@ async function call(url, service, method, ...args) {
 }
 
 function tuplify(query = {}) {
+  if (Array.isArray(query)) {
+    return query;
+  }
   const params = [];
   for (let key of Object.keys(query)) {
     params.push([key, "=", query[key]]);

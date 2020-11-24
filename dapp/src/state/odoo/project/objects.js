@@ -12,7 +12,10 @@ export const upstream = derivable(
   async ([$agent, $uid], set) => {
     if ($agent && $uid) {
       const tasks = group(
-        await $agent.search("project.task", { user_id: $uid })
+        await $agent.search("project.task", [
+          ["user_id", "=", $uid],
+          ["stage_id", "in", [1, 2, 5]],
+        ])
       );
       const durationIds = Object.values(tasks).reduce(
         (acc, curr) => acc.concat(curr.duration_entry),
@@ -91,6 +94,12 @@ const data = derived(upstream, ($upstream) => {
       tasks[task.parentId].lastActivity = new Date(
         Math.max(tasks[task.parentId].lastActivity, task.lastActivity)
       );
+
+      if (task.stage === "done") {
+        projects[task.projectId].stagesCount.done++;
+      } else if (task.stage === "todo") {
+        projects[task.projectId].stagesCount.todo++;
+      }
     }
     projects[task.projectId].stages = new Set([
       ...task.stages,
@@ -110,6 +119,12 @@ export const projects = derived(data, ($data) => $data.projects, {});
 export const taskList = derived(
   tasks,
   ($tasks) => Object.values($tasks).filter(({ isSubtask }) => !isSubtask),
+  []
+);
+
+export const projectList = derived(
+  projects,
+  ($projects) => Object.values($projects),
   []
 );
 

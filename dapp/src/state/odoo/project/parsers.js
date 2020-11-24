@@ -10,11 +10,11 @@ function parseDate(s) {
 }
 
 export function parseTask(task) {
-  const stage = STAGES[task.stage_id[0]];
+  const upstreamStage = STAGES[task.stage_id[0]];
+  const stage = ["backlog", "progress"].includes(upstreamStage)
+    ? "todo"
+    : upstreamStage;
   const stages = new Set([stage]);
-  if (stage === "backlog" || stage === "progress") {
-    stages.add("todo");
-  }
   return {
     id: task.id,
     name: task.name,
@@ -56,5 +56,9 @@ export function parseProject(project) {
     taskIds: project.task_ids,
     isTracking: false,
     stages: new Set(),
+    stagesCount: {
+      todo: 0,
+      done: 0,
+    },
   };
 }

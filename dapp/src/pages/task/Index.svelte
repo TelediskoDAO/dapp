@@ -1,6 +1,5 @@
 <script>
-  import active from 'svelte-spa-router/active'
-  import { tasksToFix, projectsToDo, projectsDone, projectsApproved } from "src/state/odoo";
+  import { tasksToFix, projectList } from "src/state/odoo";
   import Tasks from "./Tasks.svelte";
   export let params = {};
 </script>
@@ -29,22 +28,9 @@
   div {
     margin-bottom: var(--size-s);
   }
-
-  :global(a.active) {
-    color: white !important;
-    background: black;
-  }
 </style>
 
 <section>
-
-  <div>
-    <a href="#/tasks" use:active>To Do</a>
-    /
-    <a href="#/tasks/done" use:active>Done</a>
-    /
-    <a href="#/tasks/approved" use:active>Approved</a>
-  </div>
 
   {#if $tasksToFix.length}
     <h2><i class="warning">warning</i> Fix me: problems found in {$tasksToFix.length} task{$tasksToFix.length > 1 ? "s" : ""}</h2>
@@ -70,11 +56,5 @@
     <Tasks list={$tasksToFix} openDetails={true} />
   {/if}
 
-  {#if params.stage === "done"}
-    <Tasks stage="done" list={$projectsDone} />
-  {:else if params.stage === "approved"}
-    <Tasks stage="approved" list={$projectsApproved} />
-  {:else}
-    <Tasks stage="todo" list={$projectsToDo} />
-  {/if}
+  <Tasks stage="todo" list={$projectList} />
 </section>

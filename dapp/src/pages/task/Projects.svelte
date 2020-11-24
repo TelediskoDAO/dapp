@@ -9,8 +9,9 @@
   export let list;
   export let openDetails = false;
 
+  let stages = ['todo'];
+
   $: sortedList = list.sort((a, b) => a.sequence - b.sequence);
-  $: stages = sortedList.reduce((acc, curr) => {acc[curr.id] = ["todo"]; return acc}, {});
 
 	afterUpdate(() => {
     if ($currentTask && scrollToCurrent) {
@@ -22,11 +23,11 @@
 
   $: scrollToCurrent = "scrollToCurrent" in parse($querystring);
 
-  function toggleDone(id) {
-    if(stages[id].includes('done')) {
-      stages[id] = ['todo'];
+  function toggleDone() {
+    if(stages.includes('done')) {
+      stages = ['todo'];
     } else {
-      stages[id] = ['todo', 'done'];
+      stages = ['todo', 'done'];
     }
   }
 </script>
@@ -48,7 +49,7 @@
   }
 
   .header h2 {
-    font-size: var(--font-l);
+    font-size: 1.2rem;
     flex: 1;
     margin: 0;
   }
@@ -60,12 +61,6 @@
   .header i {
     font-size: 24px;
   }
-
-  .metadata {
-    text-align: right;
-    font-size: var(--font-s);
-    color: var(--color-gray-7);
-  }
 </style>
 
 {#each sortedList as project}
@@ -75,6 +70,10 @@
     showOverride={project.isTracking} >
     <div slot="header" class="header" let:visible>
       <h2>{project.name}</h2>
+      <p on:click|stopPropagation={toggleDone}>
+        {stages.includes('done') ? 'Hide' : 'Show'}
+        <strong>done</strong>
+      </p>
       <button>
         {#if visible}
           <i>unfold_less</i>
@@ -85,17 +84,12 @@
     </div>
 
     <div slot="body">
-      <div class="metadata">
-        <p>
-          <span on:click|stopPropagation={toggleDone.bind(null, project.id)}>{stages[project.id].includes('done') ? 'Hide' : 'Show'} completed tasks</span>
-        </p>
-      </div>
       {#if project.taskIds.length}
       <ul>
         {#each project.taskIds as taskId}
         {#if $tasks[taskId] && $tasks[taskId].isParentTask}
         <li>
-          <Task stages={stages[project.id]} task={$tasks[taskId]} {openDetails} />
+          <Task {stages} task={$tasks[taskId]} {openDetails} />
         </li>
         {/if}
         {/each}
