@@ -66,6 +66,11 @@
     font-size: var(--font-s);
     color: var(--color-gray-7);
   }
+
+  .metadata .toggle {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 </style>
 
 {#each sortedList as project}
@@ -86,9 +91,14 @@
 
     <div slot="body">
       <div class="metadata">
+        {#if project.stagesCount.done > 0}
         <p>
-          <span on:click|stopPropagation={toggleDone.bind(null, project.id)}>{stages[project.id].includes('done') ? 'Hide' : 'Show'} completed tasks</span>
+          <span
+            class="toggle"
+            on:click|stopPropagation={toggleDone.bind(null, project.id)}
+          >{stages[project.id].includes('done') ? 'Hide' : 'Show'} completed tasks</span>
         </p>
+        {/if}
       </div>
       {#if project.taskIds.length}
       <ul>

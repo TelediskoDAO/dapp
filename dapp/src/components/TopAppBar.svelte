@@ -1,6 +1,7 @@
 <script>
   import { authenticate, provider, address, addressShort } from "../state/eth";
   import { user } from "src/state/odoo";
+  import { title } from "src/state/runtime";
 </script>
 
 <style>
@@ -25,6 +26,6 @@
 <header>
   <section>
     <label for="sidebar--toggle">≡</label>
-    <h1>Teledisko DAO</h1>
+    <h1>{$title}</h1>
   </section>
 </header>

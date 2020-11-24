@@ -117,7 +117,9 @@ header {
   top: 0;
   left: 0;
   right: 0;
+  height: var(--size-m);
   background-color: white;
+  z-index: 1;
 }
 
 .container {

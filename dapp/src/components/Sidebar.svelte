@@ -62,7 +62,7 @@
     <section>
       <ul>
         <li>
-          <a href="#/tasks"><i>timer</i> Track Time</a>
+          <a href="#/tasks"><i>timer</i> Time Tracking</a>
         </li>
         <li>
           <a href="#/timeline"><i>calendar_today</i> Timeline</a>

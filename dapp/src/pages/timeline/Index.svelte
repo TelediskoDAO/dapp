@@ -1,6 +1,8 @@
 <script>
   import Activity from "./Activity.svelte";
   import { activityPerDay } from "src/state/odoo/project";
+  import { title } from "src/state/runtime";
+  title.set('Timeline');
 </script>
 
 <style>
@@ -8,7 +10,7 @@
     display: flex;
     margin-bottom: var(--size-xs);
     position: sticky;
-    top: 0;
+    top: var(--size-m);;
     background: #ffffffdd;
   }
 
@@ -53,8 +55,6 @@
 </style>
 
 <section>
-  <h2>Timeline</h2>
-
   <div class="entry">
     <h5></h5>
     <ol class="time">

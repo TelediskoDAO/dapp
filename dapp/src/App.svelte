@@ -1,5 +1,6 @@
 <script>
   import { user, username } from "src/state/odoo";
+  import { title } from "src/state/runtime";
   import CONFIG from "./config";
   import { slide } from 'svelte/transition';
 
@@ -57,6 +58,11 @@
     }
   }
 </style>
+
+<svelte:head>
+	<title>{$title}</title>
+</svelte:head>
+
 
 {#if $username && !$user}
 <div out:slide class="loading">
