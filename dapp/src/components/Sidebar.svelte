@@ -65,7 +65,10 @@
           <a href="#/timeline"><i>calendar_today</i> Timeline</a>
         </li>
         <li>
-          <a href="#/reports"><i>fact_check</i> Reports</a>
+          <a href="#/report"><i>fact_check</i> Report</a>
+        </li>
+        <li>
+          <a href="#/tokens"><i>account_balance</i> Tokens</a>
         </li>
         <li>
           <a href="#/connect/odoo"><i>settings</i> Settings</a>

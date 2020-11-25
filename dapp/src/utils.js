@@ -45,6 +45,13 @@ export function toPrettyTime(date) {
   return [d.join(" "), t.join(":")].join(" ");
 }
 
+export function toPrettyCurrency(number) {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+  }).format(number);
+}
+
 export function toPrettyRange(start, end) {
   const months = [
     "Jan",
