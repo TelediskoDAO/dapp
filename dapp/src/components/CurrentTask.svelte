@@ -10,15 +10,21 @@ div {
   margin: 0 auto;
 }
 
+h3 {
+  margin-top: 0;
+}
+
+h3, p {
+  font-size: var(--font-s);
+}
+
 h4, p {
   margin: 0;
 }
 
 h4 {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
   margin-bottom: var(--size-xs);
+  font-weight: normal;
 }
 section {
   background-color: var(--color-blue);
@@ -27,6 +33,7 @@ section {
 
 {#if $currentTask}
 <section>
+  <h3>Current task</h3>
   <h4>{$currentTask.name}</h4>
   <p>
     <i>timer</i>
