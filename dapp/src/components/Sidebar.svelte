@@ -22,7 +22,7 @@
   section:not(:last-child) {
   }
   small {
-    color: #ccc;
+    color: var(--color-gray-5);
   }
   ul {
     margin: 0;
@@ -50,10 +50,6 @@
       {#if $user}
         <img src="data:image/jpeg;base64,{$user.image}" />
         {$user.name}
-      {:else}
-        <a href="#/connect/odoo">
-          Login
-        </a>
       {/if}
     </section>
 
@@ -61,6 +57,7 @@
 
     <section>
       <ul>
+        {#if $user}
         <li>
           <a href="#/tasks"><i>timer</i> Time Tracking</a>
         </li>
@@ -73,6 +70,14 @@
         <li>
           <a href="#/connect/odoo"><i>settings</i> Settings</a>
         </li>
+        {:else}
+        <li>
+          <a href="#/"><i>home</i> Home Page</a>
+        </li>
+        <li>
+          <a href="#/connect/odoo"><i>login</i> Log in</a>
+        </li>
+        {/if}
       </ul>
     </section>
     <section>

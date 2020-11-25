@@ -3,93 +3,30 @@
   import { platform } from "src/state/runtime";
 </script>
 
-<style type="text/scss">
-  @import 'src/styles/index';
-
-  .apps {
-    display: flex;
-    flex-wrap: wrap;
-
-    > div {
-
-      width: 45%;
-      @include respond-to(handhelds) {
-        width: 100% ;
-      }
-
-      padding: var(--size-m);
-      margin: var(--size-s);
-      @include border;
-
-      &.disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-    }
-  }
-</style>
-
 <section>
-  <h1>Welcome to Teledisko DAO</h1>
+  <h1>Teledisko DAO</h1>
 
-  <p>
-    This web application allows contributors to interact with the <strong>Teledisko DAO</strong>. You can use it both from your laptop and from your smartphone.
-  </p>
+  {#if $platform.isStandalone}
+    <p><a href="#/connect/odoo">Log in now</a> and start using Teledisko DAO</p>
+  {:else}
+    <p>
+      This application allows contributors to interact with <strong>Teledisko DAO</strong>.
+    </p>
 
+    <h2>Use Teledisko DAO from your laptop</h2>
 
-  <h2>What you can do now</h2>
+    <p><a href="#/connect/odoo">Log in now</a> and start using Teledisko DAO.</p>
 
-  <div class="apps">
-    {#if $platform.isStandalone === false}
-      {#if $platform.isAndroid}
-        <div>
-          <h3><i>phone_android</i> Install the App</h3>
-          <p>On your browser, tap on the <i class="medium">more_vert</i> icon, then <em>Add to Home Screen</em>.</p>
-        </div>
-      {/if}
+    {#if $platform.isAndroid}
+      <h2><i>phone_android</i> Install the App</h2>
+      <p>On your browser, tap on the <i class="medium">more_vert</i> icon, then <em>Add to Home Screen</em> or <em>Install</em>.</p>
+    {:else if $platform.isIOS}
+      <h2><i>phone_iphone</i> Install the App</h2>
+      <p>On your browser, tap on the <img class="icon medium" alt="iOS share icon" src="images/icons/ios-share.png" /> icon, then <em>Add to Home Screen</em>.</p>
+    {:else}
+      <h2>Install Teledisko DAO in your smartphone</h2>
 
-      {#if $platform.isIOS}
-        <div>
-          <h3><i>phone_iphone</i> Install the App</h3>
-          <p>On your browser, tap on the <img class="icon medium" alt="iOS share icon" src="images/icons/ios-share.png" /> icon, then <em>Add to Home Screen</em>.</p>
-        </div>
-      {/if}
+      <p>This website can also be installed as an app in your Android phone or iPhone. Open this website from your smartphone and follow the instructions.</p>
     {/if}
-
-    {#if !$user}
-    <div>
-      <h3><i>login</i> Login</h3>
-      <p>Login to use the DAO applications.</p>
-      <a class="button medium" href="#/connect/odoo">Login</a>
-    </div>
-    {/if}
-
-    <div>
-      <h3><i>timer</i> Time Tracking</h3>
-      <p>Track the time you work on tasks.</p>
-      <a class="button medium" href="#/tasks">Track Time</a>
-    </div>
-
-    <div>
-      <h3><i>calendar_today</i> Timeline</h3>
-      <p>Display where you spend time.</p>
-      <a class="button medium" href="#/timeline">Timeline</a>
-    </div>
-
-    <div class:disabled={!$user}>
-      <h3><i>settings</i> Settings</h3>
-      <p>Details about your account.</p>
-      <a class="button medium" href="#/connect/odoo">Settings</a>
-    </div>
-
-  </div>
-
-  <h2>What will be available in the future</h2>
-
-  <ul>
-    <li>Login using MetaMask.</li>
-    <li>Check the balance of your Teledisko tokens.</li>
-    <li>Create and vote on polls created by other contributors.</li>
-    <li>Sell your tokens.</li>
-  </ul>
+  {/if}
 </section>
