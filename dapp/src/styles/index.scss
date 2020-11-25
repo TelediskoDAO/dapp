@@ -23,7 +23,7 @@
   --z-mid: 50;
   --z-high: 100;
 
-  --max-width: 50rem;
+  --max-width: 64rem;
 
   --line-size: 1px;
   --line-size-thick: var(--size-xs);
@@ -92,6 +92,11 @@ $break-large: 1024px;
 
 // # Basic
 
+html,
+body {
+  height: 100vh;
+}
+
 html {
   font-size: var(--root-size);
   font-family: sans-serif;
@@ -113,17 +118,10 @@ a {
 }
 
 header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  height: var(--size-m);
   background-color: white;
   z-index: 1;
-}
-
-.container {
-  margin: 1.5rem auto;
 }
 
 section {
@@ -208,18 +206,6 @@ button,
     margin-right: var(--size-xs);
   }
 }
-
-// # Main content
-.container {
-  display: flex;
-  flex-flow: row wrap;
-  max-width: var(--app-width-total);
-}
-
-.container main {
-  flex: 1;
-}
-
 
 // # Animations
 

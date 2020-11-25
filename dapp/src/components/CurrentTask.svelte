@@ -27,7 +27,7 @@ h4 {
   font-weight: normal;
 }
 section {
-  background-color: var(--color-blue);
+  background-color: #aad2d6;
 }
 </style>
 

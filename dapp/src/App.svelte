@@ -39,9 +39,7 @@
   };
 </script>
 
-<style type="text/scss">
-  @import 'src/styles/index';
-
+<style>
   .loading {
     position: fixed;
     top: 0;
@@ -54,10 +52,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
 
-    p {
-      animation: blink 1s infinite;
-    }
+  .loading p {
+    animation: blink 1s infinite;
   }
 </style>
 
@@ -75,16 +73,14 @@
 {:else}
 
 
-<TopAppBar />
-<div class="container">
-  <Sidebar />
-  <main>
-    <Router
-      {routes}
-      restoreScrollState={true}
-    />
-  </main>
-</div>
+<Sidebar />
+<main>
+  <TopAppBar />
+  <Router
+    {routes}
+    restoreScrollState={true}
+  />
+</main>
 
 <RuntimeErrors />
 {/if}

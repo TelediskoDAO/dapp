@@ -1,4 +1,5 @@
 <script>
+  import active from 'svelte-spa-router/active'
   import CurrentTask from "./CurrentTask.svelte";
   import { authenticate, provider, address, addressShort } from "../state/eth";
   import { user } from "src/state/odoo";
@@ -38,8 +39,12 @@
     margin-bottom: var(--size-xs);
   }
   li a i {
+    color: #888;
     font-size: 1.5rem;
     vertical-align: bottom;
+  }
+  :global(aside section ul a.active i) {
+    color: black !important;
   }
 </style>
 
@@ -59,26 +64,26 @@
       <ul>
         {#if $user}
         <li>
-          <a href="#/tasks"><i>timer</i> Time Tracking</a>
+          <a use:active href="#/tasks"><i>timer</i> Time Tracking</a>
         </li>
         <li>
-          <a href="#/timeline"><i>calendar_today</i> Timeline</a>
+          <a use:active href="#/timeline"><i>calendar_today</i> Timeline</a>
         </li>
         <li>
-          <a href="#/report"><i>fact_check</i> Report</a>
+          <a use:active href="#/report"><i>fact_check</i> Report</a>
         </li>
         <li>
-          <a href="#/tokens"><i>account_balance</i> Tokens</a>
+          <a use:active href="#/tokens"><i>account_balance</i> Tokens</a>
         </li>
         <li>
-          <a href="#/connect/odoo"><i>settings</i> Settings</a>
+          <a use:active href="#/connect/odoo"><i>settings</i> Settings</a>
         </li>
         {:else}
         <li>
-          <a href="#/"><i>home</i> Home Page</a>
+          <a use:active href="#/"><i>home</i> Home Page</a>
         </li>
         <li>
-          <a href="#/connect/odoo"><i>login</i> Log in</a>
+          <a use:active href="#/connect/odoo"><i>login</i> Log in</a>
         </li>
         {/if}
       </ul>
