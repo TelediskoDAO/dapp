@@ -1,5 +1,5 @@
 import { derived } from "svelte/store";
-import { persistable } from "src/state/utils";
+import { persistable, derivable } from "src/state/utils";
 import { clock } from "src/state/clock";
 import { session } from "src/net/odoo";
 
@@ -9,13 +9,17 @@ const DB = "teledisko";
 export const username = persistable("odoo.username", "");
 export const password = persistable("odoo.password", "");
 
-let lastRefresh = 0;
-export const refresh = derived(clock, ($clock, set) => {
-  if ($clock - lastRefresh > 60000) {
-    lastRefresh = $clock;
-    set($clock);
-  }
-});
+let lastRefresh = Date.now();
+export const refresh = derivable(
+  clock,
+  ($clock, set) => {
+    if ($clock - lastRefresh > 60000) {
+      lastRefresh = $clock;
+      set($clock);
+    }
+  },
+  lastRefresh
+);
 
 export const agent = derived(
   [username, password],

@@ -216,6 +216,15 @@ button,
   }
 }
 
+.small {
+  font-size: var(--font-s);
+  color: #666;
+}
+
+.small i {
+  font-size: 1rem;
+}
+
 // # Animations
 
 @keyframes blink {

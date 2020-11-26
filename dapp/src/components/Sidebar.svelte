@@ -2,13 +2,19 @@
   import active from 'svelte-spa-router/active'
   import CurrentTask from "./CurrentTask.svelte";
   import { authenticate, provider, address, addressShort } from "../state/eth";
-  import { user } from "src/state/odoo";
+  import { user, refresh} from "src/state/odoo";
   import CONFIG from "src/config";
+
+  $: refreshTime = new Date($refresh).toLocaleTimeString();
 
   const buildDate = new Date(CONFIG.date).toISOString().substr(0, 19).replace('T', ' ');
 
   function closeSidebar() {
     document.getElementById("sidebar--toggle").checked = false;
+  }
+
+  function handleRefresh() {
+    $refresh = Date.now();
   }
 </script>
 
@@ -50,6 +56,12 @@
   :global(aside section ul a.active i) {
     color: black !important;
   }
+
+  .refresh h5 {
+    font-weight: normal;
+    margin-bottom: var(--size-xs);
+  }
+
 </style>
 
 <aside>
@@ -92,6 +104,12 @@
         {/if}
       </ul>
     </section>
+
+    <section class="refresh">
+      <h5>Last refresh: {refreshTime}</h5>
+      <button on:click={handleRefresh} class="small"><i>sync</i>Refresh</button>
+    </section>
+
     <section>
       <small>Software version: {CONFIG.version}</small><br>
       <small>Build date: {buildDate}</small>
