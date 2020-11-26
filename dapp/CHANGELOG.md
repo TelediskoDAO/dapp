@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.0] 2020-11-26
+
+### Added
+
+- New navigation sidebar to quickly move around the app.
+- Header shows the name of the current page.
+- Data is refreshed every minute.
+- Button to manually refresh the data.
+- New report page shows
+- "Time tracking" screen has a new button to toggle the visibility of done tasks.
+- New "Report" screen shows time sheets yet to be tokenized.
+
+### Changed
+
+- Current task is now in the new sidebar.
+- "Time tracking" shows only tasks to do.
+- Accepted tasks are now in the new "reports" screen.
+
+### Fixed
+
+- Preload icon font should fix the flickering of the icons.
+
 ## [0.4.3] 2020-11-17
 
 ### Fixed
