@@ -18,13 +18,14 @@
   import PageTaskIndex from "./pages/task/Index.svelte";
   import PageTimeline from "./pages/timeline/Index.svelte";
   import PageReport from "./pages/report/Index.svelte";
+  import PageTokens from "./pages/tokens/Index.svelte";
 
   import Home from "./Home.svelte";
   import NotFound from "./NotFound.svelte";
 
   $: {
     if($user) {
-      //replace("/tasks");
+      replace("/tasks");
     }
   }
 
@@ -34,6 +35,7 @@
     "/tasks/:stage": PageTaskIndex,
     "/timeline": PageTimeline,
     "/report": PageReport,
+    "/tokens": PageTokens,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };

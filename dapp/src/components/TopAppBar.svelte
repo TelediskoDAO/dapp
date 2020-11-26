@@ -6,7 +6,6 @@
 
 <style>
   section {
-    padding: 0 var(--size-s);
     display: flex;
     align-items: center;
   }

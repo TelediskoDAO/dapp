@@ -6,6 +6,7 @@
   @import 'src/styles/index';
 
   section {
+    z-index: 1000;
     background-color: black;
     color: white;
     position: fixed;

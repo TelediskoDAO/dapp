@@ -97,6 +97,7 @@ body {
   height: 100vh;
 }
 
+
 html {
   font-size: var(--root-size);
   font-family: sans-serif;
@@ -122,6 +123,12 @@ header {
   top: 0;
   background-color: white;
   z-index: 1;
+  padding: 0 var(--size-m) 0 0;
+}
+
+header section {
+  padding: 0;
+  margin: 0;
 }
 
 section {

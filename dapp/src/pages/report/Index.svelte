@@ -41,9 +41,19 @@ ul li strong {
   text-align: center;
 }
 
+.important {
+  background: red;
+  color: white;
+  padding: 1rem;
+}
+
 </style>
 
 <section>
+  <p class="important">
+    Work in progress! We are currently working on adding "tiers" to the tasks, so the numbers here can be wrong!
+  </p>
+
   <h2>Tasks to tokenize</h2>
 
   <ul>

@@ -1,3 +1,10 @@
+const TIER_TO_RATE = {
+  1: 10,
+  2: 25,
+  3: 50,
+  4: 75, // Senior
+  5: 100,
+};
 export function parseLine(line) {
   return {
     id: line.id,
@@ -8,9 +15,9 @@ export function parseLine(line) {
     subtaskId: line.subtask_id && line.subtask_id[0],
     subtaskName: line.subtask_id && line.subtask_id[1],
     name: line.name,
-    tier: "senior", //line.tier,
+    tier: line.tier ? line.tier[1] : "?",
     hours: line.unit_amount,
-    value: line.unit_amount * 75,
+    value: line.tier ? TIER_TO_RATE[line.tier[0]] * line.unit_amount : 0,
     tokenAmount: line.token_amount,
     tokenized: line.tokenized,
   };
