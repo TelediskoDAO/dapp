@@ -4,5 +4,5 @@
 </script>
 
 <section>
-  <h2>Working on it :)</h2>
+  <h2>Soon!</h2>
 </section>
