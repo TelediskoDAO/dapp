@@ -6,6 +6,10 @@
   import CONFIG from "src/config";
 
   const buildDate = new Date(CONFIG.date).toISOString().substr(0, 19).replace('T', ' ');
+
+  function closeSidebar() {
+    document.getElementById("sidebar--toggle").checked = false;
+  }
 </script>
 
 <style>
@@ -64,26 +68,26 @@
       <ul>
         {#if $user}
         <li>
-          <a use:active href="#/tasks"><i>timer</i> Time Tracking</a>
+          <a use:active on:click={closeSidebar} href="#/tasks"><i>timer</i> Time Tracking</a>
         </li>
         <li>
-          <a use:active href="#/timeline"><i>calendar_today</i> Timeline</a>
+          <a use:active on:click={closeSidebar} href="#/timeline"><i>calendar_today</i> Timeline</a>
         </li>
         <li>
-          <a use:active href="#/report"><i>fact_check</i> Report</a>
+          <a use:active on:click={closeSidebar} href="#/report"><i>fact_check</i> Report</a>
         </li>
         <li>
-          <a use:active href="#/tokens"><i>account_balance</i> Tokens</a>
+          <a use:active on:click={closeSidebar} href="#/tokens"><i>account_balance</i> Tokens</a>
         </li>
         <li>
-          <a use:active href="#/connect/odoo"><i>settings</i> Settings</a>
+          <a use:active on:click={closeSidebar} href="#/connect/odoo"><i>settings</i> Settings</a>
         </li>
         {:else}
         <li>
-          <a use:active href="#/"><i>home</i> Home Page</a>
+          <a use:active on:click={closeSidebar} href="#/"><i>home</i> Home Page</a>
         </li>
         <li>
-          <a use:active href="#/connect/odoo"><i>login</i> Log in</a>
+          <a use:active on:click={closeSidebar} href="#/connect/odoo"><i>login</i> Log in</a>
         </li>
         {/if}
       </ul>
