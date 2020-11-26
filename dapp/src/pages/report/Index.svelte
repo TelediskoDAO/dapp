@@ -51,10 +51,10 @@ ul li strong {
 
 <section>
   <p class="important">
-    Work in progress! We are currently working on adding "tiers" to the tasks, so the numbers here can be wrong!
+    Work in progress! We are currently working on adding "tiers" to the tasks, so the numbers here can be <strong>wrong or missing</strong>!
   </p>
 
-  <h2>Tasks to tokenize</h2>
+  <h2>Tasks approved</h2>
 
   <ul>
     <li class="value">
