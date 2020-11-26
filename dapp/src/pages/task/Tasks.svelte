@@ -11,6 +11,7 @@
 
   $: sortedList = list.sort((a, b) => a.sequence - b.sequence);
   $: stages = sortedList.reduce((acc, curr) => {acc[curr.id] = ["todo"]; return acc}, {});
+  $: { console.log(sortedList); }
 
 	afterUpdate(() => {
     if ($currentTask && scrollToCurrent) {

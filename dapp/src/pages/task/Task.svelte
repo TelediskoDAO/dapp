@@ -37,13 +37,13 @@
   }
 
   async function handleMarkAsDone() {
-      const message = "Mark the task as done?";
-      if (confirm(message)){
-        if(tracking) {
-          await $stopDuration($currentDuration.id);
-        }
-        await $markAsDone(task.id);
+    const message = "Mark the task as done?";
+    if (confirm(message)){
+      if(tracking) {
+        await $stopDuration($currentDuration.id);
       }
+      await $markAsDone(task.id);
+    }
   }
 
 </script>

@@ -1,5 +1,6 @@
 <script>
   import { tasksToFix, projectList } from "src/state/odoo";
+  import Task from "./Task.svelte";
   import Tasks from "./Tasks.svelte";
   import { title } from "src/state/runtime";
   title.set('Time Tracking');
@@ -30,6 +31,15 @@
   div {
     margin-bottom: var(--size-s);
   }
+
+  /* FIXME */
+
+  ul {
+    list-style-type: none;
+    margin: 0 0 var(--size-m) 0;
+    padding: 0;
+  }
+
 </style>
 
 <section>
@@ -55,7 +65,13 @@
       </p>
     </details>
 
-    <Tasks list={$tasksToFix} openDetails={true} />
+    <ul>
+    {#each $tasksToFix as task}
+    <li>
+      <Task task={task} openDetails={true} />
+    </li>
+    {/each}
+    </ul>
   {/if}
 
   <Tasks stage="todo" list={$projectList} />
