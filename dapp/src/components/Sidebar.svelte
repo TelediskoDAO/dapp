@@ -88,9 +88,9 @@
         <li>
           <a use:active on:click={closeSidebar} href="#/report"><i>fact_check</i> Report</a>
         </li>
-        <li>
+        <!--li>
           <a use:active on:click={closeSidebar} href="#/tokens"><i>account_balance</i> Tokens</a>
-        </li>
+        </li-->
         <li>
           <a use:active on:click={closeSidebar} href="#/connect/odoo"><i>settings</i> Settings</a>
         </li>
@@ -107,7 +107,7 @@
 
     <section class="refresh">
       <h5>Last refresh: {refreshTime}</h5>
-      <button on:click={handleRefresh} class="small"><i>sync</i>Refresh</button>
+      <button on:click={handleRefresh} on:click={closeSidebar} class="small"><i>sync</i>Refresh</button>
     </section>
 
     <section>
