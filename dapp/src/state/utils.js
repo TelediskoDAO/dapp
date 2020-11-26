@@ -26,6 +26,7 @@ export function persistable(key, fallback) {
 }
 
 export function derivable(stores, callback, initial) {
+  const hasSet = callback.length === 2;
   return writable(initial, (set) => {
     let _stores = stores;
     let unpack;
@@ -35,15 +36,13 @@ export function derivable(stores, callback, initial) {
     }
     const values = new Array(_stores.length);
     const unsubscribeFuncs = _stores.map((store, i) =>
-      store.subscribe((value) => {
+      store.subscribe(async (value) => {
         values[i] = value;
-        let setCalled = false;
         const setWrap = (v) => {
           set(v);
-          setCalled = true;
         };
         const result = callback(unpack ? values[0] : values, setWrap);
-        if (!setCalled) {
+        if (!hasSet) {
           set(result);
         }
       })

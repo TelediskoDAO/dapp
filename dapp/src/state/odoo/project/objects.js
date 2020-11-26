@@ -2,14 +2,14 @@ import { clock } from "src/state/clock";
 import { derived } from "svelte/store";
 import { derivable } from "src/state/utils";
 import { group, map } from "src/f";
-import { agent } from "../agent";
+import { agent, refresh } from "../agent";
 import { uid } from "../user";
 import { parseTask, parseDuration, parseProject } from "./parsers";
 
 // Load data from Odoo
 export const upstream = derivable(
-  [agent, uid],
-  async ([$agent, $uid], set) => {
+  [agent, uid, refresh],
+  async ([$agent, $uid, $refresh], set) => {
     if ($agent && $uid) {
       const tasks = group(
         await $agent.search("project.task", [
@@ -34,7 +34,7 @@ export const upstream = derivable(
       set({ tasks, durations, projects });
     }
   },
-  { tasks: {}, durations: {}, projcets: {} }
+  { tasks: {}, durations: {}, projects: {} }
 );
 
 // Process data and create models for the app.
