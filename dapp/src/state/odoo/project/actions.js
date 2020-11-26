@@ -20,7 +20,8 @@ export const markAsDone = derived(
     });
     const [updatedTask] = await $agent.read("project.task", [taskId]);
     let updatedParentTask;
-    if (task.parentId) {
+    // FIXME: need to find a better way to ignore virtual parents
+    if (task.parentId && !task.parentId.startsWith("project:")) {
       [updatedParentTask] = await $agent.read("project.task", [task.parentId]);
     }
     upstream.update(($upstream) => {
@@ -91,7 +92,8 @@ export const startDuration = derived(
         stage_id: STAGES_TO_ID["progress"],
         duration: hours,
       });
-      if (task.parentId) {
+      // FIXME: need to find a better way to ignore virtual parents
+      if (task.parentId && !task.parentId.startsWith("project:")) {
         [updatedParentTask] = await $agent.read("project.task", [
           task.parentId,
         ]);
