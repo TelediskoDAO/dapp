@@ -56,7 +56,6 @@
 
 <section>
   <div class="entry">
-    <h5 />
     <ol class="time">
       <li style="left: 0">0h</li>
       <li style="left: 12.5%">3h</li>
