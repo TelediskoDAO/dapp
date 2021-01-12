@@ -48,7 +48,7 @@ export const createDuration = derived(
     const duration = {
       task: taskId,
       start: utc(start),
-      end: utc(end),
+      end: end && utc(end),
     };
     const hours = $hoursByTask[taskId] + calculateHours(start, end);
     const durationId = await $agent.create("project.task.duration", duration);
@@ -191,7 +191,7 @@ export const updateDuration = derived(
       calculateHours(start, end);
     const result = await $agent.update("project.task.duration", durationId, {
       start: utc(start),
-      end: utc(end),
+      end: end && utc(end),
     });
     const [updatedDuration] = await $agent.read("project.task.duration", [
       durationId,

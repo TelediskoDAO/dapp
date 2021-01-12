@@ -1,20 +1,30 @@
 <script>
-	import { slide } from 'svelte/transition';
-  import { tasks, currentTask, currentDuration, currentHours, currentHoursTotal, durations, hoursByTask, startDuration, stopDuration, markAsDone } from "src/state/odoo";
+  import { slide } from "svelte/transition";
+  import {
+    tasks,
+    currentTask,
+    currentDuration,
+    currentHoursTotal,
+    hoursByTask,
+    startDuration,
+    stopDuration,
+    markAsDone,
+  } from "src/state/odoo";
   import { toPrettyDuration } from "src/utils";
   import Durations from "./Durations.svelte";
 
   export let task;
-  export let stages = ['todo'];
+  export let stages = ["todo"];
   export let openDetails = false;
 
   let createTimeEntry = false;
   let working = false;
 
-  $: subtasks = task.subtaskIds.map(id => $tasks[id]).filter(task => task);
+  $: subtasks = task.subtaskIds.map((id) => $tasks[id]).filter((task) => task);
   $: tracking = $currentTask && $currentTask.id === task.id;
-  $: currentHoursProxy = tracking ? currentHours : null;
-  $: currentHoursTotalProxy = tracking ? $currentHoursTotal : $hoursByTask[task.id];
+  $: currentHoursTotalProxy = tracking
+    ? $currentHoursTotal
+    : $hoursByTask[task.id];
 
   async function handleStart() {
     working = true;
@@ -22,7 +32,7 @@
       await $startDuration(task.id);
     } else {
       const message = `You are tracking "${$currentTask.name}", wanna switch to "${task.name}" instead?`;
-      if (confirm(message)){
+      if (confirm(message)) {
         await $stopDuration($currentDuration.id);
         await $startDuration(task.id);
       }
@@ -38,18 +48,17 @@
 
   async function handleMarkAsDone() {
     const message = "Mark the task as done?";
-    if (confirm(message)){
-      if(tracking) {
+    if (confirm(message)) {
+      if (tracking) {
         await $stopDuration($currentDuration.id);
       }
       await $markAsDone(task.id);
     }
   }
-
 </script>
 
 <style type="text/scss">
-  @import 'src/styles/index';
+  // @import "src/styles/index";
 
   button.done {
     background-color: var(--color-green);
@@ -115,7 +124,6 @@
     //padding: var(--size-s);
     .header {
       padding: 0;
-
     }
     p {
       margin: 0;
@@ -123,7 +131,9 @@
   }
 
   .header {
-    .start, .stop, .done {
+    .start,
+    .stop,
+    .done {
       order: -1;
       margin-right: var(--size-s);
       //padding: var(--size-s);
@@ -156,7 +166,6 @@
   i {
     vertical-align: bottom;
   }
-
 </style>
 
 <!--{task.id}, {task.name}, {task.lastUpdate}, {Array.from(task.stages).toString()}-->
