@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] 2021-01-12
+
+### Added
+
+- Add a new view in Reports, showing work that has been done but not approved yet
+
+### Changed
+
+- Edit a duration allows to not specify an end, by doing so, the app goes straight to time tracking
+
+### Fixed
+
+- Fix blank screen on Firefox
+- Remove SCSS from Svelte components
 
 ## [0.5.2] 2020-11-26
 
