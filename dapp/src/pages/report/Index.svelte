@@ -5,6 +5,9 @@
     linesByProject,
     totalHours,
     totalValue,
+    prospectByProject,
+    prospectTotalHours,
+    prospectTotalValue,
   } from "src/state/odoo/timesheet";
   import { title } from "src/state/runtime";
   title.set("Reports");
@@ -41,7 +44,7 @@
 
   .note {
     font-size: var(--font-s);
-    color: #999;
+    color: var(--color-gray-9);
     text-align: center;
   }
 
@@ -50,36 +53,72 @@
     color: white;
     padding: 1rem;
   }
+
+  .prospect {
+    margin-bottom: var(--size-l);
+  }
 </style>
 
 <section>
-  <p class="important">
-    Work in progress! We are currently working on adding "tiers" to the tasks,
-    so the numbers here can be
-    <strong>wrong or missing</strong>!
-  </p>
+  <div class="prospect">
+    <div class="important">
+      Work in progress! We are currently working on this feature, so some
+      numbers might be
+      <strong>wrong or missing</strong>!
+    </div>
 
-  <h2>Tasks approved</h2>
+    <h2>Tasks done</h2>
 
-  <ul>
-    <li class="value">
-      <span> Value </span>
-      <strong> {toPrettyCurrency($totalValue)} </strong>
-    </li>
-
-    <li class="time">
-      <span> Time </span>
-      <strong> {toPrettyDuration($totalHours)} </strong>
-    </li>
-  </ul>
-
-  {#if $linesByProject.length}
-    <Report linesByProject={$linesByProject} />
-  {:else}
     <p class="note">
-      All
-      <strong>approved</strong>
-      tasks have been paid already.
+      The following tasks
+      <strong>have not been approved</strong>
+      by the project controller yet
     </p>
-  {/if}
+
+    <ul>
+      <li class="value">
+        <span> Value </span>
+        <strong> {toPrettyCurrency($prospectTotalValue)} </strong>
+      </li>
+
+      <li class="time">
+        <span> Time </span>
+        <strong> {toPrettyDuration($prospectTotalHours)} </strong>
+      </li>
+    </ul>
+
+    {#if $prospectByProject.length}
+      <Report linesByProject={$prospectByProject} />
+    {:else}
+      <p class="note">No hours logged.</p>
+    {/if}
+  </div>
+
+  <div class="approved">
+    <h2>Task approved</h2>
+
+    <p class="note">You will receive tokens within a week</p>
+
+    <ul>
+      <li class="value">
+        <span> Value </span>
+        <strong> {toPrettyCurrency($totalValue)} </strong>
+      </li>
+
+      <li class="time">
+        <span> Time </span>
+        <strong> {toPrettyDuration($totalHours)} </strong>
+      </li>
+    </ul>
+
+    {#if $linesByProject.length}
+      <Report linesByProject={$linesByProject} />
+    {:else}
+      <p class="note">
+        All
+        <strong>approved</strong>
+        tasks have been paid already.
+      </p>
+    {/if}
+  </div>
 </section>

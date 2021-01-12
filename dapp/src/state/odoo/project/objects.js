@@ -9,7 +9,7 @@ import { parseTask, parseDuration, parseProject } from "./parsers";
 // Load data from Odoo
 export const upstream = derivable(
   [agent, uid, refresh],
-  async ([$agent, $uid, $refresh], set) => {
+  async ([$agent, $uid], set) => {
     if ($agent && $uid) {
       const tasks = group(
         await $agent.search("project.task", [
