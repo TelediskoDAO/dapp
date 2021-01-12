@@ -57,9 +57,7 @@
   }
 </script>
 
-<style type="text/scss">
-  // @import "src/styles/index";
-
+<style>
   button.done {
     background-color: var(--color-green);
   }
@@ -73,17 +71,13 @@
   .task {
     background: #ffffff;
     transition: all 1s;
-    &.hasSubtasks {
-      padding: 0;
-    }
-    &.isSubtask {
-    }
+  }
+  .task.hasSubtasks {
+    padding: 0;
   }
 
-  .tracking {
-    .stop {
-      background-color: var(--color-blue);
-    }
+  .tracking .stop {
+    background-color: var(--color-blue);
   }
 
   h3 {
@@ -114,34 +108,26 @@
     padding: 0;
   }
 
-  .hasSubtasks {
-    .header {
-      margin-bottom: var(--size-s);
-    }
+  .hasSubtasks .header {
+    margin-bottom: var(--size-s);
   }
 
-  .isSubtask {
-    //padding: var(--size-s);
-    .header {
-      padding: 0;
-    }
-    p {
-      margin: 0;
-    }
+  .isSubtask .header {
+    padding: 0;
+  }
+  .isSubtask p {
+    margin: 0;
   }
 
-  .header {
-    .start,
-    .stop,
-    .done {
-      order: -1;
-      margin-right: var(--size-s);
-      //padding: var(--size-s);
-      display: block;
-    }
-    .details {
-      border: none;
-    }
+  .header .start,
+  .header .stop,
+  .header .done {
+    order: -1;
+    margin-right: var(--size-s);
+    display: block;
+  }
+  .header .details {
+    border: none;
   }
 
   ul {
@@ -152,15 +138,6 @@
 
   .buttons {
     margin-top: var(--size-s);
-  }
-
-  .task:not(.tracking):first-child {
-  }
-
-  .task {
-  }
-
-  .task:not(.tracking):last-child {
   }
 
   i {

@@ -10,12 +10,6 @@
 </script>
 
 <style>
-  div {
-    padding: var(--size-s);
-    max-width: var(--max-width);
-    margin: 0 auto;
-  }
-
   h3 {
     margin-top: 0;
   }

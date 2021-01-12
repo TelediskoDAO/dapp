@@ -22,15 +22,11 @@
   }
 </script>
 
-<style type="text/scss">
+<style>
   table {
     margin-top: var(--size-s);
     width: 100%;
     padding-bottom: var(--size-m);
-  }
-
-  .new-entry {
-    text-align: right;
   }
 </style>
 

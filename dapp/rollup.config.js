@@ -1,8 +1,6 @@
-import * as fs from "fs";
 import path from "path";
 
 import alias from "@rollup/plugin-alias";
-import sveltePreprocess from "svelte-preprocess";
 import commonjs from "@rollup/plugin-commonjs";
 import copy from "rollup-plugin-copy";
 import json from "@rollup/plugin-json";
@@ -53,7 +51,6 @@ export default [
       copy({ targets: [{ src: "public/*", dest: "build" }] }),
       svelte({
         dev: !production,
-        preprocess: sveltePreprocess(),
         css: (css) => css.write("components.css"),
       }),
       scss({

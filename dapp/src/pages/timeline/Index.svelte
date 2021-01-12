@@ -18,11 +18,6 @@
     list-style: none;
   }
 
-  h5 {
-    width: var(--size-m);
-    margin: 0;
-  }
-
   .time {
     position: relative;
     height: var(--size-s);
@@ -47,10 +42,6 @@
     bottom: 100%;
     left: 50%;
     right: 50%;
-  }
-
-  .metadata {
-    color: #666;
   }
 </style>
 

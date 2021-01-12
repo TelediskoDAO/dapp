@@ -43,9 +43,7 @@
   }
 </script>
 
-<style type="text/scss">
-  @import "src/styles/index";
-
+<style>
   ul {
     list-style-type: none;
     margin: 0 0 var(--size-m) 0;
@@ -56,7 +54,7 @@
     display: flex;
     align-items: center;
     margin-bottom: var(--size-s);
-    @include border-bottom;
+    border-bottom: var(--line-size) solid var(--line-color);
   }
 
   .header h2 {

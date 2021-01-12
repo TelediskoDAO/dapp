@@ -4,36 +4,14 @@
   import Tasks from "./Tasks.svelte";
   import { title } from "src/state/runtime";
   title.set("Time Tracking");
-  export let params = {};
 </script>
 
-<style type="text/scss">
-  @import "src/styles/index";
-
-  h1 {
-    @include border-bottom-thick;
-  }
-
+<style>
   .warning {
     color: var(--color-warning-fg);
     background-color: var(--color-warning-bg);
     padding: var(--size-xs);
   }
-
-  .timer {
-    animation: blink 1s infinite;
-  }
-
-  a {
-    padding: var(--size-xs) var(--size-s);
-  }
-
-  div {
-    margin-bottom: var(--size-s);
-  }
-
-  /* FIXME */
-
   ul {
     list-style-type: none;
     margin: 0 0 var(--size-m) 0;

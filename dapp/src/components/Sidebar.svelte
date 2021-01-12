@@ -70,7 +70,7 @@
   <nav class="content">
     <section class="user-data">
       {#if $user}
-        <img src="data:image/jpeg;base64,{$user.image}" />
+        <img alt="User's avatar" src="data:image/jpeg;base64,{$user.image}" />
         {$user.name}
       {/if}
     </section>
