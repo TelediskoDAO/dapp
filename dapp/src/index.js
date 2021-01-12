@@ -61,7 +61,10 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 window.addEventListener("hashchange", function (event) {
-  document.getElementById("sidebar--toggle").checked = false;
+  const element = document.getElementById("sidebar--toggle");
+  if (element) {
+    element.checked = false;
+  }
 });
 
 new App({ target: document.body });
