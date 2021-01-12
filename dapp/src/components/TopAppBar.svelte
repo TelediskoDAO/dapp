@@ -10,10 +10,6 @@
     align-items: center;
   }
 
-  label {
-
-  }
-
   h1 {
     font-size: var(--font-l);
     flex: 1;

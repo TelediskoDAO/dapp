@@ -6,20 +6,10 @@
     );
 </script>
 
-<style>
-  .paper {
-    width: 500px;
-    max-width: 80%;
-    margin: 50px auto;
-  }
-</style>
-
 <section>
-  <div="paper">
+  <div>
     <h2>Connect to Odoo</h2>
-    <p>
-      Allow this website to synchronize your tasks with odoo.teledisko.com.
-    </p>
+    <p>Allow this website to synchronize your tasks with odoo.teledisko.com.</p>
     <button style="margin-top: 10px" variant="raised" on:click={_sign}>
       Connect
     </button>

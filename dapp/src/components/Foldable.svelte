@@ -1,12 +1,12 @@
 <script>
-  export let key = null;
+  //export let key = null;
   export let showOverride = null;
   export let show = false;
 
   const storageKey = null;
   //const storageKey = key !== null ? `widget:foldable:show:${key}` : null;
 
-  if(storageKey) {
+  if (storageKey) {
     const previousValue = JSON.parse(localStorage.getItem(storageKey));
     if (previousValue !== null) {
       show = previousValue;
@@ -20,7 +20,7 @@
   function handleShow() {
     show = !show;
 
-    if(storageKey) {
+    if (storageKey) {
       localStorage.setItem(storageKey, show);
     }
   }
@@ -34,7 +34,7 @@
 
 <div>
   <div class="header" on:click={handleShow}>
-    <slot name="header" visible={show}/>
+    <slot name="header" visible={show} />
   </div>
   {#if show}
     <slot name="body" />

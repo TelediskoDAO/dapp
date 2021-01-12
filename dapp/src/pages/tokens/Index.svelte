@@ -1,6 +1,6 @@
 <script>
   import { title } from "src/state/runtime";
-  title.set('Tokens');
+  title.set("Tokens");
 </script>
 
 <section>

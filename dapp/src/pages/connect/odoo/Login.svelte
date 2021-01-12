@@ -1,26 +1,25 @@
 <script>
   import { connectToOdoo, user, username, password } from "src/state/odoo";
-  import { push } from 'svelte-spa-router'
+  import { push } from "svelte-spa-router";
 
   let loginError;
-  let _username = '';
-  let _password = '';
+  let _username = "";
+  let _password = "";
 
   async function handleConnect() {
     try {
       await connectToOdoo(_username, _password);
-      push('/');
-    } catch(e) {
+      push("/");
+    } catch (e) {
       loginError = true;
     }
   }
 
   function handleDisconnect() {
-    $username = '';
-    $password = '';
-    push('/');
+    $username = "";
+    $password = "";
+    push("/");
   }
-
 </script>
 
 <style>
@@ -30,55 +29,54 @@
 </style>
 
 <section>
-
-    <h2>Odoo Login</h2>
-    {#if $user}
-    <p>
-      You are connected already.
-    </p>
-      <button on:click={handleDisconnect}>
-        Disconnect
-      </button>
-    {:else}
+  <h2>Odoo Login</h2>
+  {#if $user}
+    <p>You are connected already.</p>
+    <button on:click={handleDisconnect}> Disconnect </button>
+  {:else}
     <form on:submit|preventDefault={handleConnect}>
       <fieldset>
         <legend>Connect using your Odoo credentials.</legend>
         <p>
-          <label>Odoo Username<br/>
+          <label>Odoo Username<br />
             <input bind:value={_username} required />
           </label>
         </p>
         <p>
-          <label>Odoo Password<br/>
+          <label>Odoo Password<br />
             <input type="password" bind:value={_password} required />
           </label>
         </p>
 
         {#if loginError}
-        <p class="error">Login error, please check your username and password.</p>
+          <p class="error">
+            Login error, please check your username and password.
+          </p>
         {/if}
 
-        <button type="submit">
-          Connect
-        </button>
+        <button type="submit"> Connect </button>
       </fieldset>
     </form>
-    {/if}
+  {/if}
 
-    <details>
-      <summary>Is it secure?</summary>
-      <p>
-        Your credentials are stored in your browser and are <strong>only</strong>
-        used to load and save data in the <a href="https://odoo.teledisko.com/"
-        target="_blank">odoo.teledisko.com</a> server.
-        There is <strong>no third party involved</strong>.
-      </p>
+  <details>
+    <summary>Is it secure?</summary>
+    <p>
+      Your credentials are stored in your browser and are
+      <strong>only</strong>
+      used to load and save data in the
+      <a
+        href="https://odoo.teledisko.com/"
+        target="_blank">odoo.teledisko.com</a>
+      server. There is
+      <strong>no third party involved</strong>.
+    </p>
 
-      <p>
-        <strong>Note:</strong> this is just a temporary solution until <a
-        href="https://gitlab.com/teledisko/dao/-/tree/master/tips/2">TIP-2</a>
-        is ready.
-      </p>
-    </details>
-
+    <p>
+      <strong>Note:</strong>
+      this is just a temporary solution until
+      <a href="https://gitlab.com/teledisko/dao/-/tree/master/tips/2">TIP-2</a>
+      is ready.
+    </p>
+  </details>
 </section>

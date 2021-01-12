@@ -23,14 +23,14 @@
   }
 
   tbody tr:nth-child(odd) {
-     background-color: #f5f5f5;
+    background-color: #f5f5f5;
   }
 
   td {
     padding: var(--size-xs);
   }
 
-  td.value{
+  td.value {
     text-align: right;
     font-weight: bold;
   }
@@ -54,25 +54,25 @@
 </style>
 
 <ol>
-{#each linesByProject as project}
-  <li>
-    <h4>Project: {project.name}</h4>
-    <table>
-      <tbody>
-      {#each project.lines as line}
-        <tr>
-          <td>
-            {line.name}
-            <ul class="metadata">
-              <li>{line.tier} tier</li>
-              <li><i>timer</i>{toPrettyDuration(line.hours)}</li>
-            </ul>
-          </td>
-          <td class="value">{toPrettyCurrency(line.value)}</td>
-        </tr>
-      {/each}
-      </tbody>
-    </table>
-  </li>
-{/each}
+  {#each linesByProject as project}
+    <li>
+      <h4>Project: {project.name}</h4>
+      <table>
+        <tbody>
+          {#each project.lines as line}
+            <tr>
+              <td>
+                {line.name}
+                <ul class="metadata">
+                  <li>{line.tier} tier</li>
+                  <li><i>timer</i>{toPrettyDuration(line.hours)}</li>
+                </ul>
+              </td>
+              <td class="value">{toPrettyCurrency(line.value)}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </li>
+  {/each}
 </ol>

@@ -7,11 +7,7 @@
   <ul class="demo-list">
     {#each Object.entries($contributors || {}) as [address, value]}
       <li>
-        <p>
-          {value.name || address}
-          {address}
-          {value.balance} TDT
-        </p>
+        <p>{value.name || address} {address} {value.balance} TDT</p>
       </li>
     {/each}
   </ul>
