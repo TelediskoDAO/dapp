@@ -95,7 +95,8 @@
       <td class="options">
         <div class="buttons">
           <button
-            on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>
+            on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}
+          >
             <i>delete</i>
           </button>
         </div>
@@ -120,7 +121,8 @@
         {#if editable}
           <div class="buttons">
             <button on:click={() => (edit = true)}> <i>edit</i> </button><button
-              on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}>
+              on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}
+            >
               <i>delete</i>
             </button>
           </div>
@@ -140,12 +142,14 @@
               bind:value={startDate}
               on:change={() => taskId && (endDate = startDate)}
               type="date"
-              required />
+              required
+            />
             <input
               bind:value={startTime}
               on:change={() => taskId && (endTime = startTime)}
               type="time"
-              required />
+              required
+            />
           </label>
         </p>
         {#if !keepTracking}
@@ -155,15 +159,20 @@
               <input
                 bind:value={endTime}
                 type="time"
-                min={startDate === endDate ? startTime : ''} />
+                min={startDate === endDate ? startTime : ''}
+              />
             </label>
           </p>
         {/if}
-        <p>
-          <label>Keep tracking
-            <input bind:checked={keepTracking} type="checkbox" />
-          </label>
-        </p>
+        <!--
+        {#if duration.end}
+          <p>
+            <label>Continue tracking the task
+              <input bind:checked={keepTracking} type="checkbox" />
+            </label>
+          </p>
+        {/if}
+        -->
         <div class="buttons">
           <button type="submit">Save</button>
           {#if duration}
