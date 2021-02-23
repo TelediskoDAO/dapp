@@ -1,6 +1,4 @@
 <script>
-  import { authenticate, provider, address, addressShort } from "../state/eth";
-  import { user } from "src/state/odoo";
   import { title } from "src/state/runtime";
 </script>
 

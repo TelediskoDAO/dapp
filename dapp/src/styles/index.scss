@@ -1,5 +1,4 @@
 @import "icons.scss";
-@import "headroom.scss";
 @import "sidebar.scss";
 
 // # Variables
@@ -74,19 +73,22 @@
   border-bottom: var(--line-size-thick) solid var(--line-color);
 }
 
-
 $break-small: 576px;
 $break-large: 1024px;
 
 @mixin respond-to($media) {
   @if $media == handhelds {
-    @media only screen and (max-width: $break-small) { @content; }
-  }
-  @else if $media == medium-screens {
-    @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) { @content; }
-  }
-  @else if $media == wide-screens {
-    @media only screen and (min-width: $break-large) { @content; }
+    @media only screen and (max-width: $break-small) {
+      @content;
+    }
+  } @else if $media == medium-screens {
+    @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) {
+      @content;
+    }
+  } @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) {
+      @content;
+    }
   }
 }
 
@@ -96,7 +98,6 @@ html,
 body {
   height: 100vh;
 }
-
 
 html {
   font-size: var(--root-size);
@@ -110,7 +111,9 @@ body {
   margin-bottom: 50px;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -173,7 +176,10 @@ fieldset {
   @include border;
 }
 
-button, select, input, .button {
+button,
+select,
+input,
+.button {
   @include border;
   border-radius: var(--size-xs);
   padding: var(--size-xs) var(--size-xs);

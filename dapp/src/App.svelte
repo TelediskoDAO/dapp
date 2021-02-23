@@ -1,12 +1,11 @@
 <script>
   import { user, username } from "src/state/odoo";
   import { title } from "src/state/runtime";
-  import CONFIG from "./config";
-  import { slide } from 'svelte/transition';
+  import { slide } from "svelte/transition";
 
   import TopAppBar from "./components/TopAppBar.svelte";
   import Sidebar from "./components/Sidebar.svelte";
-  import CurrentTask from "./components/CurrentTask.svelte";
+  import MismatchError from "src/components/MismatchError.svelte";
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
   import Router from "svelte-spa-router";
@@ -20,11 +19,10 @@
   import PageReport from "./pages/report/Index.svelte";
   import PageTokens from "./pages/tokens/Index.svelte";
 
-  import Home from "./Home.svelte";
   import NotFound from "./NotFound.svelte";
 
   $: {
-    if($user) {
+    if ($user) {
       replace("/tasks");
     }
   }
@@ -62,27 +60,20 @@
 </style>
 
 <svelte:head>
-	<title>{$title}</title>
+  <title>{$title}</title>
 </svelte:head>
 
-
 {#if $username && !$user}
-<div out:slide class="loading">
-  <p>
-    loading...
-  </p>
-</div>
+  <div out:slide class="loading">
+    <p>loading...</p>
+  </div>
 {:else}
+  <Sidebar />
+  <main>
+    <MismatchError />
+    <TopAppBar />
+    <Router {routes} restoreScrollState={true} />
+  </main>
 
-
-<Sidebar />
-<main>
-  <TopAppBar />
-  <Router
-    {routes}
-    restoreScrollState={true}
-  />
-</main>
-
-<RuntimeErrors />
+  <RuntimeErrors />
 {/if}
