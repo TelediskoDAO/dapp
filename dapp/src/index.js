@@ -1,6 +1,5 @@
 //import { version } from "../package.json";
 import CONFIG from "./config";
-import "src/styles/index.scss";
 import App from "./App.svelte";
 import { errors, platform } from "src/state/runtime";
 

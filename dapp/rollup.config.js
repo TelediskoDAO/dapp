@@ -7,7 +7,6 @@ import json from "@rollup/plugin-json";
 import livereload from "rollup-plugin-livereload";
 import replace from "@rollup/plugin-replace";
 import resolve from "@rollup/plugin-node-resolve";
-import scss from "rollup-plugin-scss";
 import serve from "rollup-plugin-serve";
 import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
@@ -62,9 +61,6 @@ export default [
       svelte({
         dev: !production,
         css: (css) => css.write("components.css"),
-      }),
-      scss({
-        output: "build/style.css",
       }),
       setAlias(),
       json(),
