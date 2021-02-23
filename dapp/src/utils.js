@@ -1,3 +1,4 @@
+import ethers from "ethers";
 export function utc(date) {
   const d = date ? date : new Date();
   const year = d.getUTCFullYear();
@@ -45,13 +46,29 @@ export function toPrettyTime(date) {
   return [d.join(" "), t.join(":")].join(" ");
 }
 
+export function fromFloatNumber(number) {
+  return ethers.BigNumber.from(number * 1e6).mul(
+    ethers.BigNumber.from(10).pow(12)
+  );
+}
+
+export function toFloatNumber(number) {
+  if (number instanceof ethers.BigNumber) {
+    number = number.div(ethers.BigNumber.from(10).pow(12)).toNumber() / 1e6;
+  }
+  return number;
+}
+
 export function toPrettyCurrency(number) {
+  if (number instanceof ethers.BigNumber) {
+    number = number.div(ethers.BigNumber.from(10).pow(12)).toNumber() / 1e6;
+  }
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
     currency: "USD",
   })
     .format(number)
-    .replace("$", "Ŧ");
+    .replace("$", "TT");
 }
 
 export function toPrettyRange(start, end) {
@@ -120,4 +137,8 @@ export function splitDate(date) {
     ),
     [pad(date.getHours()), pad(date.getMinutes())].join(":"),
   ];
+}
+
+export function toShortAddress(address) {
+  return address.substr(0, 6) + "…" + address.substr(-4);
 }

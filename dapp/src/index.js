@@ -40,6 +40,7 @@ window.addEventListener("error", function (event) {
   errors.update(($errors) => [event, ...$errors]);
 });
 window.addEventListener("unhandledrejection", function (event) {
+  console.log("error", event);
   errors.update(($errors) => [event, ...$errors]);
 });
 
@@ -60,7 +61,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-window.addEventListener("hashchange", function (event) {
+window.addEventListener("hashchange", function () {
   const element = document.getElementById("sidebar--toggle");
   if (element) {
     element.checked = false;

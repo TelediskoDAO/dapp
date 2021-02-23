@@ -14,6 +14,12 @@ import { terser } from "rollup-plugin-terser";
 import packageJson from "./package.json";
 
 const production = !process.env.ROLLUP_WATCH;
+
+const network = process.env.NETWORK || "local";
+const endpoint = process.env.ENDPOINT || "http://localhost:8545";
+const oracleAddress = process.env.ORACLE_ADDRESS;
+const tokenAddress = process.env.TOKEN_ADDRESS;
+
 const dedupe = (importee) =>
   importee === "svelte" || importee.startsWith("svelte/");
 
@@ -46,6 +52,10 @@ export default [
           production,
           date: now,
           version: production ? packageJson.version : "dev",
+          network,
+          endpoint,
+          oracleAddress,
+          tokenAddress,
         }),
       }),
       copy({ targets: [{ src: "public/*", dest: "build" }] }),

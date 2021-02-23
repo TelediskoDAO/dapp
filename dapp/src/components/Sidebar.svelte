@@ -1,7 +1,6 @@
 <script>
   import active from "svelte-spa-router/active";
   import CurrentTask from "./CurrentTask.svelte";
-  import { authenticate, provider, address, addressShort } from "../state/eth";
   import { user, refresh } from "src/state/odoo";
   import CONFIG from "src/config";
 
@@ -85,35 +84,33 @@
               Time Tracking</a>
           </li>
           <li>
-            <a
-              use:active
-              on:click={closeSidebar}
-              href="#/timeline"><i>calendar_today</i>
+            <a use:active on:click={closeSidebar} href="#/timeline"><i
+              >calendar_today</i>
               Timeline</a>
           </li>
           <li>
-            <a
-              use:active
-              on:click={closeSidebar}
-              href="#/report"><i>fact_check</i>
+            <a use:active on:click={closeSidebar} href="#/report"><i
+              >fact_check</i>
               Report</a>
           </li>
-          <!--li>
-          <a use:active on:click={closeSidebar} href="#/tokens"><i>account_balance</i> Tokens</a>
-        </li-->
           <li>
-          <a use:active on:click={closeSidebar} href="#/connect/odoo"><i>settings</i> Settings</a>
-        </li>
+            <a use:active on:click={closeSidebar} href="#/tokens"><i
+              >account_balance</i>
+              Tokens</a>
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/connect/odoo"><i
+              >settings</i>
+              Settings</a>
+          </li>
         {:else}
           <li>
             <a use:active on:click={closeSidebar} href="#/"><i>home</i>
               Home Page</a>
           </li>
           <li>
-            <a
-              use:active
-              on:click={closeSidebar}
-              href="#/connect/odoo"><i>login</i>
+            <a use:active on:click={closeSidebar} href="#/connect/odoo"><i
+              >login</i>
               Log in</a>
           </li>
         {/if}
@@ -122,10 +119,8 @@
 
     <section class="refresh">
       <h5>Last refresh: {refreshTime}</h5>
-      <button
-        on:click={handleRefresh}
-        on:click={closeSidebar}
-        class="small"><i>sync</i>Refresh</button>
+      <button on:click={handleRefresh} on:click={closeSidebar} class="small"><i
+        >sync</i>Refresh</button>
     </section>
 
     <section>

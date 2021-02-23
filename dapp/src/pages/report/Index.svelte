@@ -48,12 +48,6 @@
     text-align: center;
   }
 
-  .important {
-    background: red;
-    color: white;
-    padding: 1rem;
-  }
-
   .prospect {
     margin-bottom: var(--size-l);
   }
@@ -61,12 +55,6 @@
 
 <section>
   <div class="prospect">
-    <div class="important">
-      Work in progress! We are currently working on this feature, so some
-      numbers might be
-      <strong>wrong or missing</strong>!
-    </div>
-
     <h2>Tasks done</h2>
 
     <p class="note">
@@ -77,13 +65,13 @@
 
     <ul>
       <li class="value">
-        <span> Value </span>
-        <strong> {toPrettyCurrency($prospectTotalValue)} </strong>
+        <span>Value</span>
+        <strong>{toPrettyCurrency($prospectTotalValue)}</strong>
       </li>
 
       <li class="time">
-        <span> Time </span>
-        <strong> {toPrettyDuration($prospectTotalHours)} </strong>
+        <span>Time</span>
+        <strong>{toPrettyDuration($prospectTotalHours)}</strong>
       </li>
     </ul>
 
@@ -101,13 +89,13 @@
 
     <ul>
       <li class="value">
-        <span> Value </span>
-        <strong> {toPrettyCurrency($totalValue)} </strong>
+        <span>Value</span>
+        <strong>{toPrettyCurrency($totalValue)}</strong>
       </li>
 
       <li class="time">
-        <span> Time </span>
-        <strong> {toPrettyDuration($totalHours)} </strong>
+        <span>Time</span>
+        <strong>{toPrettyDuration($totalHours)}</strong>
       </li>
     </ul>
 

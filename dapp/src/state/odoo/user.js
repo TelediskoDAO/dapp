@@ -10,8 +10,10 @@ export const user = derived(agent, async ($agent, set) => {
   if ($agent) {
     const [data] = await $agent.read("res.users", $agent.uid);
     set({
+      uid: data.id,
       name: data.name,
       image: data.image_medium,
+      address: data.ethereum_address,
     });
   } else {
     set(null);
