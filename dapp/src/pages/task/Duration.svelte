@@ -20,7 +20,7 @@
   let edit = duration ? false : true;
 
   let startDate, startTime, endDate, endTime, range, hours;
-  let keepTracking = !(duration && duration.end);
+  let keepTracking = !taskId && !(duration && duration.end);
 
   if (taskId) {
     [startDate, startTime] = splitDate();
