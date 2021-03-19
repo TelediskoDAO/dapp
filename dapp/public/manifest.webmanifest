@@ -17,10 +17,10 @@
     }
   ],
   "start_url": "/",
-  "background_color": "#c07a90",
+  "background_color": "#000000",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "#c07a90",
+  "theme_color": "#000000",
   "shortcuts": [
     {
       "name": "Your Tasks",
