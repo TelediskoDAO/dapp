@@ -3,6 +3,12 @@
   import { platform } from "src/state/runtime";
 </script>
 
+<style>
+  .medium {
+    padding: 0;
+  }
+</style>
+
 <section>
   <h1>Teledisko DAO</h1>
 
@@ -38,7 +44,8 @@
         <img
           class="icon medium"
           alt="iOS share icon"
-          src="images/icons/ios-share.png" />
+          src="images/icons/ios-share.png"
+        />
         icon, then
         <em>Add to Home Screen</em>.
       </p>

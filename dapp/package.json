@@ -1,6 +1,6 @@
 {
   "name": "teledisko-dao",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Teledisko DAO",
   "main": "index.js",
   "scripts": {

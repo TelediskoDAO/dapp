@@ -10,7 +10,12 @@
     stopDuration,
   } from "src/state/odoo";
   import { clock } from "src/state/clock";
-  import { toPrettyDuration, toPrettyRange, splitDate } from "src/utils";
+  import {
+    toPrettyDuration,
+    toPrettyRange,
+    splitDate,
+    joinDate,
+  } from "src/utils";
 
   export let editable = true;
   export let handleDone = null;
@@ -44,8 +49,8 @@
 
   async function handleSubmit() {
     // If there is no `duration`, we create a new duration connected to `taskId`
-    let start = new Date([startDate, startTime].join(" "));
-    let end = keepTracking ? false : new Date([endDate, endTime].join(" "));
+    let start = joinDate(startDate, startTime);
+    let end = keepTracking ? false : joinDate(endDate, endTime);
     if (keepTracking && $currentTask !== undefined && $currentTask !== taskId) {
       //const message = `You are tracking "${$currentTask.name}". `;
       //if (confirm(message)) {
@@ -75,14 +80,29 @@
     animation: blink 1s infinite;
   }
 
-  .buttons {
-    justify-content: flex-end;
-  }
-
   .warning {
     color: var(--color-warning-fg);
     background-color: var(--color-warning-bg);
     padding: var(--size-xs);
+  }
+
+  .buttons {
+    justify-content: flex-end;
+  }
+
+  .edit .buttons {
+    justify-content: flex-start;
+  }
+
+  .edit span {
+    font-weight: bold;
+    display: block;
+  }
+
+  .edit input[type="date"],
+  .edit input[type="time"] {
+    height: 100%;
+    padding: var(--size-xs) var(--size-xs);
   }
 </style>
 
@@ -133,35 +153,33 @@
 {/if}
 
 {#if edit}
-  <tr>
+  <tr class="edit">
     <td colspan="3">
       <form on:submit|preventDefault={handleSubmit}>
         <p>
-          <label>Start<br />
-            <input
-              bind:value={startDate}
-              on:change={() => taskId && (endDate = startDate)}
-              type="date"
-              required
-            />
-            <input
-              bind:value={startTime}
-              on:change={() => taskId && (endTime = startTime)}
-              type="time"
-              required
-            />
-          </label>
+          <span>Start</span>
+          <input
+            bind:value={startDate}
+            on:change={() => taskId && (endDate = startDate)}
+            type="date"
+            required
+          />
+          <input
+            bind:value={startTime}
+            on:change={() => taskId && (endTime = startTime)}
+            type="time"
+            required
+          />
         </p>
         {#if !keepTracking}
           <p>
-            <label>End<br />
-              <input bind:value={endDate} type="date" min={startDate} />
-              <input
-                bind:value={endTime}
-                type="time"
-                min={startDate === endDate ? startTime : ''}
-              />
-            </label>
+            <span>End</span>
+            <input bind:value={endDate} type="date" min={startDate} />
+            <input
+              bind:value={endTime}
+              type="time"
+              min={startDate === endDate ? startTime : ''}
+            />
           </p>
         {/if}
         <!--
