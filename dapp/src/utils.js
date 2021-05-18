@@ -142,7 +142,7 @@ export function splitDate(date) {
 export function joinDate(date, time) {
   const [year, month, day] = date.split("-");
   const [hour, minute] = time.split(":");
-  return new Date(year, month, day, hour, minute);
+  return new Date(year, month - 1, day, hour, minute);
 }
 
 export function toShortAddress(address) {
