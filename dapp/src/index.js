@@ -1,40 +1,24 @@
 //import { version } from "../package.json";
 import CONFIG from "./config";
 import App from "./App.svelte";
-import { errors, platform } from "src/state/runtime";
+import { platform, updateAvailable } from "src/state/runtime";
+import { installServiceWorker } from "./service-worker-manager";
 
 console.log("Config is", CONFIG);
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js").then((registration) => {
-    console.log("[Client] service worker registered");
-    registration.addEventListener("updatefound", () => {
-      console.log("[Client] update found");
-      let newWorker = registration.installing;
-      newWorker.addEventListener("statechange", () => {
-        console.log("[Client] State change", newWorker.state);
-        if (
-          newWorker.state === "installed" &&
-          navigator.serviceWorker.controller
-        ) {
-          if (confirm("A new version of the app is available, refresh?")) {
-            newWorker.postMessage({ action: "skipWaiting" });
-          }
-        }
-      });
-    });
-  });
-
-  let refreshing;
-  navigator.serviceWorker.addEventListener("controllerchange", function (e) {
-    console.log("[Client] Controller change", e);
-    if (refreshing) return;
-    window.location.reload();
-    refreshing = true;
-  });
+if (CONFIG.production) {
+  if (navigator.serviceWorker) {
+    installServiceWorker("service-worker.js", {
+      onInstalled: (activate) => {
+        console.log("onInstalled callback");
+        updateAvailable.set(activate);
+      },
+    }).catch(console.log);
+  }
 }
 
 // Display errors
+/*
 window.addEventListener("error", function (event) {
   errors.update(($errors) => [event, ...$errors]);
 });
@@ -42,6 +26,7 @@ window.addEventListener("unhandledrejection", function (event) {
   console.log("error", event);
   errors.update(($errors) => [event, ...$errors]);
 });
+*/
 
 // Check browser display mode
 window.addEventListener("DOMContentLoaded", () => {
@@ -68,3 +53,4 @@ window.addEventListener("hashchange", function () {
 });
 
 new App({ target: document.body });
+window.TELEDISKO_DAO_BOOTED = true;

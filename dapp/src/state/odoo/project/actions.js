@@ -1,5 +1,5 @@
 import { derived } from "svelte/store";
-import { utc } from "src/utils";
+import { utc } from "../../../utils";
 import { upstream, tasks, hoursByTask, durations } from "./objects";
 import { agent } from "../agent";
 

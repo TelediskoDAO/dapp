@@ -4,6 +4,7 @@
   import { slide } from "svelte/transition";
 
   import TopAppBar from "./components/TopAppBar.svelte";
+  import UpdateAvailable from "./components/UpdateAvailable.svelte";
   import Sidebar from "./components/Sidebar.svelte";
   import MismatchError from "src/components/MismatchError.svelte";
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
@@ -69,10 +70,12 @@
   </div>
 {:else}
   <Sidebar />
+
   <main>
     <MismatchError />
     <TopAppBar />
     <Router {routes} restoreScrollState={true} />
+    <UpdateAvailable />
   </main>
 
   <RuntimeErrors />

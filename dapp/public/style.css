@@ -322,3 +322,26 @@ label[for="sidebar--toggle"] {
   font-size: 30px;
   font-weight: bold;
 }
+
+.CORE .runtime-error {
+  z-index: 1000;
+  background-color: black;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.CORE .runtime-error p {
+  padding: var(--size-s);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.CORE .runtime-error strong {
+  background-color: red;
+  color: white;
+  padding: var(--size-xs);
+  font-weight: bold;
+}

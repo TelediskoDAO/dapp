@@ -1,5 +1,4 @@
 import CONFIG from "./config";
-
 console.log(
   "[Service Worker] Version:",
   CONFIG.version,
@@ -25,6 +24,7 @@ const contentToCache = [
   "images/splash-2048.png",
   "images/splash-640.png",
   "images/splash-750.png",
+  "core.js",
   "bundle.js",
   "components.css",
   "./",
@@ -38,6 +38,7 @@ function addToCache() {
     Promise.all(
       contentToCache.map((url) =>
         fetch(`${url}?${CONFIG.date}`).then((response) => {
+          console.log(`[Service Worker] Fetching ${url}?${CONFIG.date}`);
           if (!response.ok) {
             console.error(`[Service Worker ${cacheName}] Cannot fetch`, url);
             throw Error(`Cannot fetch ${url}`);
@@ -71,30 +72,28 @@ async function clearCaches() {
 }
 
 function register() {
-  if (CONFIG.production) {
-    console.log(`[Service Worker ${cacheName}] Register Listener: install`);
-    self.addEventListener("install", (e) => {
-      e.waitUntil(addToCache());
-    });
+  console.log(`[Service Worker ${cacheName}] Register Listener: install`);
+  self.addEventListener("install", (e) => {
+    e.waitUntil(addToCache());
+  });
 
-    console.log(`[Service Worker ${cacheName}] Register Listener: fetch`);
-    self.addEventListener("fetch", (e) => {
-      e.respondWith(retrieve(e));
-    });
+  console.log(`[Service Worker ${cacheName}] Register Listener: fetch`);
+  self.addEventListener("fetch", (e) => {
+    e.respondWith(retrieve(e));
+  });
 
-    console.log(`[Service Worker ${cacheName}] Register Listener: activate`);
-    self.addEventListener("activate", (e) => {
-      console.log(`[Service Worker ${cacheName}] Activate`);
-      e.waitUntil(clearCaches());
-    });
+  console.log(`[Service Worker ${cacheName}] Register Listener: activate`);
+  self.addEventListener("activate", (e) => {
+    console.log(`[Service Worker ${cacheName}] Activate`);
+    e.waitUntil(clearCaches());
+  });
 
-    self.addEventListener("message", function (event) {
-      console.log("[Service Worker] Message:", event);
-      if (event.data.action === "skipWaiting") {
-        self.skipWaiting();
-      }
-    });
-  }
+  self.addEventListener("message", function (event) {
+    console.log("[Service Worker] Message:", event);
+    if (event.data.action === "skipWaiting") {
+      self.skipWaiting();
+    }
+  });
 }
 
 register();
