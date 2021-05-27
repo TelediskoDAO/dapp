@@ -17,6 +17,7 @@ export function parseTask(task) {
   const stages = new Set([stage]);
   return {
     id: task.id,
+    userId: task.user_id[0],
     name: task.name,
     description: task.description,
     isTracking: false,

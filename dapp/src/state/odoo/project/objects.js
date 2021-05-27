@@ -11,12 +11,28 @@ export const upstream = derivable(
   [agent, uid, refresh],
   async ([$agent, $uid], set) => {
     if ($agent && $uid) {
-      const tasks = group(
+      let tasks = group(
         await $agent.search("project.task", [
           ["user_id", "=", $uid],
           ["stage_id", "in", [1, 2, 5]],
         ])
       );
+      const missingTaskIds = Object.values(tasks).reduce(
+        (acc, curr) =>
+          curr.task_id[0] !== undefined && tasks[curr.task_id[0]] === undefined
+            ? acc.concat(curr.task_id[0])
+            : acc,
+        []
+      );
+      const missingTasks = group(
+        await $agent.search("project.task", [["id", "in", missingTaskIds]])
+      );
+
+      tasks = {
+        ...tasks,
+        ...missingTasks,
+      };
+
       const durationIds = Object.values(tasks).reduce(
         (acc, curr) => acc.concat(curr.duration_entry),
         []
@@ -87,6 +103,7 @@ const data = derived(upstream, ($upstream) => {
     }
 
     if (task.parentId !== null) {
+      console.log("AAAAA", tasks[task.parentId], task);
       tasks[task.parentId].stages = new Set([
         ...task.stages,
         ...tasks[task.parentId].stages,
