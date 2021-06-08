@@ -43,7 +43,7 @@ export async function installServiceWorker(
     log(`New Service Worker activated, version ${version}, build date ${date}`);
     // Seems like iOS doesn't always pick up the new worker,
     // let's add some good ol delay before reloading
-    // window.setTimeout(() => window.location.reload(), 1000);
+    window.setTimeout(() => window.location.reload(), 1000);
   };
 
   checkForUpdates(options.onInstalled);
