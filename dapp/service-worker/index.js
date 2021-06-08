@@ -21,7 +21,6 @@ const contentToCache = [
   "images/splash-1536.png",
   "images/splash-1668.png",
   "images/splash-2048.png",
-  "images/splash-2048.png",
   "images/splash-640.png",
   "images/splash-750.png",
   "core.js",
