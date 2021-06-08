@@ -42,12 +42,13 @@
 
 <section>
   <h2>App info</h2>
-  <button on:click={handleReset}>Reset Storage and Cache</button>
   {#if navigator.serviceWorker}
     <button on:click={handleCheckForUpdates}>Check for updates</button>
   {/if}
+  <button on:click={handleReset}>Reset Storage and Cache</button>
   <br />
   <button on:click={handleShowLogs}>Show Logs</button>
+  <button on:click={() => window.location.reload()}>Reload</button>
 </section>
 
 <section>
