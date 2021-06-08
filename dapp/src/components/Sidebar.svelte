@@ -1,7 +1,7 @@
 <script>
   import active from "svelte-spa-router/active";
   import CurrentTask from "./CurrentTask.svelte";
-  import { user, refresh } from "src/state/odoo";
+  import { user, refresh } from "../state/odoo";
   import CONFIG from "src/config";
 
   $: refreshTime = new Date($refresh).toLocaleTimeString();

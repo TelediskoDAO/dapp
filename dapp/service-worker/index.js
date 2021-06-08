@@ -90,8 +90,21 @@ function register() {
 
   self.addEventListener("message", function (event) {
     console.log("[Service Worker] Message:", event);
-    if (event.data.action === "skipWaiting") {
-      self.skipWaiting();
+    const port = event.ports[0];
+    switch (event.data.method) {
+      case "skipWaiting":
+        self.skipWaiting();
+        break;
+      case "getInfo":
+        port.postMessage({
+          result: {
+            version: CONFIG.version,
+            date: CONFIG.date,
+          },
+        });
+        break;
+      default:
+        break;
     }
   });
 }

@@ -3,19 +3,23 @@ import CONFIG from "./config";
 import App from "./App.svelte";
 import { platform, updateAvailable } from "src/state/runtime";
 import { installServiceWorker } from "./service-worker-manager";
+import { logger } from "./state/runtime";
 
+const log = logger("UI:Update");
 console.log("Config is", CONFIG);
 
-if (CONFIG.production) {
-  if (navigator.serviceWorker) {
-    installServiceWorker("service-worker.js", {
-      onInstalled: (activate) => {
-        console.log("onInstalled callback");
-        updateAvailable.set(activate);
-      },
-    }).catch(console.log);
-  }
+//if (CONFIG.production) {
+if (navigator.serviceWorker) {
+  installServiceWorker("service-worker.js", {
+    onInstalled: (activate, info) => {
+      const version = info.version;
+      const date = new Date(info.date);
+      log(`Prompt update, version ${version}, build date ${date}`);
+      updateAvailable.set(activate);
+    },
+  });
 }
+//}
 
 // Display errors
 /*

@@ -1,6 +1,7 @@
 <script>
-  import { user, username } from "src/state/odoo";
-  import { title } from "src/state/runtime";
+  import { logger } from "./state/runtime";
+  import { user, username } from "./state/odoo";
+  import { title } from "./state/runtime";
   import { slide } from "svelte/transition";
 
   import TopAppBar from "./components/TopAppBar.svelte";
@@ -22,6 +23,8 @@
 
   import NotFound from "./NotFound.svelte";
 
+  const log = logger("App");
+
   $: {
     if ($user) {
       replace("/tasks");
@@ -38,6 +41,8 @@
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
+
+  log("Boot");
 </script>
 
 <style>

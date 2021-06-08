@@ -57,6 +57,10 @@ body {
   margin-bottom: 50px;
 }
 
+main {
+  padding-bottom: var(--size-l);
+}
+
 *,
 *:before,
 *:after {

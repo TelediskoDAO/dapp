@@ -103,7 +103,6 @@ const data = derived(upstream, ($upstream) => {
     }
 
     if (task.parentId !== null) {
-      console.log("AAAAA", tasks[task.parentId], task);
       tasks[task.parentId].stages = new Set([
         ...task.stages,
         ...tasks[task.parentId].stages,
