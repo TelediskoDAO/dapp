@@ -18,7 +18,7 @@
 
 <header>
   <section>
-    <label for="sidebar--toggle">≡</label>
+    <label for="sidebar--toggle"><i>menu</i></label>
     <h1>{$title}</h1>
   </section>
 </header>
