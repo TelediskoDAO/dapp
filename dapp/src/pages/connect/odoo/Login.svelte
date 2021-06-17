@@ -1,14 +1,13 @@
 <script>
-  import { connectToOdoo, user, username, password } from "src/state/odoo";
+  import { connectToOdoo, user, username, password } from "../../../state/odoo";
   import { push } from "svelte-spa-router";
 
   let loginError;
-  let _username = "";
-  let _password = "";
 
-  async function handleConnect() {
+  async function handleConnect(e) {
+    const form = new FormData(e.target);
     try {
-      await connectToOdoo(_username, _password);
+      await connectToOdoo(form.get("username"), form.get("password"));
       push("/");
     } catch (e) {
       loginError = true;
@@ -32,19 +31,17 @@
   <h2>Odoo Login</h2>
   {#if $user}
     <p>You are connected already.</p>
-    <button on:click={handleDisconnect}> Disconnect </button>
+    <button on:click={handleDisconnect}>Disconnect</button>
   {:else}
     <form on:submit|preventDefault={handleConnect}>
       <fieldset>
         <legend>Connect using your Odoo credentials.</legend>
         <p>
-          <label>Odoo Username<br />
-            <input bind:value={_username} required />
-          </label>
+          <label>Odoo Username<br /> <input name="username" required /> </label>
         </p>
         <p>
           <label>Odoo Password<br />
-            <input type="password" bind:value={_password} required />
+            <input name="password" type="password" required />
           </label>
         </p>
 
@@ -54,7 +51,7 @@
           </p>
         {/if}
 
-        <button type="submit"> Connect </button>
+        <button type="submit">Connect</button>
       </fieldset>
     </form>
   {/if}
@@ -67,7 +64,8 @@
       used to load and save data in the
       <a
         href="https://odoo.teledisko.com/"
-        target="_blank">odoo.teledisko.com</a>
+        target="_blank"
+      >odoo.teledisko.com</a>
       server. There is
       <strong>no third party involved</strong>.
     </p>
