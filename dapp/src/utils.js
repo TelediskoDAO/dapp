@@ -1,4 +1,5 @@
-import ethers from "ethers";
+import { ethers } from "ethers";
+
 export function utc(date) {
   const d = date ? date : new Date();
   const year = d.getUTCFullYear();

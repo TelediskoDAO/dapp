@@ -11,6 +11,9 @@ import serve from "rollup-plugin-serve";
 import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
 import packageJson from "./package.json";
+import sveltePreprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
+import css from 'rollup-plugin-css-only';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -18,9 +21,6 @@ const network = process.env.NETWORK || "local";
 const endpoint = process.env.ENDPOINT || "http://localhost:8545";
 const oracleAddress = process.env.ORACLE_ADDRESS;
 const tokenAddress = process.env.TOKEN_ADDRESS;
-
-const dedupe = (importee) =>
-  importee === "svelte" || importee.startsWith("svelte/");
 
 const now = Date.now();
 
@@ -39,7 +39,7 @@ function setAlias() {
 
 export default [
   {
-    input: "src/index.js",
+    input: "src/index.ts",
     output: {
       file: "build/bundle.js",
       format: "iife",
@@ -59,17 +59,21 @@ export default [
       }),
       copy({ targets: [{ src: "public/*", dest: "build" }] }),
       svelte({
-        dev: !production,
-        css: (css) => css.write("components.css"),
+        compilerOptions: {
+          // enable run-time checks when not in production
+          dev: !production
+        },
+        preprocess: sveltePreprocess({ sourceMap: !production }),
       }),
+      css({ output: 'components.css' }),
       setAlias(),
       json(),
-      // rollup-plugin-node-resolve embeds external dependecies in the bundle,
-      // more info here:
-      // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
-      resolve({ browser: true, dedupe }),
+      resolve({ browser: true, dedupe: ['svelte'] }),
       commonjs(),
-      // https://github.com/thgh/rollup-plugin-serve
+      typescript({
+        sourceMap: !production,
+        inlineSources: !production
+      }),
       !production &&
         serve({
           contentBase: "build",
@@ -107,7 +111,7 @@ export default [
       // rollup-plugin-node-resolve embeds external dependecies in the bundle,
       // more info here:
       // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
-      resolve({ browser: true, dedupe }),
+      resolve({ browser: true, dedupe: ['svelte'] }),
       commonjs(),
       //!production && livereload("build"),
       production && terser(),

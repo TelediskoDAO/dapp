@@ -103,6 +103,11 @@
               >settings</i>
               Settings</a>
           </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/resolutions"><i
+              >verified</i>
+              Resolutions</a>
+          </li>
         {:else}
           <li>
             <a use:active on:click={closeSidebar} href="#/"><i>home</i>

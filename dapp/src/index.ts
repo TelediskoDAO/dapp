@@ -8,7 +8,7 @@ import { logger } from "./state/runtime";
 const log = logger("UI:Update");
 console.log("Config is", CONFIG);
 
-//if (CONFIG.production) {
+if (CONFIG.production) {
 if (navigator.serviceWorker) {
   installServiceWorker("service-worker.js", {
     onInstalled: (activate, info) => {
@@ -19,7 +19,7 @@ if (navigator.serviceWorker) {
     },
   });
 }
-//}
+}
 
 // Display errors
 /*

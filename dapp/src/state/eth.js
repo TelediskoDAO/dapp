@@ -1,4 +1,4 @@
-import ethers from "ethers";
+import { ethers } from "ethers";
 import erc20ABI from "../contracts/erc20.abi.json";
 import { writable, readable, derived } from "svelte/store";
 import { clock } from "./clock";
