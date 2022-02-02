@@ -21,17 +21,17 @@
   import PageReport from "./pages/report/Index.svelte";
   import PageTokens from "./pages/tokens/Index.svelte";
   import PageResolutions from "./pages/resolutions/Index.svelte";
-  // import PageResolutions from "./pages/resolutions/New.svelte";
+  import PageResolutionsNew from "./pages/resolutions/New.svelte";
 
   import NotFound from "./NotFound.svelte";
 
   const log = logger("App");
 
-  $: {
-    if ($user) {
-      replace("/tasks");
-    }
-  }
+  // $: {
+  //   if ($user) {
+  //     replace("/tasks");
+  //   }
+  // }
 
   const routes = {
     "/": PageIndex,
@@ -41,7 +41,7 @@
     "/report": PageReport,
     "/tokens": PageTokens,
     "/resolutions": PageResolutions,
-    // "/resolutions/new": PageResolutionsNew,
+    "/resolutions/new": PageResolutionsNew,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
