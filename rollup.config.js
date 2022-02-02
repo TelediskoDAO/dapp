@@ -11,16 +11,15 @@ import serve from "rollup-plugin-serve";
 import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
 import packageJson from "./package.json";
-import sveltePreprocess from 'svelte-preprocess';
-import typescript from '@rollup/plugin-typescript';
-import css from 'rollup-plugin-css-only';
+import sveltePreprocess from "svelte-preprocess";
+import typescript from "@rollup/plugin-typescript";
+import css from "rollup-plugin-css-only";
 
 const production = !process.env.ROLLUP_WATCH;
 
 const network = process.env.NETWORK || "local";
 const endpoint = process.env.ENDPOINT || "http://localhost:8545";
 const oracleAddress = process.env.ORACLE_ADDRESS;
-const tokenAddress = process.env.TOKEN_ADDRESS;
 
 const now = Date.now();
 
@@ -54,25 +53,24 @@ export default [
           network,
           endpoint,
           oracleAddress,
-          tokenAddress,
         }),
       }),
       copy({ targets: [{ src: "public/*", dest: "build" }] }),
       svelte({
         compilerOptions: {
           // enable run-time checks when not in production
-          dev: !production
+          dev: !production,
         },
         preprocess: sveltePreprocess({ sourceMap: !production }),
       }),
-      css({ output: 'components.css' }),
+      css({ output: "components.css" }),
       setAlias(),
       json(),
-      resolve({ browser: true, dedupe: ['svelte'] }),
+      resolve({ browser: true, dedupe: ["svelte"] }),
       commonjs(),
       typescript({
         sourceMap: !production,
-        inlineSources: !production
+        inlineSources: !production,
       }),
       !production &&
         serve({
@@ -111,7 +109,7 @@ export default [
       // rollup-plugin-node-resolve embeds external dependecies in the bundle,
       // more info here:
       // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
-      resolve({ browser: true, dedupe: ['svelte'] }),
+      resolve({ browser: true, dedupe: ["svelte"] }),
       commonjs(),
       //!production && livereload("build"),
       production && terser(),

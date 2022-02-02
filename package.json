@@ -4,8 +4,8 @@
   "description": "Teledisko DAO",
   "main": "index.js",
   "scripts": {
-    "build": "TOKEN_ADDRESS=0xEb25F8C8a4b5338880CdC607DbBF0eD475Dd0dc1 ORACLE_ADDRESS=0x8D3e7C3e4aBAb77A66b69C0564c7dD7420eC3449 NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --config",
-    "start": "rollup --watch --config",
+    "build": "ORACLE_ADDRESS=0x8D3e7C3e4aBAb77A66b69C0564c7dD7420eC3449 NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --config",
+    "start": "NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --watch --config",
     "test": "echo \"Error: no test specified\" && exit 1",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },

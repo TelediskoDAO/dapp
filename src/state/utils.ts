@@ -1,11 +1,11 @@
-import { writable } from "svelte/store";
+import { derived, Readable, Unsubscriber, writable } from "svelte/store";
 
-export function get(key, fallback) {
+export function get(key, fallback = undefined) {
   const value = localStorage.getItem(key);
   return value === null ? fallback : JSON.parse(value);
 }
 
-export function set(key, valueOrFunction, fallback) {
+export function set(key, valueOrFunction, fallback = undefined) {
   let value;
   if (valueOrFunction instanceof Function) {
     const prev = get(key, fallback);
