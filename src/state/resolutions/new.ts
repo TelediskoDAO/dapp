@@ -7,8 +7,15 @@ export const RESOLUTION_TYPES = {
   2: 'other'
 }
 
+export const RESOLUTION_STATES = {
+  PRE_DRAFT: 'pre-draft',
+  APPROVED: 'approved'
+}
+
 export const newResolution = writable({
   title: '',
   content: '',
-  type: null
+  type: null,
+  status: RESOLUTION_STATES.PRE_DRAFT,
+  ipfsId: null
 });

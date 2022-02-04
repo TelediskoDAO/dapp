@@ -11,6 +11,7 @@
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
   import Router from "svelte-spa-router";
+  import { NotificationDisplay } from '@beyonk/svelte-notifications'
   import { replace } from "svelte-spa-router";
 
   // Pages
@@ -22,6 +23,7 @@
   import PageTokens from "./pages/tokens/Index.svelte";
   import PageResolutions from "./pages/resolutions/Index.svelte";
   import PageResolutionsNew from "./pages/resolutions/New.svelte";
+  import PageResolutionsEdit from "./pages/resolutions/Edit.svelte";
 
   import NotFound from "./NotFound.svelte";
 
@@ -42,11 +44,14 @@
     "/tokens": PageTokens,
     "/resolutions": PageResolutions,
     "/resolutions/new": PageResolutionsNew,
+    "/resolutions/:resolutionIpfsId": PageResolutionsEdit,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
 
   log("Boot");
+
+  let notification
 </script>
 
 <style>
@@ -72,6 +77,8 @@
 <svelte:head>
   <title>{$title}</title>
 </svelte:head>
+
+<NotificationDisplay bind:this={notification} />
 
 {#if $username && !$user}
   <div out:slide class="loading">

@@ -1,16 +1,19 @@
-<script>
+<script lang="ts">
   import Select, { Option } from "@smui/select"
   import Button, { Label } from "@smui/button"
   import CircularProgress from "@smui/circular-progress"
   import Textfield from "@smui/textfield"
   import LayoutGrid, { Cell, InnerGrid } from '@smui/layout-grid';
   import { push } from 'svelte-spa-router'
+  import { notifier } from '@beyonk/svelte-notifications'
   
   import { newResolution, RESOLUTION_TYPES } from "../../state/resolutions/new";
-  import { title } from "src/state/runtime";
   import { signer } from "../../state/eth";
   import networks from "../../contracts/networks.json";
   import { ResolutionMock__factory } from "../../contracts";
+  import { add as addToIpfs } from "../../net/ipfs";
+  import { resolutions } from "../../state/resolutions";
+  import { title } from "../../state/runtime";
 
   title.set("Resolutions");
 
@@ -19,40 +22,43 @@
   }
 
   let loading = false
-  let error = null
   let receipt = null
   let awaitingConfirmation = false
+  let disabled = true
 
-  $:
-    disabled = [
+  $: {
+    const fieldsToCheck = [
       $newResolution.type,
       $newResolution.content.trim(),
       $newResolution.title.trim()
-    ].filter(Boolean).length < Object.keys($newResolution).length
+    ]
+    disabled = fieldsToCheck.filter(Boolean).length < fieldsToCheck.length
+  }
 
   async function handleContractPreDraft() {
     if (!$signer) {
       return push('/connect/odoo')
     }
-    error = null
     receipt = null
     loading = true
     awaitingConfirmation = false
-    const chainId = await $signer.getChainId();
-    const address = networks[chainId.toString()]["ResolutionMock"];
-    const contract = ResolutionMock__factory.connect(address, $signer);
-
     try {
-      const tx = await contract.createResolution('todo', 0) // sign (metamask popup will appear) + send (transaction will be in the mempull)
+      const chainId = await $signer.getChainId();
+      const address = networks[chainId.toString()]["ResolutionMock"];
+      const contract = ResolutionMock__factory.connect(address, $signer);
+      const ipfsId = await addToIpfs($newResolution);
+      $newResolution.ipfsId = ipfsId
+      const tx = await contract.createResolution(ipfsId, $newResolution.type)
       awaitingConfirmation = true
-      receipt = await tx.wait() // waiting for the transaction to be put on a block
+      receipt = await tx.wait()
+      notifier.success('Resolution draft created!', 5000)
+      $resolutions = [...$resolutions, $newResolution]
+      push('/resolutions')
     } catch (err) {
-      error = err.message
+      notifier.danger(err.message, 7000)
     }
-
     loading = false
-  }
-    
+  } 
 </script>
 
 
@@ -91,9 +97,6 @@
       {/if}
     </div>
   {/if}
-  {#if error}
-    <p>Oops, it looks there's been an error: {error}</p>
-  {/if}
   <LayoutGrid>
     {#if receipt?.blockHash}
       <Cell span={12}>
@@ -101,7 +104,7 @@
       </Cell>
     {:else}
       <Cell span={12}>
-        <h1>New Resolution</h1>
+        <h1>{$newResolution.title || 'New Resolution'}</h1>
       </Cell>
     {/if}
     

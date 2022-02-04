@@ -43,6 +43,7 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
+    "@beyonk/svelte-notifications": "^4.1.1",
     "ethers": "^5.5.3",
     "qs": "^6.9.6",
     "svelte": "^3.29.0",
