@@ -152,30 +152,3 @@ export const balance = derived(
     }
   }
 );
-
-export const resolutionContract: Readable<ResolutionMock> = derived(
-  signer,
-  // @ts-ignore
-  async ($signer, set) => {
-    if ($signer) {
-      const chainId = await $signer.getChainId();
-      const address: string = networks[chainId.toString()]["ResolutionMock"];
-      const contract = ResolutionMock__factory.connect(address, $signer);
-      set(contract);
-
-      try {
-        const tx = await contract.createResolution('whatever', 0) // sign (metamask popup will appear) + send (transaction will be in the mempull)
-        const receipt = await tx.wait() // waiting for the transaction to be put on a block
-      } catch (error) {
-        // if user denies to sign i.e. etc or closes the metamask popup?
-      }
-
-      // console.log('receipt: ', receipt.blockHash);
-
-      // 3 states for a transaction
-      // 1 signed locally
-      // 2 mempull (awaiting to be "finalized")
-      // 3 finalized
-    }
-  }
-);
