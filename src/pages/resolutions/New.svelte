@@ -29,11 +29,13 @@
       const address = networks[chainId.toString()]["ResolutionMock"];
       const contract = ResolutionMock__factory.connect(address, $signer);
       const ipfsId = await addToIpfs($currentResolution);
-      $currentResolution.ipfsId = ipfsId
-      const tx = await contract.createResolution(ipfsId, $currentResolution.type)
-      awaitingConfirmation = true
-      receipt = await tx.wait()
-      $currentResolution.blockHash = receipt.blockHash
+      $currentResolution.ipfsId = ipfsId;
+      const tx = await contract.createResolution(ipfsId, $currentResolution.type);
+      const resolutionId = $resolutions.length; // to fix, as tx.value looks to always be 0
+      awaitingConfirmation = true;
+      receipt = await tx.wait();
+      $currentResolution.blockHash = receipt.blockHash;
+      $currentResolution.resolutionId = Number(resolutionId);
       notifier.success('Resolution draft created!', 5000)
       $resolutions = [...$resolutions, $currentResolution]
       push('/resolutions')
@@ -45,9 +47,6 @@
 </script>
 
 <ResolutionForm
-  title={$currentResolution.title}
-  content={$currentResolution.content}
-  type={$currentResolution.type}
   awaitingConfirmation={awaitingConfirmation}
   handleSave={handleContractPreDraft}
   loading={loading}

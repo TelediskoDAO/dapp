@@ -3,6 +3,7 @@
   import Button, { Label, Group } from "@smui/button"
   import CircularProgress from "@smui/circular-progress"
   import Textfield from "@smui/textfield"
+  import HelperText from '@smui/textfield/helper-text';
   import LayoutGrid, { Cell, InnerGrid } from '@smui/layout-grid';
   import { emptyResolution, currentResolution, RESOLUTION_TYPES } from "../state/resolutions/new";
   import { onDestroy } from "svelte";
@@ -14,11 +15,9 @@
   const noop = () => {};
 
   export let editMode = false;
-  export let title = '';
-  export let content = '';
-  export let type = '';
   export let loading = false;
   export let awaitingConfirmation = false;
+  export let disabledUpdate = true;
   export let handleSave = noop;
   export let handleApprove = noop;
   export let handleExport = noop;
@@ -26,13 +25,14 @@
   let disabled = false;
 
   $: {
-    const checkDisabledFields = [title.trim(), content.trim(), type]
+    const checkDisabledFields = [$currentResolution.title.trim(), $currentResolution.content.trim(), $currentResolution.type]
     disabled = checkDisabledFields.filter(Boolean).length < checkDisabledFields.length
   }
 
   onDestroy(() => {
     $currentResolution = { ...emptyResolution }
   })
+
 </script>
 
 
@@ -53,7 +53,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, .5);
+    background-color: rgba(255, 255, 255, .7);
     backdrop-filter: blur(3px);
     z-index: 1;
     display: flex; justify-content: center; align-items: center;
@@ -66,6 +66,12 @@
     <div class="progress">
       {#if awaitingConfirmation}
         Awaiting for the transaction to be put on a block... hold tight!
+        <div style="width: 200px; margin-left: 16px;">
+          <div class="tenor-gif-embed" data-postid="10743923" data-share-method="host" data-aspect-ratio="1.15741" data-width="100%">
+            <a href="https://tenor.com/view/ethereum-eth-homer-simpson-cryptocurrency-altcoins-gif-10743923">Ethereum Homer Simpson GIF</a>from <a href="https://tenor.com/search/ethereum-gifs">Ethereum GIFs</a>
+          </div>
+          <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+        </div>
       {:else}
         <CircularProgress style="height: 32px; width: 32px;" indeterminate />
       {/if}
@@ -73,14 +79,14 @@
   {/if}
   <LayoutGrid>
     <Cell span={12}>
-      <h1>{editMode ? `Editing: ${title}` : `New Resolution: ${title}`}</h1>
+      <h1>{editMode ? `Editing: ${$currentResolution.title}` : `New Resolution: ${$currentResolution.title}`}</h1>
     </Cell>
     
     <Cell span={12}>
       <InnerGrid>
         <Cell span={6}>
           <div use:init>
-            <Textfield class="field" bind:value={title} label="Resolution Title" />
+            <Textfield class="field" bind:value={$currentResolution.title} label="Resolution Title" />
           </div>
         </Cell>
       </InnerGrid>
@@ -91,16 +97,18 @@
           <Textfield
             style="width: 100%"
             textarea
-            bind:value={content}
+            bind:value={$currentResolution.content}
             label="Resolution Content"
-          />
+          >
+            <HelperText slot="helper">Markdown supported</HelperText>
+          </Textfield>
         </Cell>
       </InnerGrid>
     </Cell>
     <Cell span={12}>
       <InnerGrid>
         <Cell span={3}>
-          <Select class="field" bind:value={type} label="Resolution Type">
+          <Select class="field" bind:value={$currentResolution.type} label="Resolution Type">
             {#each Object.entries(RESOLUTION_TYPES) as resolutionType}
               <Option value={resolutionType[0]}>{resolutionType[1]}</Option>
             {/each}
@@ -111,7 +119,7 @@
     <Cell span={3}>
       {#if editMode}
         <Group variant="raised">
-          <Button variant="raised" disabled={disabled} on:click={handleSave}>
+          <Button variant="raised" disabled={disabled || disabledUpdate} on:click={handleSave}>
             <Label>Update</Label>
           </Button>
           <Button variant="raised" disabled={disabled} on:click={handleExport}>

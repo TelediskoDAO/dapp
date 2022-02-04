@@ -1,16 +1,17 @@
 <script lang="ts">
-import { onMount } from "svelte";
+  import { onMount } from "svelte";
+  import ResolutionView from "../../components/ResolutionView.svelte";
 
   import { resolutions } from "../../state/resolutions";
-import { RESOLUTION_TYPES } from "../../state/resolutions/new";
+  import { Resolution, RESOLUTION_TYPES } from "../../state/resolutions/new";
 
   type Params = {
-    resolutionIpfsId?: string
+    resolutionId?: string
   }
 
   export let params: Params = {}
 
-  const resolutionData = $resolutions.find(res => res.ipfsId === params.resolutionIpfsId)
+  const resolutionData = $resolutions.find((res: Resolution) => String(res.resolutionId) === params.resolutionId)
 
   onMount(() => {
     window.print()
@@ -18,12 +19,9 @@ import { RESOLUTION_TYPES } from "../../state/resolutions/new";
   })
 </script>
 
-<div>
-  <h1>{resolutionData.title}</h1>
-  <pre>
-    {resolutionData.content}
-  </pre>
-
-  <div><small><em>Resolution type: {RESOLUTION_TYPES[resolutionData.type]}</em></small></div>
-  <small><em>Resolution status: {resolutionData.status}</em></small>
-</div>
+<ResolutionView
+  title={resolutionData.title}
+  content={resolutionData.content}
+  type={RESOLUTION_TYPES[resolutionData.type]}
+  state={resolutionData.state}
+/>

@@ -45,8 +45,8 @@
     "/tokens": PageTokens,
     "/resolutions": PageResolutions,
     "/resolutions/new": PageResolutionsNew,
-    "/resolutions/:resolutionIpfsId": PageResolutionsEdit,
-    "/resolutions/:resolutionIpfsId/print": PageResolutionsPrint,
+    "/resolutions/:resolutionId": PageResolutionsEdit,
+    "/resolutions/:resolutionId/print": PageResolutionsPrint,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
