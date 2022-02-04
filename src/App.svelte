@@ -10,7 +10,7 @@
   import MismatchError from "src/components/MismatchError.svelte";
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
-  import Router from "svelte-spa-router";
+  import Router, { location } from "svelte-spa-router";
   import { NotificationDisplay } from '@beyonk/svelte-notifications'
   import { replace } from "svelte-spa-router";
 
@@ -24,6 +24,7 @@
   import PageResolutions from "./pages/resolutions/Index.svelte";
   import PageResolutionsNew from "./pages/resolutions/New.svelte";
   import PageResolutionsEdit from "./pages/resolutions/Edit.svelte";
+  import PageResolutionsPrint from "./pages/resolutions/Print.svelte";
 
   import NotFound from "./NotFound.svelte";
 
@@ -45,6 +46,7 @@
     "/resolutions": PageResolutions,
     "/resolutions/new": PageResolutionsNew,
     "/resolutions/:resolutionIpfsId": PageResolutionsEdit,
+    "/resolutions/:resolutionIpfsId/print": PageResolutionsPrint,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
@@ -85,14 +87,19 @@
     <p>loading...</p>
   </div>
 {:else}
-  <Sidebar />
 
-  <main>
-    <MismatchError />
-    <TopAppBar />
-    <Router {routes} restoreScrollState={true} />
-    <UpdateAvailable />
-  </main>
+  {#if /\/print$/.test($location)}
+    <Router {routes} restoreScrollState />
+  {:else}
+    <Sidebar />
 
-  <RuntimeErrors />
+    <main>
+      <MismatchError />
+      <TopAppBar />
+      <Router {routes} restoreScrollState />
+      <UpdateAvailable />
+    </main>
+
+    <RuntimeErrors />
+  {/if}
 {/if}
