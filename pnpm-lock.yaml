@@ -11,10 +11,13 @@ specifiers:
   '@rollup/plugin-typescript': ^8.0.0
   '@smui/button': ^6.0.0-beta.13
   '@smui/card': ^6.0.0-beta.13
+  '@smui/checkbox': ^6.0.0-beta.13
   '@smui/chips': ^6.0.0-beta.13
   '@smui/circular-progress': ^6.0.0-beta.13
   '@smui/dialog': ^6.0.0-beta.13
+  '@smui/form-field': ^6.0.0-beta.13
   '@smui/layout-grid': ^6.0.0-beta.13
+  '@smui/paper': ^6.0.0-beta.13
   '@smui/select': ^6.0.0-beta.13
   '@smui/textfield': ^6.0.0-beta.13
   '@tsconfig/svelte': ^2.0.0
@@ -68,10 +71,13 @@ devDependencies:
   '@rollup/plugin-typescript': 8.3.0_86c7512d54e5fcf3b546877c26442da8
   '@smui/button': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/card': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+  '@smui/checkbox': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/chips': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/circular-progress': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/dialog': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+  '@smui/form-field': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/layout-grid': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+  '@smui/paper': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/select': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/textfield': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@tsconfig/svelte': 2.0.1
@@ -652,7 +658,6 @@ packages:
       '@material/theme': 13.0.0
       '@material/typography': 13.0.0
       tslib: 2.3.1
-    dev: false
 
   /@material/icon-button/13.0.0:
     resolution: {integrity: sha512-SdxFytWvbfN0fj7jHFq3DqK5/Zoms+Ipuv6fI8AzwgDFe7mXJ2euPahN+3XcmJ3BaSMyfYsdbcYdCWs8bgHW1w==}
@@ -1218,7 +1223,6 @@ packages:
     transitivePeerDependencies:
       - svelte
       - typescript
-    dev: false
 
   /@smui/chips/6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5:
     resolution: {integrity: sha512-plGYIeTeQt1AKLdUGX/SRZklkSkf8Ye/x0mq5pqzbSJ87FgOtNGTJ/bNTS8ZRbCjVlwtgHMRWlB5aFpAMlA42Q==}
@@ -1327,7 +1331,6 @@ packages:
     transitivePeerDependencies:
       - svelte
       - typescript
-    dev: false
 
   /@smui/icon-button/6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5:
     resolution: {integrity: sha512-BAHciMZhdiEBEywOKj+Zai6A55L8kATxv1dcFjfxfudd1Re6Y/sqHmR4EaYi5XSjTK0qtmxrSvCTuJEqMulUFg==}
@@ -1444,7 +1447,6 @@ packages:
     transitivePeerDependencies:
       - svelte
       - typescript
-    dev: false
 
   /@smui/radio/6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5:
     resolution: {integrity: sha512-zoUIo3yb+0iA/mcgDD2pG80nxtZcVsPJmZMTWjhsiwakY1Zp6SHFXMDhZaPImKApQ5A9RgX5rkn78kv5aTI1wA==}

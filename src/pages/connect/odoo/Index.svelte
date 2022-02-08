@@ -3,6 +3,7 @@
   import Ethereum from "./Ethereum.svelte";
   import Info from "./Info.svelte";
   import { title } from "src/state/runtime";
+  import ShowFeatures from "./showFeatures.svelte";
   title.set("Settings");
 </script>
 
@@ -10,3 +11,5 @@
 <Ethereum />
 <hr />
 <Info />
+<hr />
+<ShowFeatures />
