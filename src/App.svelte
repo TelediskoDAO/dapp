@@ -11,7 +11,7 @@
   import MismatchError from "./components/MismatchError.svelte";
   import RuntimeErrors from "./components/RuntimeErrors.svelte";
 
-  import Router, { push, replace, location } from "svelte-spa-router";
+  import Router, { location } from "svelte-spa-router";
   import { NotificationDisplay } from "@beyonk/svelte-notifications";
 
   // Pages
@@ -62,8 +62,28 @@
     }
   }
 
-  let notification: NotificationDisplay;
+  let notification;
 </script>
+
+<style>
+  .loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+    z-index: 10000;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .loading p {
+    animation: blink 1s infinite;
+  }
+</style>
 
 <svelte:head>
   <title>{$title}</title>
@@ -89,23 +109,3 @@
 
   <RuntimeErrors />
 {/if}
-
-<style>
-  .loading {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background-color: white;
-    z-index: 10000;
-    font-size: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .loading p {
-    animation: blink 1s infinite;
-  }
-</style>
