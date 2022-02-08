@@ -23,8 +23,8 @@
   import PageTokens from "./pages/tokens/Index.svelte";
   import PageResolutions from "./pages/resolutions/Index.svelte";
   import PageResolutionsNew from "./pages/resolutions/New.svelte";
+  import PageResolutionsView from "./pages/resolutions/View.svelte";
   import PageResolutionsEdit from "./pages/resolutions/Edit.svelte";
-  import PageResolutionsPrint from "./pages/resolutions/Print.svelte";
 
   import NotFound from "./NotFound.svelte";
 
@@ -45,8 +45,9 @@
     "/tokens": PageTokens,
     "/resolutions": PageResolutions,
     "/resolutions/new": PageResolutionsNew,
-    "/resolutions/:resolutionId": PageResolutionsEdit,
-    "/resolutions/:resolutionId/print": PageResolutionsPrint,
+    "/resolutions/:resolutionId": PageResolutionsView,
+    "/resolutions/:resolutionId/edit": PageResolutionsEdit,
+    "/resolutions/:resolutionId/print": PageResolutionsView,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };

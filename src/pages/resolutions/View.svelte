@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import ResolutionView from "../../components/ResolutionView.svelte";
+  import { location } from "svelte-spa-router";
 
+  import ResolutionView from "../../components/ResolutionView.svelte";
   import { resolutions } from "../../state/resolutions";
   import { Resolution, RESOLUTION_TYPES } from "../../state/resolutions/new";
 
@@ -16,8 +17,10 @@
   );
 
   onMount(() => {
-    window.print();
-    window.close();
+    if (/\/print$/.test($location)) {
+      window.print();
+      window.close();
+    }
   });
 </script>
 

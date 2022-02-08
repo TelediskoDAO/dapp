@@ -3,9 +3,7 @@
   import { notifier } from "@beyonk/svelte-notifications";
 
   import { currentResolution } from "../../state/resolutions/new";
-  import { signer } from "../../state/eth";
-  import networks from "../../contracts/networks.json";
-  import { ResolutionMock__factory } from "../../contracts";
+  import { resolutionContract, signer } from "../../state/eth";
   import { add as addToIpfs } from "../../net/ipfs";
   import { resolutions } from "../../state/resolutions";
   import { title } from "../../state/runtime";
@@ -25,12 +23,9 @@
     loading = true;
     awaitingConfirmation = false;
     try {
-      const chainId = await $signer.getChainId();
-      const address = networks[chainId.toString()]["ResolutionMock"];
-      const contract = ResolutionMock__factory.connect(address, $signer);
       const ipfsId = await addToIpfs($currentResolution);
       $currentResolution.ipfsId = ipfsId;
-      const tx = await contract.createResolution(
+      const tx = await $resolutionContract.createResolution(
         ipfsId,
         $currentResolution.type
       );

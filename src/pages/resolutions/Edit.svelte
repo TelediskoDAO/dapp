@@ -1,25 +1,22 @@
 <script lang="ts">
-  import { push } from "svelte-spa-router";
+  import { push, replace } from "svelte-spa-router";
   import { notifier } from "@beyonk/svelte-notifications";
   import isEqual from "lodash.isequal";
   import Dialog, { Title, Content, Actions } from "@smui/dialog";
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import Button, { Label } from "@smui/button";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
-  import { signer } from "../../state/eth";
+  import { resolutionContract, signer } from "../../state/eth";
   import { resolutions } from "../../state/resolutions";
   import {
     currentResolution,
     emptyResolution,
     Resolution,
     RESOLUTION_STATES,
-    RESOLUTION_TYPES,
   } from "../../state/resolutions/new";
-  import networks from "../../contracts/networks.json";
-  import { ResolutionMock__factory } from "../../contracts";
+
   import { add as addToIpfs } from "../../net/ipfs";
-  import ResolutionView from "../../components/ResolutionView.svelte";
 
   type Params = {
     resolutionId: string;
@@ -50,12 +47,9 @@
     loading = true;
     awaitingConfirmation = false;
     try {
-      const chainId = await $signer.getChainId();
-      const address = networks[chainId.toString()]["ResolutionMock"];
-      const contract = ResolutionMock__factory.connect(address, $signer);
       const ipfsId = await addToIpfs($currentResolution);
       $currentResolution.ipfsId = ipfsId;
-      const tx = await contract.updateResolution(
+      const tx = await $resolutionContract.updateResolution(
         $currentResolution.resolutionId,
         ipfsId,
         $currentResolution.type
@@ -95,10 +89,7 @@
     loading = true;
     awaitingConfirmation = false;
     try {
-      const chainId = await $signer.getChainId();
-      const address = networks[chainId.toString()]["ResolutionMock"];
-      const contract = ResolutionMock__factory.connect(address, $signer);
-      const tx = await contract.approveResolution(
+      const tx = await $resolutionContract.approveResolution(
         $currentResolution.resolutionId
       );
       awaitingConfirmation = true;
@@ -113,6 +104,7 @@
       $resolutions = Object.assign([], $resolutions, {
         [currentResolutionIndex]: $currentResolution,
       });
+      push(`/resolutions/${$currentResolution.resolutionId}`);
     } catch (err) {
       notifier.danger(err.message, 7000);
     }
@@ -122,44 +114,39 @@
   onDestroy(() => {
     $currentResolution = { ...emptyResolution };
   });
+
+  onMount(() => {
+    if ($currentResolution.state !== RESOLUTION_STATES.PRE_DRAFT) {
+      replace(`/resolutions/${$currentResolution.resolutionId}`);
+    }
+  });
 </script>
 
-{#if $currentResolution.state === RESOLUTION_STATES.PRE_DRAFT}
-  <Dialog
-    bind:open
-    aria-labelledby="dialog-title"
-    aria-describedby="dialog-content"
-  >
-    <Title id="dialog-title">Warning!</Title>
-    <Content id="dialog-content">
-      Have you exported the resolution pdf and signed it?
-    </Content>
-    <Actions>
-      <Button on:click={() => (open = false)}>
-        <Label>No</Label>
-      </Button>
-      <Button on:click={handleApprove}>
-        <Label>Yes, proceed</Label>
-      </Button>
-    </Actions>
-  </Dialog>
+<Dialog
+  bind:open
+  aria-labelledby="dialog-title"
+  aria-describedby="dialog-content"
+>
+  <Title id="dialog-title">Warning!</Title>
+  <Content id="dialog-content">
+    Have you exported the resolution pdf and signed it?
+  </Content>
+  <Actions>
+    <Button on:click={() => (open = false)}>
+      <Label>No</Label>
+    </Button>
+    <Button on:click={handleApprove}>
+      <Label>Yes, proceed</Label>
+    </Button>
+  </Actions>
+</Dialog>
 
-  <ResolutionForm
-    {awaitingConfirmation}
-    handleSave={handleUpdateResolution}
-    {loading}
-    editMode
-    {handleExport}
-    handleApprove={handlePreApprove}
-    {disabledUpdate}
-  />
-{:else}
-  <section>
-    <ResolutionView
-      title={$currentResolution.title}
-      content={$currentResolution.content}
-      type={RESOLUTION_TYPES[$currentResolution.type]}
-      state={$currentResolution.state}
-    />
-  </section>
-{/if}
+<ResolutionForm
+  {awaitingConfirmation}
+  handleSave={handleUpdateResolution}
+  {loading}
+  editMode
+  {handleExport}
+  handleApprove={handlePreApprove}
+  {disabledUpdate}
+/>

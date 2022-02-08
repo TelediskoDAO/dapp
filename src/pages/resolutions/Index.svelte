@@ -30,7 +30,11 @@
             <Actions>
               <Button
                 variant="raised"
-                href={`#/resolutions/${resolution.resolutionId}`}
+                href={`#/resolutions/${resolution.resolutionId}${
+                  resolution.state === RESOLUTION_STATES.PRE_DRAFT
+                    ? "/edit"
+                    : ""
+                }`}
               >
                 <Label
                   >{resolution.state === RESOLUTION_STATES.PRE_DRAFT
