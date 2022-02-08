@@ -32,14 +32,6 @@
   }
 </script>
 
-<style>
-  textarea {
-    display: block;
-    width: 100%;
-    height: 50vh;
-  }
-</style>
-
 <section>
   <h2>App info</h2>
   {#if navigator.serviceWorker}
@@ -52,5 +44,13 @@
 </section>
 
 <section>
-  {#if showLogs && $logs}<textarea readonly>{$logs.join('\n')}</textarea>{/if}
+  {#if showLogs && $logs}<textarea readonly>{$logs.join("\n")}</textarea>{/if}
 </section>
+
+<style>
+  textarea {
+    display: block;
+    width: 100%;
+    height: 50vh;
+  }
+</style>

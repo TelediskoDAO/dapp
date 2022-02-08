@@ -2,6 +2,15 @@
   import { updateAvailable } from "src/state/runtime";
 </script>
 
+{#if $updateAvailable}
+  <div>
+    <section>
+      New version available
+      <button on:click={() => $updateAvailable()}>Update App</button>
+    </section>
+  </div>
+{/if}
+
 <style>
   div {
     z-index: 1000;
@@ -50,12 +59,3 @@
     }
   }
 </style>
-
-{#if $updateAvailable}
-  <div>
-    <section>
-      New version available
-      <button on:click={() => $updateAvailable()}>Update App</button>
-    </section>
-  </div>
-{/if}

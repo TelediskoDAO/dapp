@@ -43,6 +43,53 @@
   }
 </script>
 
+{#each sortedList as project}
+  <Foldable
+    key={["project", project.id].join(":")}
+    show={false}
+    showOverride={project.isTracking}
+  >
+    <div slot="header" class="header" let:visible>
+      <h2>{project.name}</h2>
+      <button>
+        {#if visible}<i>unfold_less</i>{:else}<i>unfold_more</i>{/if}
+      </button>
+    </div>
+
+    <div slot="body">
+      <div class="metadata">
+        {#if project.stagesCount.done > 0}
+          <p>
+            <span
+              class="toggle"
+              on:click|stopPropagation={toggleDone.bind(null, project.id)}
+              >{stages[project.id].includes("done") ? "Hide" : "Show"}
+              completed tasks</span
+            >
+          </p>
+        {/if}
+      </div>
+      {#if project.taskIds.length}
+        <ul>
+          {#each project.taskIds as taskId}
+            {#if $tasks[taskId] && $tasks[taskId].isParentTask}
+              <li>
+                <Task
+                  stages={stages[project.id]}
+                  task={$tasks[taskId]}
+                  {openDetails}
+                />
+              </li>
+            {/if}
+          {/each}
+        </ul>
+      {:else}
+        <p>No tasks.</p>
+      {/if}
+    </div>
+  </Foldable>
+{/each}
+
 <style>
   ul {
     list-style-type: none;
@@ -82,46 +129,3 @@
     text-decoration: underline;
   }
 </style>
-
-{#each sortedList as project}
-  <Foldable
-    key={['project', project.id].join(':')}
-    show={false}
-    showOverride={project.isTracking}>
-    <div slot="header" class="header" let:visible>
-      <h2>{project.name}</h2>
-      <button>
-        {#if visible}<i>unfold_less</i>{:else}<i>unfold_more</i>{/if}
-      </button>
-    </div>
-
-    <div slot="body">
-      <div class="metadata">
-        {#if project.stagesCount.done > 0}
-          <p>
-            <span
-              class="toggle"
-              on:click|stopPropagation={toggleDone.bind(null, project.id)}>{stages[project.id].includes('done') ? 'Hide' : 'Show'}
-              completed tasks</span>
-          </p>
-        {/if}
-      </div>
-      {#if project.taskIds.length}
-        <ul>
-          {#each project.taskIds as taskId}
-            {#if $tasks[taskId] && $tasks[taskId].isParentTask}
-              <li>
-                <Task
-                  stages={stages[project.id]}
-                  task={$tasks[taskId]}
-                  {openDetails} />
-              </li>
-            {/if}
-          {/each}
-        </ul>
-      {:else}
-        <p>No tasks.</p>
-      {/if}
-    </div>
-  </Foldable>
-{/each}

@@ -6,17 +6,19 @@
   import { Resolution, RESOLUTION_TYPES } from "../../state/resolutions/new";
 
   type Params = {
-    resolutionId?: string
-  }
+    resolutionId?: string;
+  };
 
-  export let params: Params = {}
+  export let params: Params = {};
 
-  const resolutionData = $resolutions.find((res: Resolution) => String(res.resolutionId) === params.resolutionId)
+  const resolutionData = $resolutions.find(
+    (res: Resolution) => String(res.resolutionId) === params.resolutionId
+  );
 
   onMount(() => {
-    window.print()
-    window.close()
-  })
+    window.print();
+    window.close();
+  });
 </script>
 
 <ResolutionView

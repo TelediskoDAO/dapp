@@ -20,6 +20,89 @@
   }
 </script>
 
+<aside>
+  <input id="sidebar--toggle" type="checkbox" />
+  <nav class="content">
+    <section class="user-data">
+      {#if $user}
+        <img alt="User's avatar" src="data:image/jpeg;base64,{$user.image}" />
+        {$user.name}
+      {/if}
+    </section>
+
+    <CurrentTask />
+
+    <section>
+      <ul>
+        {#if $user}
+          <li>
+            <a use:active on:click={closeSidebar} href="#/tasks"
+              ><i>timer</i>
+              Time Tracking</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/timeline"
+              ><i>calendar_today</i>
+              Timeline</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/report"
+              ><i>fact_check</i>
+              Report</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/tokens"
+              ><i>account_balance</i>
+              Tokens</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/connect/odoo"
+              ><i>settings</i>
+              Settings</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/resolutions"
+              ><i>verified</i>
+              Resolutions</a
+            >
+          </li>
+        {:else}
+          <li>
+            <a use:active on:click={closeSidebar} href="#/"
+              ><i>home</i>
+              Home Page</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/connect/odoo"
+              ><i>login</i>
+              Log in</a
+            >
+          </li>
+        {/if}
+      </ul>
+    </section>
+
+    <section class="refresh">
+      <h5>Last refresh: {refreshTime}</h5>
+      <button on:click={handleRefresh} on:click={closeSidebar} class="small"
+        ><i>sync</i>Refresh</button
+      >
+    </section>
+
+    <section>
+      <small>Software version: {CONFIG.version}</small><br />
+      <small>Build date: {buildDate}</small>
+    </section>
+  </nav>
+  <label class="overlay" for="sidebar--toggle" />
+</aside>
+
 <style>
   .user-data {
     display: flex;
@@ -63,75 +146,3 @@
     margin-bottom: var(--size-xs);
   }
 </style>
-
-<aside>
-  <input id="sidebar--toggle" type="checkbox" />
-  <nav class="content">
-    <section class="user-data">
-      {#if $user}
-        <img alt="User's avatar" src="data:image/jpeg;base64,{$user.image}" />
-        {$user.name}
-      {/if}
-    </section>
-
-    <CurrentTask />
-
-    <section>
-      <ul>
-        {#if $user}
-          <li>
-            <a use:active on:click={closeSidebar} href="#/tasks"><i>timer</i>
-              Time Tracking</a>
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/timeline"><i
-              >calendar_today</i>
-              Timeline</a>
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/report"><i
-              >fact_check</i>
-              Report</a>
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/tokens"><i
-              >account_balance</i>
-              Tokens</a>
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/connect/odoo"><i
-              >settings</i>
-              Settings</a>
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/resolutions"><i
-              >verified</i>
-              Resolutions</a>
-          </li>
-        {:else}
-          <li>
-            <a use:active on:click={closeSidebar} href="#/"><i>home</i>
-              Home Page</a>
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/connect/odoo"><i
-              >login</i>
-              Log in</a>
-          </li>
-        {/if}
-      </ul>
-    </section>
-
-    <section class="refresh">
-      <h5>Last refresh: {refreshTime}</h5>
-      <button on:click={handleRefresh} on:click={closeSidebar} class="small"><i
-        >sync</i>Refresh</button>
-    </section>
-
-    <section>
-      <small>Software version: {CONFIG.version}</small><br />
-      <small>Build date: {buildDate}</small>
-    </section>
-  </nav>
-  <label class="overlay" for="sidebar--toggle" />
-</aside>

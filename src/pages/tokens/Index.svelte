@@ -32,39 +32,14 @@
   }
 </script>
 
-<style>
-  .balance h2,
-  .balance .address {
-    font-size: var(--size-s);
-    color: gray;
-  }
-
-  .balance .value {
-    font-size: var(--size-m);
-    font-weight: bold;
-    margin: 0;
-  }
-
-  .perc button {
-    color: gray;
-    border: none;
-    text-decoration: underline;
-  }
-
-  .disclaimer {
-    background-color: var(--color-warning-bg);
-  }
-</style>
-
 {#if $balance && $user}
   <div class="disclaimer">
     <section>
       <p>
         <strong>Note:</strong>
-        all transactions are sent to the Rinkeby testnet, and no real value is
-        attached to the token. More work has to be done to a) make
-        TelediskoTaler a real security token with real value; and b) implement
-        all the rules specified in the
+        all transactions are sent to the Rinkeby testnet, and no real value is attached
+        to the token. More work has to be done to a) make TelediskoTaler a real security
+        token with real value; and b) implement all the rules specified in the
         <em>Wuschwelt</em>
         document.
       </p>
@@ -88,16 +63,13 @@
     {#if $hasAgent && $tokenContract}
       <form on:submit|preventDefault={handleSellSubmit}>
         <label for="sell-token-amount">Amount</label>
-        <span class="perc"><button
-            type="button"
-            on:click={() => setAmount(100)}
-          >100%</button>,
+        <span class="perc"
+          ><button type="button" on:click={() => setAmount(100)}>100%</button>,
           <button type="button" on:click={() => setAmount(75)}>75%</button>,
           <button type="button" on:click={() => setAmount(50)}>50%</button>,
-          <button
-            type="button"
-            on:click={() => setAmount(25)}
-          >25%</button></span>
+          <button type="button" on:click={() => setAmount(25)}>25%</button
+          ></span
+        >
         <input
           id="sell-token-amount"
           autocomplete="off"
@@ -114,3 +86,27 @@
     {/if}
   </section>
 {/if}
+
+<style>
+  .balance h2,
+  .balance .address {
+    font-size: var(--size-s);
+    color: gray;
+  }
+
+  .balance .value {
+    font-size: var(--size-m);
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .perc button {
+    color: gray;
+    border: none;
+    text-decoration: underline;
+  }
+
+  .disclaimer {
+    background-color: var(--color-warning-bg);
+  }
+</style>

@@ -3,12 +3,6 @@
   import { platform } from "src/state/runtime";
 </script>
 
-<style>
-  .medium {
-    padding: 0;
-  }
-</style>
-
 <section>
   <h1>Teledisko DAO</h1>
 
@@ -60,3 +54,9 @@
     {/if}
   {/if}
 </section>
+
+<style>
+  .medium {
+    padding: 0;
+  }
+</style>

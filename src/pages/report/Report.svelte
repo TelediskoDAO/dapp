@@ -3,6 +3,30 @@
   export let linesByProject;
 </script>
 
+<ol>
+  {#each linesByProject as project}
+    <li>
+      <h4>Project: {project.name}</h4>
+      <table>
+        <tbody>
+          {#each project.lines as line}
+            <tr>
+              <td>
+                {line.name}
+                <ul class="metadata">
+                  <li>{line.tier} tier</li>
+                  <li><i>timer</i>{toPrettyDuration(line.hours)}</li>
+                </ul>
+              </td>
+              <td class="value">{toPrettyCurrency(line.value)}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </li>
+  {/each}
+</ol>
+
 <style>
   ol {
     margin: 0;
@@ -52,27 +76,3 @@
     margin-right: var(--size-xs);
   }
 </style>
-
-<ol>
-  {#each linesByProject as project}
-    <li>
-      <h4>Project: {project.name}</h4>
-      <table>
-        <tbody>
-          {#each project.lines as line}
-            <tr>
-              <td>
-                {line.name}
-                <ul class="metadata">
-                  <li>{line.tier} tier</li>
-                  <li><i>timer</i>{toPrettyDuration(line.hours)}</li>
-                </ul>
-              </td>
-              <td class="value">{toPrettyCurrency(line.value)}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </li>
-  {/each}
-</ol>

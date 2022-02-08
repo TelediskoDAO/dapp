@@ -26,12 +26,6 @@
   }
 </script>
 
-<style>
-  .header {
-    cursor: pointer;
-  }
-</style>
-
 <div>
   <div class="header" on:click={handleShow}>
     <slot name="header" visible={show} />
@@ -40,3 +34,9 @@
     <slot name="body" />
   {/if}
 </div>
+
+<style>
+  .header {
+    cursor: pointer;
+  }
+</style>

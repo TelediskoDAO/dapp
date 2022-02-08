@@ -5,6 +5,26 @@
   title.set("Timeline");
 </script>
 
+<section>
+  <div class="entry">
+    <ol class="time">
+      <li style="left: 0">0h</li>
+      <li style="left: 12.5%">3h</li>
+      <li style="left: 25%">6h</li>
+      <li style="left: 37.5%">9h</li>
+      <li style="left: 50%">12h</li>
+      <li style="left: 62.5%">15h</li>
+      <li style="left: 75%">18h</li>
+      <li style="left: 87.5%">21h</li>
+      <li style="left: 100%">24h</li>
+    </ol>
+  </div>
+
+  {#each $activityPerDay as item}
+    <Activity {item} />
+  {/each}
+</section>
+
 <style>
   .entry {
     display: flex;
@@ -44,23 +64,3 @@
     right: 50%;
   }
 </style>
-
-<section>
-  <div class="entry">
-    <ol class="time">
-      <li style="left: 0">0h</li>
-      <li style="left: 12.5%">3h</li>
-      <li style="left: 25%">6h</li>
-      <li style="left: 37.5%">9h</li>
-      <li style="left: 50%">12h</li>
-      <li style="left: 62.5%">15h</li>
-      <li style="left: 75%">18h</li>
-      <li style="left: 87.5%">21h</li>
-      <li style="left: 100%">24h</li>
-    </ol>
-  </div>
-
-  {#each $activityPerDay as item}
-    <Activity {item} />
-  {/each}
-</section>

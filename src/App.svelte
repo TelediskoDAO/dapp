@@ -11,7 +11,7 @@
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
   import Router, { location } from "svelte-spa-router";
-  import { NotificationDisplay } from '@beyonk/svelte-notifications'
+  import { NotificationDisplay } from "@beyonk/svelte-notifications";
   import { replace } from "svelte-spa-router";
 
   // Pages
@@ -53,8 +53,33 @@
 
   log("Boot");
 
-  let notification
+  let notification;
 </script>
+
+<svelte:head>
+  <title>{$title}</title>
+</svelte:head>
+
+<NotificationDisplay bind:this={notification} />
+
+{#if $username && !$user}
+  <div out:slide class="loading">
+    <p>loading...</p>
+  </div>
+{:else if /\/print$/.test($location)}
+  <Router {routes} restoreScrollState />
+{:else}
+  <Sidebar />
+
+  <main>
+    <MismatchError />
+    <TopAppBar />
+    <Router {routes} restoreScrollState />
+    <UpdateAvailable />
+  </main>
+
+  <RuntimeErrors />
+{/if}
 
 <style>
   .loading {
@@ -75,31 +100,3 @@
     animation: blink 1s infinite;
   }
 </style>
-
-<svelte:head>
-  <title>{$title}</title>
-</svelte:head>
-
-<NotificationDisplay bind:this={notification} />
-
-{#if $username && !$user}
-  <div out:slide class="loading">
-    <p>loading...</p>
-  </div>
-{:else}
-
-  {#if /\/print$/.test($location)}
-    <Router {routes} restoreScrollState />
-  {:else}
-    <Sidebar />
-
-    <main>
-      <MismatchError />
-      <TopAppBar />
-      <Router {routes} restoreScrollState />
-      <UpdateAvailable />
-    </main>
-
-    <RuntimeErrors />
-  {/if}
-{/if}
