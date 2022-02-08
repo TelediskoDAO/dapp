@@ -1,38 +1,53 @@
-<script>
-  import Button, { Label } from "@smui/button"
-  import Dialog, { Title, Content, Actions } from '@smui/dialog';
-  import { title } from "src/state/runtime";
+<script lang="ts">
+  import { push } from 'svelte-spa-router'
+  import { notifier } from '@beyonk/svelte-notifications'
   
+  import { currentResolution } from "../../state/resolutions/new";
+  import { signer } from "../../state/eth";
+  import networks from "../../contracts/networks.json";
+  import { ResolutionMock__factory } from "../../contracts";
+  import { add as addToIpfs } from "../../net/ipfs";
+  import { resolutions } from "../../state/resolutions";
+  import { title } from "../../state/runtime";
+  import ResolutionForm from "../../components/ResolutionForm.svelte";
+
   title.set("Resolutions");
-  let open = false;
-  let clicked = 'Nothing yet.';
+
+  let loading = false
+  let receipt = null
+  let awaitingConfirmation = false
+
+  async function handleContractPreDraft() {
+    if (!$signer) {
+      return push('/connect/odoo')
+    }
+    receipt = null
+    loading = true
+    awaitingConfirmation = false
+    try {
+      const chainId = await $signer.getChainId();
+      const address = networks[chainId.toString()]["ResolutionMock"];
+      const contract = ResolutionMock__factory.connect(address, $signer);
+      const ipfsId = await addToIpfs($currentResolution);
+      $currentResolution.ipfsId = ipfsId;
+      const tx = await contract.createResolution(ipfsId, $currentResolution.type);
+      const resolutionId = $resolutions.length; // to fix, as tx.value looks to always be 0
+      awaitingConfirmation = true;
+      receipt = await tx.wait();
+      $currentResolution.blockHash = receipt.blockHash;
+      $currentResolution.resolutionId = Number(resolutionId);
+      notifier.success('Resolution draft created!', 5000)
+      $resolutions = [...$resolutions, $currentResolution]
+      push('/resolutions')
+    } catch (err) {
+      notifier.danger(err.message, 7000)
+    }
+    loading = false
+  } 
 </script>
 
-<section>
-  <h1>New Resolution</h1>
-
-  <Dialog
-  bind:open
-  aria-labelledby="simple-title"
-  aria-describedby="simple-content"
->
-  <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-  <Title id="simple-title">Dialog Title</Title>
-  <Content id="simple-content">Super awesome dialog body text?</Content>
-  <Actions>
-    <Button on:click={() => (clicked = 'No')}>
-      <Label>No</Label>
-    </Button>
-    <Button on:click={() => (clicked = 'Yes')}>
-      <Label>Yes</Label>
-    </Button>
-  </Actions>
-</Dialog>
-
-<Button on:click={() => (open = true)}>
-  <Label>Open Dialog</Label>
-</Button>
-
-<pre class="status">Clicked: {clicked}</pre>
-
-</section>
+<ResolutionForm
+  awaitingConfirmation={awaitingConfirmation}
+  handleSave={handleContractPreDraft}
+  loading={loading}
+/>

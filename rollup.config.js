@@ -53,6 +53,7 @@ export default [
           network,
           endpoint,
           oracleAddress,
+          ipfsEndpoint: 'https://ipfs.infura.io:5001'
         }),
       }),
       copy({ targets: [{ src: "public/*", dest: "build" }] }),

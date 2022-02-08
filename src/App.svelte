@@ -10,7 +10,8 @@
   import MismatchError from "src/components/MismatchError.svelte";
   import RuntimeErrors from "src/components/RuntimeErrors.svelte";
 
-  import Router from "svelte-spa-router";
+  import Router, { location } from "svelte-spa-router";
+  import { NotificationDisplay } from '@beyonk/svelte-notifications'
   import { replace } from "svelte-spa-router";
 
   // Pages
@@ -21,17 +22,19 @@
   import PageReport from "./pages/report/Index.svelte";
   import PageTokens from "./pages/tokens/Index.svelte";
   import PageResolutions from "./pages/resolutions/Index.svelte";
-  // import PageResolutions from "./pages/resolutions/New.svelte";
+  import PageResolutionsNew from "./pages/resolutions/New.svelte";
+  import PageResolutionsEdit from "./pages/resolutions/Edit.svelte";
+  import PageResolutionsPrint from "./pages/resolutions/Print.svelte";
 
   import NotFound from "./NotFound.svelte";
 
   const log = logger("App");
 
-  $: {
-    if ($user) {
-      replace("/tasks");
-    }
-  }
+  // $: {
+  //   if ($user) {
+  //     replace("/tasks");
+  //   }
+  // }
 
   const routes = {
     "/": PageIndex,
@@ -41,12 +44,16 @@
     "/report": PageReport,
     "/tokens": PageTokens,
     "/resolutions": PageResolutions,
-    // "/resolutions/new": PageResolutionsNew,
+    "/resolutions/new": PageResolutionsNew,
+    "/resolutions/:resolutionId": PageResolutionsEdit,
+    "/resolutions/:resolutionId/print": PageResolutionsPrint,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
 
   log("Boot");
+
+  let notification
 </script>
 
 <style>
@@ -73,19 +80,26 @@
   <title>{$title}</title>
 </svelte:head>
 
+<NotificationDisplay bind:this={notification} />
+
 {#if $username && !$user}
   <div out:slide class="loading">
     <p>loading...</p>
   </div>
 {:else}
-  <Sidebar />
 
-  <main>
-    <MismatchError />
-    <TopAppBar />
-    <Router {routes} restoreScrollState={true} />
-    <UpdateAvailable />
-  </main>
+  {#if /\/print$/.test($location)}
+    <Router {routes} restoreScrollState />
+  {:else}
+    <Sidebar />
 
-  <RuntimeErrors />
+    <main>
+      <MismatchError />
+      <TopAppBar />
+      <Router {routes} restoreScrollState />
+      <UpdateAvailable />
+    </main>
+
+    <RuntimeErrors />
+  {/if}
 {/if}

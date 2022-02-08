@@ -152,16 +152,3 @@ export const balance = derived(
     }
   }
 );
-
-export const resolutionContract: Readable<ResolutionMock> = derived(
-  signer,
-  // @ts-ignore
-  async ($signer, set) => {
-    if ($signer) {
-      const chainId = await $signer.getChainId();
-      const address: string = networks[chainId.toString()]["ResolutionMock"];
-      const contract = ResolutionMock__factory.connect(address, $signer);
-      set(contract);
-    }
-  }
-);
