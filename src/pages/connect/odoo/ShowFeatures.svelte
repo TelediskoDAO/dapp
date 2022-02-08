@@ -25,7 +25,7 @@
 <section>
   <h2>Advanced features</h2>
   <FormField>
-    <Checkbox value={$showWIPFeatures} on:change={onWIPChange} />
+    <Checkbox checked={$showWIPFeatures} on:change={onWIPChange} />
     <span slot="label">
       Enable features that are <em>Work In Progress</em>.
     </span>
