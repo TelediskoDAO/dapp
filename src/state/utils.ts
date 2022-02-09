@@ -17,8 +17,8 @@ export function set(key, valueOrFunction, fallback = undefined) {
   return value;
 }
 
-export function persistable(key, fallback) {
-  const value = writable(get(key, fallback));
+export function persistable<T>(key: string, fallback: T) {
+  const value = writable<T>(get(key, fallback));
   value.subscribe((current) => {
     set(key, current);
   });
