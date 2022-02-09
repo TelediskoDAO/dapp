@@ -6,32 +6,19 @@
   title.set("Time Tracking");
 </script>
 
-<style>
-  .warning {
-    color: var(--color-warning-fg);
-    background-color: var(--color-warning-bg);
-    padding: var(--size-xs);
-  }
-  ul {
-    list-style-type: none;
-    margin: 0 0 var(--size-m) 0;
-    padding: 0;
-  }
-</style>
-
 <section>
   {#if $tasksToFix.length}
     <h2>
       <i class="warning">warning</i>
       Fix me: problems found in
       {$tasksToFix.length}
-      task{$tasksToFix.length > 1 ? 's' : ''}
+      task{$tasksToFix.length > 1 ? "s" : ""}
     </h2>
 
     <p>
       <strong>Problem:</strong>
-      some time entries have incorrect values, or you are tracking multiple
-      tasks at the same time.
+      some time entries have incorrect values, or you are tracking multiple tasks
+      at the same time.
     </p>
 
     <p>
@@ -65,3 +52,16 @@
 
   <Tasks stage="todo" list={$projectList} />
 </section>
+
+<style>
+  .warning {
+    color: var(--color-warning-fg);
+    background-color: var(--color-warning-bg);
+    padding: var(--size-xs);
+  }
+  ul {
+    list-style-type: none;
+    margin: 0 0 var(--size-m) 0;
+    padding: 0;
+  }
+</style>

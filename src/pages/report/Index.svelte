@@ -13,46 +13,6 @@
   title.set("Reports");
 </script>
 
-<style>
-  h2 {
-    text-align: center;
-    margin-bottom: var(--size-s);
-  }
-
-  ul {
-    padding: 0;
-    margin: 0 0 var(--size-m) 0;
-    display: flex;
-    justify-content: center;
-  }
-
-  li {
-    list-style-type: none;
-    padding: var(--size-xs) var(--size-s);
-    margin: 0 var(--size-s);
-  }
-
-  ul li span,
-  ul li strong {
-    margin: var(--size-xs) 0;
-    text-align: center;
-    display: block;
-  }
-  ul li strong {
-    font-size: var(--font-l);
-  }
-
-  .note {
-    font-size: var(--font-s);
-    color: var(--color-gray-9);
-    text-align: center;
-  }
-
-  .prospect {
-    margin-bottom: var(--size-l);
-  }
-</style>
-
 <section>
   <div class="prospect">
     <h2>Tasks done</h2>
@@ -110,3 +70,43 @@
     {/if}
   </div>
 </section>
+
+<style>
+  h2 {
+    text-align: center;
+    margin-bottom: var(--size-s);
+  }
+
+  ul {
+    padding: 0;
+    margin: 0 0 var(--size-m) 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  li {
+    list-style-type: none;
+    padding: var(--size-xs) var(--size-s);
+    margin: 0 var(--size-s);
+  }
+
+  ul li span,
+  ul li strong {
+    margin: var(--size-xs) 0;
+    text-align: center;
+    display: block;
+  }
+  ul li strong {
+    font-size: var(--font-l);
+  }
+
+  .note {
+    font-size: var(--font-s);
+    color: var(--color-gray-9);
+    text-align: center;
+  }
+
+  .prospect {
+    margin-bottom: var(--size-l);
+  }
+</style>

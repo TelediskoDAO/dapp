@@ -22,14 +22,6 @@
   }
 </script>
 
-<style>
-  table {
-    margin-top: var(--size-s);
-    width: 100%;
-    padding-bottom: var(--size-m);
-  }
-</style>
-
 {#if createTimeEntry}
   <table>
     <Duration {taskId} handleDone={onCreateTimeEntryDone} />
@@ -55,3 +47,11 @@
     </tbody>
   {/if}
 </table>
+
+<style>
+  table {
+    margin-top: var(--size-s);
+    width: 100%;
+    padding-bottom: var(--size-m);
+  }
+</style>

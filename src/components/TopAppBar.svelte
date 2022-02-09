@@ -2,6 +2,13 @@
   import { title } from "src/state/runtime";
 </script>
 
+<header>
+  <section>
+    <label for="sidebar--toggle"><i>menu</i></label>
+    <h1>{$title}</h1>
+  </section>
+</header>
+
 <style>
   section {
     display: flex;
@@ -15,10 +22,3 @@
     text-align: center;
   }
 </style>
-
-<header>
-  <section>
-    <label for="sidebar--toggle"><i>menu</i></label>
-    <h1>{$title}</h1>
-  </section>
-</header>

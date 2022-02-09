@@ -127,7 +127,6 @@ export const address = derived(
   }
 );
 
-// @ts-ignore
 export const tokenContract: Readable<ERC20> = derived(
   signer,
   // @ts-ignore
@@ -150,5 +149,19 @@ export const balance = derived(
       const address: string = $user.address;
       set(await $tokenContract.balanceOf(address));
     }
+  }
+);
+
+export const resolutionContract: Readable<ResolutionMock> = derived(
+  signer,
+  ($signer, set) => {
+    (async () => {
+      if ($signer) {
+        const chainId = await $signer.getChainId();
+        const address = networks[chainId.toString()]["ResolutionMock"];
+        const contract = ResolutionMock__factory.connect(address, $signer);
+        set(contract);
+      }
+    })();
   }
 );

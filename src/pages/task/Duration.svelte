@@ -67,6 +67,108 @@
   }
 </script>
 
+{#if duration}
+  {#if !range.start}
+    <tr>
+      <td><span class="duration"> <i class="warning">warning</i> </span></td>
+      <td>Empty interval!</td>
+
+      <td class="options">
+        <div class="buttons">
+          <button
+            on:click={() =>
+              confirm("Are you sure?") && $removeDuration(duration.id)}
+          >
+            <i>delete</i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  {:else}
+    <tr>
+      <td>
+        {#if hours < 0 || ($durationsOpen.length > 1 && !range.end)}
+          <i class="warning">warning</i>
+        {/if}
+        <span class="duration">{toPrettyDuration(hours)}</span>
+        {#if !range.end}<i class="timer">timer</i>{/if}
+      </td>
+      <td>
+        <span class="range"
+          >{range.start}–{#if range.end}
+            {range.end}
+          {:else}<strong class="timer">now</strong>{/if}</span
+        >
+      </td>
+
+      <td class="options">
+        {#if editable}
+          <div class="buttons">
+            <button on:click={() => (edit = true)}> <i>edit</i> </button><button
+              on:click={() =>
+                confirm("Are you sure?") && $removeDuration(duration.id)}
+            >
+              <i>delete</i>
+            </button>
+          </div>
+        {/if}
+      </td>
+    </tr>
+  {/if}
+{/if}
+
+{#if edit}
+  <tr class="edit">
+    <td colspan="3">
+      <form on:submit|preventDefault={handleSubmit}>
+        <p>
+          <span>Start</span>
+          <input
+            bind:value={startDate}
+            on:change={() => taskId && (endDate = startDate)}
+            type="date"
+            required
+          />
+          <input
+            bind:value={startTime}
+            on:change={() => taskId && (endTime = startTime)}
+            type="time"
+            required
+          />
+        </p>
+        {#if !keepTracking}
+          <p>
+            <span>End</span>
+            <input bind:value={endDate} type="date" min={startDate} />
+            <input
+              bind:value={endTime}
+              type="time"
+              min={startDate === endDate ? startTime : ""}
+            />
+          </p>
+        {/if}
+        <!--
+        {#if duration.end}
+          <p>
+            <label>Continue tracking the task
+              <input bind:checked={keepTracking} type="checkbox" />
+            </label>
+          </p>
+        {/if}
+        -->
+        <div class="buttons">
+          <button type="submit">Save</button>
+          {#if duration}
+            <button type="reset" on:click={() => (edit = false)}>Cancel</button>
+          {:else}
+            <button type="reset" on:click={() => handleDone()}>Cancel</button>
+          {/if}
+        </div>
+      </form>
+    </td>
+  </tr>
+{/if}
+
 <style>
   .duration {
     font-weight: bold;
@@ -105,101 +207,3 @@
     padding: var(--size-xs) var(--size-xs);
   }
 </style>
-
-{#if duration}
-  {#if !range.start}
-    <tr>
-      <td><span class="duration"> <i class="warning">warning</i> </span></td>
-      <td>Empty interval!</td>
-
-      <td class="options">
-        <div class="buttons">
-          <button
-            on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}
-          >
-            <i>delete</i>
-          </button>
-        </div>
-      </td>
-    </tr>
-  {:else}
-    <tr>
-      <td>
-        {#if hours < 0 || ($durationsOpen.length > 1 && !range.end)}
-          <i class="warning">warning</i>
-        {/if}
-        <span class="duration">{toPrettyDuration(hours)}</span>
-        {#if !range.end}<i class="timer">timer</i>{/if}
-      </td>
-      <td>
-        <span class="range">{range.start}–{#if range.end}
-            {range.end}
-          {:else}<strong class="timer">now</strong>{/if}</span>
-      </td>
-
-      <td class="options">
-        {#if editable}
-          <div class="buttons">
-            <button on:click={() => (edit = true)}> <i>edit</i> </button><button
-              on:click={() => confirm('Are you sure?') && $removeDuration(duration.id)}
-            >
-              <i>delete</i>
-            </button>
-          </div>
-        {/if}
-      </td>
-    </tr>
-  {/if}
-{/if}
-
-{#if edit}
-  <tr class="edit">
-    <td colspan="3">
-      <form on:submit|preventDefault={handleSubmit}>
-        <p>
-          <span>Start</span>
-          <input
-            bind:value={startDate}
-            on:change={() => taskId && (endDate = startDate)}
-            type="date"
-            required
-          />
-          <input
-            bind:value={startTime}
-            on:change={() => taskId && (endTime = startTime)}
-            type="time"
-            required
-          />
-        </p>
-        {#if !keepTracking}
-          <p>
-            <span>End</span>
-            <input bind:value={endDate} type="date" min={startDate} />
-            <input
-              bind:value={endTime}
-              type="time"
-              min={startDate === endDate ? startTime : ''}
-            />
-          </p>
-        {/if}
-        <!--
-        {#if duration.end}
-          <p>
-            <label>Continue tracking the task
-              <input bind:checked={keepTracking} type="checkbox" />
-            </label>
-          </p>
-        {/if}
-        -->
-        <div class="buttons">
-          <button type="submit">Save</button>
-          {#if duration}
-            <button type="reset" on:click={() => (edit = false)}>Cancel</button>
-          {:else}
-            <button type="reset" on:click={() => handleDone()}>Cancel</button>
-          {/if}
-        </div>
-      </form>
-    </td>
-  </tr>
-{/if}

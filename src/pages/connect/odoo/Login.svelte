@@ -21,12 +21,6 @@
   }
 </script>
 
-<style>
-  details {
-    margin-top: var(--size-l);
-  }
-</style>
-
 <section>
   <h2>Odoo Login</h2>
   {#if $user}
@@ -40,7 +34,8 @@
           <label>Odoo Username<br /> <input name="username" required /> </label>
         </p>
         <p>
-          <label>Odoo Password<br />
+          <label
+            >Odoo Password<br />
             <input name="password" type="password" required />
           </label>
         </p>
@@ -62,10 +57,9 @@
       Your credentials are stored in your browser and are
       <strong>only</strong>
       used to load and save data in the
-      <a
-        href="https://odoo.teledisko.com/"
-        target="_blank"
-      >odoo.teledisko.com</a>
+      <a href="https://odoo.teledisko.com/" target="_blank"
+        >odoo.teledisko.com</a
+      >
       server. There is
       <strong>no third party involved</strong>.
     </p>
@@ -78,3 +72,9 @@
     </p>
   </details>
 </section>
+
+<style>
+  details {
+    margin-top: var(--size-l);
+  }
+</style>

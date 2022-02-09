@@ -2,6 +2,23 @@
   import { errors } from "src/state/runtime";
 </script>
 
+{#if $errors.length}
+  <section class="runtime-error">
+    {#each $errors as error}
+      <p><strong>Error:</strong> <code>{error.reason.message}</code></p>
+    {/each}
+    <p>
+      What to do now? Would be nice if you can
+      <a href="https://gitlab.com/teledisko/dao/-/issues/new" target="_blank"
+        >create an issue</a
+      >
+      describing what happened. To keep using this app
+      <button on:click={() => window.location.reload()}>reload the page</button
+      >.
+    </p>
+  </section>
+{/if}
+
 <style>
   section {
     z-index: 1000;
@@ -26,20 +43,3 @@
     font-weight: bold;
   }
 </style>
-
-{#if $errors.length}
-  <section class="runtime-error">
-    {#each $errors as error}
-      <p><strong>Error:</strong> <code>{error.reason.message}</code></p>
-    {/each}
-    <p>
-      What to do now? Would be nice if you can
-      <a
-        href="https://gitlab.com/teledisko/dao/-/issues/new"
-        target="_blank"
-      >create an issue</a>
-      describing what happened. To keep using this app
-      <button on:click={() => window.location.reload()}>reload the page</button>.
-    </p>
-  </section>
-{/if}
