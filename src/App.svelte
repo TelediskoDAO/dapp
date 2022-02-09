@@ -31,8 +31,7 @@
   const log = logger("App");
 
   $: {
-    console.log("location is", $location);
-    if ($user) {
+    if ($user && $location === "/") {
       replace("/tasks");
     }
   }
@@ -66,26 +65,6 @@
   let notification: NotificationDisplay;
 </script>
 
-<style>
-  .loading {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background-color: white;
-    z-index: 10000;
-    font-size: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .loading p {
-    animation: blink 1s infinite;
-  }
-</style>
-
 <svelte:head>
   <title>{$title}</title>
 </svelte:head>
@@ -110,3 +89,23 @@
 
   <RuntimeErrors />
 {/if}
+
+<style>
+  .loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+    z-index: 10000;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .loading p {
+    animation: blink 1s infinite;
+  }
+</style>
