@@ -58,7 +58,7 @@
     console.log("error is", $userError);
     if ($userError) {
       notifier.danger($userError, 7000);
-      push("/");
+      push("/connect/odoo");
     }
   }
 
