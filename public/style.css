@@ -328,7 +328,7 @@ label[for="sidebar--toggle"] {
 }
 
 .CORE .runtime-error {
-  z-index: 1000;
+  z-index: 99999;
   background-color: black;
   color: white;
   position: fixed;

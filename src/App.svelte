@@ -1,18 +1,18 @@
-<script>
+<script lang="ts">
   import { logger } from "./state/runtime";
-  import { user, username } from "./state/odoo";
+  import { user, userError, username } from "./state/odoo";
   import { title } from "./state/runtime";
   import { slide } from "svelte/transition";
 
+  import { notifier } from "@beyonk/svelte-notifications";
   import TopAppBar from "./components/TopAppBar.svelte";
   import UpdateAvailable from "./components/UpdateAvailable.svelte";
   import Sidebar from "./components/Sidebar.svelte";
-  import MismatchError from "src/components/MismatchError.svelte";
-  import RuntimeErrors from "src/components/RuntimeErrors.svelte";
+  import MismatchError from "./components/MismatchError.svelte";
+  import RuntimeErrors from "./components/RuntimeErrors.svelte";
 
-  import Router, { location } from "svelte-spa-router";
+  import Router, { location, replace, push } from "svelte-spa-router";
   import { NotificationDisplay } from "@beyonk/svelte-notifications";
-  import { replace } from "svelte-spa-router";
 
   // Pages
   import PageIndex from "./pages/Index.svelte";
@@ -30,11 +30,11 @@
 
   const log = logger("App");
 
-  // $: {
-  //   if ($user) {
-  //     replace("/tasks");
-  //   }
-  // }
+  $: {
+    if ($user && $location === "/") {
+      replace("/tasks");
+    }
+  }
 
   const routes = {
     "/": PageIndex,
@@ -54,7 +54,15 @@
 
   log("Boot");
 
-  let notification;
+  $: {
+    console.log("error is", $userError);
+    if ($userError) {
+      notifier.danger($userError, 7000);
+      push("/connect/odoo");
+    }
+  }
+
+  let notification: NotificationDisplay;
 </script>
 
 <svelte:head>
@@ -63,7 +71,7 @@
 
 <NotificationDisplay bind:this={notification} />
 
-{#if $username && !$user}
+{#if $username && !$user && !$userError}
   <div out:slide class="loading">
     <p>loading...</p>
   </div>
@@ -90,7 +98,7 @@
     right: 0;
     left: 0;
     background-color: white;
-    z-index: 99999;
+    z-index: 10000;
     font-size: 2rem;
     display: flex;
     justify-content: center;

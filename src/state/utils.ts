@@ -25,7 +25,7 @@ export function persistable<T>(key: string, fallback: T) {
   return value;
 }
 
-export function derivable(stores, callback, initial) {
+export function derivable(stores, callback, initial = undefined) {
   const hasSet = callback.length === 2;
   return writable(initial, (set) => {
     let _stores = stores;
