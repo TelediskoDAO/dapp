@@ -14,7 +14,7 @@
       $showWIPFeatures = false;
     } else {
       open = true;
-      e.stopPropagation();
+      e.preventDefault();
     }
   }
   function onWIPDialogSelect(v: boolean) {
@@ -25,7 +25,7 @@
 <section>
   <h2>Advanced features</h2>
   <FormField>
-    <Checkbox checked={$showWIPFeatures} on:change={onWIPChange} />
+    <Checkbox checked={$showWIPFeatures} on:click={onWIPChange} />
     <span slot="label">
       Enable features that are <em>Work In Progress</em>.
     </span>
