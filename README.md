@@ -1,12 +1,15 @@
-# svelte-minimal
-A minimal template to get you started with Svelte. It supports **hash-based routing** (thanks to [svelte-spa-router](https://github.com/ItalyPaleAle/svelte-spa-router)) and doesn't require any server-side processing.
+# teledisko dapp
 
-## How to use it
-```
-npx degit vrde/svelte-minimal myapp
-npm install
-npm start
-```
+## How to develop
 
-## How to make a production build
-`npm run build`
+Prerequisites:
+
+- Install [pnpm](https://pnpm.io/).
+- Clone https://github.com/TelediskoDAO/contracts
+
+
+```
+pnpm install
+./config-contracts.sh
+pnpm start
+```
