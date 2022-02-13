@@ -6,6 +6,7 @@ interface IConfig {
   endpoint: string;
   oracleAddress: string;
   ipfsEndpoint: string;
+  graphProtocolGQLEndpoint: string;
 }
 
 // @ts-ignore

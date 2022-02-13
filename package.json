@@ -4,7 +4,7 @@
   "description": "Teledisko DAO",
   "main": "index.js",
   "scripts": {
-    "build": "ORACLE_ADDRESS=0x8D3e7C3e4aBAb77A66b69C0564c7dD7420eC3449 NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --config",
+    "build": "ORACLE_ADDRESS=0x3b314254fa6bf048BB5B2184fAbBfe0f25Fa7f20 NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --config",
     "start": "NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --watch --config",
     "test": "echo \"Error: no test specified\" && exit 1",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -53,6 +53,8 @@
     "@beyonk/svelte-notifications": "^4.1.1",
     "@types/lodash.isequal": "^4.5.5",
     "ethers": "^5.5.3",
+    "graphql": "^16.3.0",
+    "graphql-request": "^4.0.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.3",
     "lodash.isequal": "^4.5.0",

@@ -5,18 +5,19 @@
   import Dialog, { Title, Content, Actions } from "@smui/dialog";
   import { onDestroy, onMount } from "svelte";
   import Button, { Label } from "@smui/button";
+  import CircularProgress from "@smui/circular-progress";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
   import { resolutionContract, signer } from "../../state/eth";
-  import { resolutions } from "../../state/resolutions";
   import {
     currentResolution,
     emptyResolution,
-    Resolution,
     RESOLUTION_STATES,
   } from "../../state/resolutions/new";
 
-  import { add as addToIpfs } from "../../net/ipfs";
+  import { add as addToIpfs, get } from "../../net/ipfs";
+  import { graphQLClient } from "../../net/graphQl";
+  import { getResolutionQuery } from "../../graphql/get-resolution.query";
 
   type Params = {
     resolutionId: string;
@@ -26,46 +27,49 @@
     resolutionId: "",
   };
 
-  let resolutionData = $resolutions.find(
-    (res: Resolution) => String(res.resolutionId) === params.resolutionId
-  );
-
-  $currentResolution = { ...resolutionData };
-
-  $: disabledUpdate = isEqual(resolutionData, $currentResolution);
-
+  let resolutionData;
+  let disabledUpdate = true;
   let loading = false;
-  let receipt = null;
   let awaitingConfirmation = false;
   let open = false;
+
+  onMount(async () => {
+    const { resolutionMockTest } = await graphQLClient.request(
+      getResolutionQuery,
+      { id: params.resolutionId }
+    );
+    const ipfsData = await get(resolutionMockTest.ipfsDataURI);
+    resolutionData = {
+      ...ipfsData,
+    };
+
+    if (resolutionData.state !== RESOLUTION_STATES.PRE_DRAFT) {
+      replace(`/resolutions/${params.resolutionId}`);
+    }
+
+    $currentResolution = { ...resolutionData };
+  });
+
+  $: {
+    disabledUpdate = isEqual(resolutionData, $currentResolution);
+  }
 
   async function handleUpdateResolution() {
     if (!$signer) {
       return push("/connect/odoo");
     }
-    receipt = null;
     loading = true;
     awaitingConfirmation = false;
     try {
       const ipfsId = await addToIpfs($currentResolution);
-      $currentResolution.ipfsId = ipfsId;
       const tx = await $resolutionContract.updateResolution(
-        $currentResolution.resolutionId,
+        params.resolutionId,
         ipfsId,
         $currentResolution.type
       );
       awaitingConfirmation = true;
-      receipt = await tx.wait();
-      $currentResolution.blockHash = receipt.blockHash;
+      await tx.wait();
       notifier.success("Resolution draft updated!", 5000);
-      const currentResolutionIndex = $resolutions.findIndex(
-        (res: Resolution) =>
-          res.resolutionId === $currentResolution.resolutionId
-      );
-      $resolutions = Object.assign([], $resolutions, {
-        [currentResolutionIndex]: $currentResolution,
-      });
-      resolutionData = { ...$currentResolution };
     } catch (err) {
       notifier.danger(err.message, 7000);
     }
@@ -73,7 +77,7 @@
   }
 
   function handleExport() {
-    window.open(`/#/resolutions/${$currentResolution.resolutionId}/print`);
+    window.open(`/#/resolutions/${params.resolutionId}/print`);
   }
 
   function handlePreApprove() {
@@ -85,26 +89,16 @@
     if (!$signer) {
       return push("/connect/odoo");
     }
-    receipt = null;
     loading = true;
     awaitingConfirmation = false;
     try {
       const tx = await $resolutionContract.approveResolution(
-        $currentResolution.resolutionId
+        params.resolutionId
       );
       awaitingConfirmation = true;
-      receipt = await tx.wait();
-      $currentResolution.blockHash = receipt.blockHash;
-      $currentResolution.state = RESOLUTION_STATES.NOTICE;
+      await tx.wait();
       notifier.success("Resolution approved!", 5000);
-      const currentResolutionIndex = $resolutions.findIndex(
-        (res: Resolution) =>
-          res.resolutionId === $currentResolution.resolutionId
-      );
-      $resolutions = Object.assign([], $resolutions, {
-        [currentResolutionIndex]: $currentResolution,
-      });
-      push(`/resolutions/${$currentResolution.resolutionId}`);
+      push(`/resolutions/${params.resolutionId}`);
     } catch (err) {
       notifier.danger(err.message, 7000);
     }
@@ -113,12 +107,6 @@
 
   onDestroy(() => {
     $currentResolution = { ...emptyResolution };
-  });
-
-  onMount(() => {
-    if ($currentResolution.state !== RESOLUTION_STATES.PRE_DRAFT) {
-      replace(`/resolutions/${$currentResolution.resolutionId}`);
-    }
   });
 </script>
 
@@ -141,12 +129,16 @@
   </Actions>
 </Dialog>
 
-<ResolutionForm
-  {awaitingConfirmation}
-  handleSave={handleUpdateResolution}
-  {loading}
-  editMode
-  {handleExport}
-  handleApprove={handlePreApprove}
-  {disabledUpdate}
-/>
+{#if !resolutionData}
+  <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+{:else}
+  <ResolutionForm
+    {awaitingConfirmation}
+    handleSave={handleUpdateResolution}
+    {loading}
+    editMode
+    {handleExport}
+    handleApprove={handlePreApprove}
+    {disabledUpdate}
+  />
+{/if}

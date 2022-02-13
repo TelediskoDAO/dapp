@@ -3,7 +3,6 @@
   import { location } from "svelte-spa-router";
 
   import ResolutionView from "../../components/ResolutionView.svelte";
-  import { resolutions } from "../../state/resolutions";
   import { Resolution, RESOLUTION_TYPES } from "../../state/resolutions/new";
 
   type Params = {
@@ -12,9 +11,7 @@
 
   export let params: Params = {};
 
-  const resolutionData = $resolutions.find(
-    (res: Resolution) => String(res.resolutionId) === params.resolutionId
-  );
+  const resolutionData = null;
 
   onMount(() => {
     if (/\/print$/.test($location)) {

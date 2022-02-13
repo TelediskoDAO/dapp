@@ -1,16 +1,19 @@
 <script lang="ts">
+  import { onDestroy } from "svelte";
   import Select, { Option } from "@smui/select";
   import Button, { Label, Group } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text";
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
+  import FormField from "@smui/form-field";
+  import Checkbox from "@smui/checkbox";
+
   import {
     emptyResolution,
     currentResolution,
     RESOLUTION_TYPES,
   } from "../state/resolutions/new";
-  import { onDestroy } from "svelte";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -37,6 +40,8 @@
     disabled =
       checkDisabledFields.filter(Boolean).length < checkDisabledFields.length;
   }
+
+  console.log("$currentResolution: ", $currentResolution);
 
   onDestroy(() => {
     $currentResolution = { ...emptyResolution };
@@ -120,6 +125,10 @@
               <Option value={resolutionType[0]}>{resolutionType[1]}</Option>
             {/each}
           </Select>
+          <FormField>
+            <Checkbox bind:checked={$currentResolution.isNegative} />
+            <span slot="label"> Negative resolution. </span>
+          </FormField>
         </Cell>
       </InnerGrid>
     </Cell>

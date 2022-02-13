@@ -53,7 +53,9 @@ export default [
           network,
           endpoint,
           oracleAddress,
-          ipfsEndpoint: 'https://ipfs.infura.io:5001'
+          ipfsEndpoint: "https://ipfs.infura.io:5001",
+          graphProtocolGQLEndpoint:
+            "https://api.thegraph.com/subgraphs/name/telediskodao/resolution-mock",
         }),
       }),
       copy({ targets: [{ src: "public/*", dest: "build" }] }),

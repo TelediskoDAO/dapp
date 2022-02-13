@@ -3,10 +3,32 @@
   import Card, { Content, Actions } from "@smui/card";
   import Button, { Label } from "@smui/button";
   import LayoutGrid, { Cell } from "@smui/layout-grid";
+  import CircularProgress from "@smui/circular-progress";
 
-  import { resolutions } from "../../state/resolutions";
   import { RESOLUTION_STATES } from "../../state/resolutions/new";
   import { title } from "../../state/runtime";
+  import { get } from "../../net/ipfs";
+  import { onMount } from "svelte";
+  import { graphQLClient } from "../../net/graphQl";
+  import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
+
+  let resolutions;
+
+  onMount(async () => {
+    const { resolutionMockTests } = await graphQLClient.request(
+      getResolutionsQuery
+    );
+
+    resolutions = await Promise.all(
+      resolutionMockTests.map(async (item): Promise<any> => {
+        const ipfsData = await get(item.ipfsDataURI);
+        return {
+          ...ipfsData,
+          resolutionId: item.id,
+        };
+      })
+    );
+  });
 
   title.set("Resolutions");
 </script>
@@ -18,9 +40,12 @@
       <Label>Create resolution</Label>
     </Button>
   </div>
-  {#if $resolutions.length > 0}
+  {#if !resolutions}
+    <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+  {/if}
+  {#if resolutions?.length > 0}
     <LayoutGrid>
-      {#each $resolutions as resolution}
+      {#each resolutions as resolution}
         <Cell span={4}>
           <Card>
             <Content
