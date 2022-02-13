@@ -4,6 +4,7 @@ export const getResolutionsQuery = gql`
   query GetResolutions {
     resolutionMockTests {
       id
+      approved
       ipfsDataURI
     }
   }

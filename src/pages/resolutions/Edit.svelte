@@ -43,7 +43,7 @@
       ...ipfsData,
     };
 
-    if (resolutionData.state !== RESOLUTION_STATES.PRE_DRAFT) {
+    if (resolutionMockTest.approved) {
       replace(`/resolutions/${params.resolutionId}`);
     }
 

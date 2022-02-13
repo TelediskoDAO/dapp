@@ -5,7 +5,6 @@
   import LayoutGrid, { Cell } from "@smui/layout-grid";
   import CircularProgress from "@smui/circular-progress";
 
-  import { RESOLUTION_STATES } from "../../state/resolutions/new";
   import { title } from "../../state/runtime";
   import { get } from "../../net/ipfs";
   import { onMount } from "svelte";
@@ -25,6 +24,7 @@
         return {
           ...ipfsData,
           resolutionId: item.id,
+          approved: item.approved,
         };
       })
     );
@@ -56,16 +56,10 @@
               <Button
                 variant="raised"
                 href={`#/resolutions/${resolution.resolutionId}${
-                  resolution.state === RESOLUTION_STATES.PRE_DRAFT
-                    ? "/edit"
-                    : ""
+                  !resolution.approved ? "/edit" : ""
                 }`}
               >
-                <Label
-                  >{resolution.state === RESOLUTION_STATES.PRE_DRAFT
-                    ? "Edit"
-                    : "View"}</Label
-                >
+                <Label>{!resolution.approved ? "Edit" : "View"}</Label>
               </Button>
             </Actions>
           </Card>
