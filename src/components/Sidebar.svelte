@@ -102,10 +102,11 @@
     </section>
 
     <section class="build-info">
-      {#if CONFIG.env !== "production"}
-        <small>Env: {CONFIG.env}</small>
+      {#if CONFIG.env === "production"}
+        <small>Version: {CONFIG.version}</small>
+      {:else}
+        <small>Version: {CONFIG.env}</small>
       {/if}
-      <small>Version: {CONFIG.version}</small><br />
       {#if CONFIG.env === "staging"}
         <small
           >Commit: <a
