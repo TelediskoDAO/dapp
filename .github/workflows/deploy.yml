@@ -48,17 +48,17 @@ jobs:
         run: pnpm build
 
       - name: Add .nojekyll file
-        run: touch .nojekyll
+        run: touch build/.nojekyll
 
       - name: Add staging CNAME
         if: startsWith(github.ref, 'refs/tags/v') != true
         run: |
-          echo "dao-staging.teledisko.com" > CNAME
+          echo "dao-staging.teledisko.com" > build/CNAME
 
       - name: Add production CNAME
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          echo "dao.teledisko.com" > CNAME
+          echo "dao.teledisko.com" > build/CNAME
 
       - name: Deploy to staging
         if: startsWith(github.ref, 'refs/tags/v') != true
