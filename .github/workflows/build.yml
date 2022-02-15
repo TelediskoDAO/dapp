@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  push:
+    # branches: [ main ]
+    branches: *
+
+jobs:
+  cache-and-install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Install
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6
+          run_install: true
+
+      - name: Install contracts
+        run: pnpm build
+
+      - name: Build contracts
+        working-directory: contracts
+        run: |
+          pnpx hardhat compile
+          cp -r typechain/* ../src/contracts
+          cp deployments/* ../src/contracts
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
