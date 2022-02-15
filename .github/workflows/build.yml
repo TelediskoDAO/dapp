@@ -49,4 +49,4 @@ jobs:
           repository-name: TelediskoDAO/dao-staging.teledisko.com
           branch: main
           folder: build
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          ssh-key: ${{ secrets.STAGING_DEPLOY_KEY }}
