@@ -1,7 +1,11 @@
 name: Deploy
 
 on:
-  push
+  push:
+    branches:    
+      - main
+    tags:        
+      - v*
 
 jobs:
   deploy:
