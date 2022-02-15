@@ -37,8 +37,8 @@ jobs:
         working-directory: contracts
         run: |
           pnpm run compile
-          cp -r typechain ../src/contracts
-          cp -r deployments/* ../src/contracts
+          cp -rv typechain ../src/contracts
+          cp -rv deployments/* ../src/contracts
 
       - name: Build
         run: pnpm build
