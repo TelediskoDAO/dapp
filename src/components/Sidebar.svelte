@@ -24,50 +24,6 @@
   }
 </script>
 
-<style>
-  .user-data {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-  }
-  .user-data img {
-    width: var(--size-m);
-    display: block;
-    margin-right: var(--size-xs);
-    border-radius: 100%;
-  }
-
-  small {
-    color: var(--color-gray-5);
-  }
-  ul {
-    margin: 0;
-    padding: 0;
-  }
-  li {
-    list-style-type: none;
-  }
-  li a {
-    text-decoration: none;
-    padding: 0.4rem 0;
-    display: block;
-    margin-bottom: var(--size-xs);
-  }
-  li a i {
-    color: #888;
-    font-size: 1.5rem;
-    vertical-align: bottom;
-  }
-  :global(aside section ul a.active i) {
-    color: black !important;
-  }
-
-  .refresh h5 {
-    font-weight: normal;
-    margin-bottom: var(--size-xs);
-  }
-</style>
-
 <aside>
   <input id="sidebar--toggle" type="checkbox" />
   <nav class="content">
@@ -145,10 +101,68 @@
       >
     </section>
 
-    <section>
-      <small>Software version: {CONFIG.version}</small><br />
+    <section class="build-info">
+      {#if CONFIG.env === "production"}
+        <small>Version: {CONFIG.version}</small>
+      {:else}
+        <small>Version: {CONFIG.env}</small>
+      {/if}
+      {#if CONFIG.env === "staging"}
+        <small
+          >Commit: <a
+            href="https://github.com/TelediskoDAO/dapp/commit/{CONFIG.gitRevision}"
+          >
+            {CONFIG.gitRevision.substring(0, 8)}
+          </a></small
+        >
+      {/if}
       <small>Build date: {buildDate}</small>
     </section>
   </nav>
   <label class="overlay" for="sidebar--toggle" />
 </aside>
+
+<style>
+  .user-data {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  .user-data img {
+    width: var(--size-m);
+    display: block;
+    margin-right: var(--size-xs);
+    border-radius: 100%;
+  }
+
+  .build-info small {
+    color: var(--color-gray-5);
+    display: block;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    list-style-type: none;
+  }
+  li a {
+    text-decoration: none;
+    padding: 0.4rem 0;
+    display: block;
+    margin-bottom: var(--size-xs);
+  }
+  li a i {
+    color: #888;
+    font-size: 1.5rem;
+    vertical-align: bottom;
+  }
+  :global(aside section ul a.active i) {
+    color: black !important;
+  }
+
+  .refresh h5 {
+    font-weight: normal;
+    margin-bottom: var(--size-xs);
+  }
+</style>
