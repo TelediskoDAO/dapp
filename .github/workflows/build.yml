@@ -25,6 +25,9 @@ jobs:
           version: 6
           run_install: true
 
+      - name: Checkout "contracts" submodule
+        run: git submodule init contracts
+
       - name: Install contracts
         working-directory: contracts
         run: pnpm install
@@ -32,7 +35,7 @@ jobs:
       - name: Build contracts
         working-directory: contracts
         run: |
-          pnpx hardhat compile
+          pnpm run compile
           cp -r typechain/* ../src/contracts
           cp deployments/* ../src/contracts
 
