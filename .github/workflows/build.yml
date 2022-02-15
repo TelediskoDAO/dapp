@@ -44,7 +44,9 @@ jobs:
         run: pnpm build
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          repository-name: TelediskoDAO/dao-staging.teledisko.com
+          branch: main
+          folder: build
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
