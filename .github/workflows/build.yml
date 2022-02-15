@@ -27,7 +27,7 @@ jobs:
 
       - name: Install contracts
         working-directory: contracts
-        run: pnpm build
+        run: pnpm install
 
       - name: Build contracts
         working-directory: contracts
