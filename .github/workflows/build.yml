@@ -36,8 +36,8 @@ jobs:
         working-directory: contracts
         run: |
           pnpm run compile
-          cp -r typechain/* ../src/contracts
-          cp deployments/* ../src/contracts
+          cp -r typechain/* $GITHUB_WORKSPACE/src/contracts
+          cp deployments/* $GITHUB_WORKSPACE/src/contracts
 
       - name: Build
         run: pnpm build
