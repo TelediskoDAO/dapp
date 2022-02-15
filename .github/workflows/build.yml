@@ -28,16 +28,17 @@ jobs:
       - name: Checkout "contracts" submodule
         run: git submodule update --init contracts
 
-      - name: Install and compile contracts
+      - name: Install contracts
         working-directory: contracts
         run: |
           pnpm install
-          pnpm run compile
 
-      - name: Copy contracts
+      - name: Compile contracts
+        working-directory: contracts
         run: |
-          cp -r contracts/typechain/* src/contracts
-          cp contracts/deployments/* src/contracts
+          pnpm run compile
+          cp -r contracts/typechain ../src/contracts
+          cp -r contracts/deployments/* ../src/contracts
 
       - name: Build
         run: pnpm build
