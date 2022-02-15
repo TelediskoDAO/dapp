@@ -16,7 +16,7 @@ import typescript from "@rollup/plugin-typescript";
 import css from "rollup-plugin-css-only";
 
 const ENVS = ["production", "staging", "development"];
-const env = process.env.NODE_ENV.toLowerCase() || "development";
+const env = process.env.NODE_ENV?.toLowerCase() || "development";
 
 if (!ENVS.includes(env)) {
   console.error(`Invalid NODE_ENV value: ${env}`);
