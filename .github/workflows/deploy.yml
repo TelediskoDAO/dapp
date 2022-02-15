@@ -44,8 +44,13 @@ jobs:
           cp -rv typechain ../src/contracts
           cp -rv deployments/* ../src/contracts
 
-      - name: Build
-        run: pnpm build
+      - name: Build for production
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: NODE_ENV=production pnpm build
+
+      - name: Build for staging
+        if: startsWith(github.ref, 'refs/tags/v') != true
+        run: NODE_ENV=staging pnpm build
 
       - name: Add .nojekyll file
         run: touch build/.nojekyll

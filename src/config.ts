@@ -1,3 +1,5 @@
+type Env = "production" | "staging" | "development";
+
 interface IConfig {
   production: boolean;
   date: number;
@@ -6,6 +8,8 @@ interface IConfig {
   endpoint: string;
   oracleAddress: string;
   ipfsEndpoint: string;
+  gitRevision: string;
+  env: Env;
 }
 
 // @ts-ignore
