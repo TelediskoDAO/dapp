@@ -33,7 +33,6 @@
   let selectedType: ResolutionManager.ResolutionTypeStructOutput | null = null;
 
   $: {
-    console.log($currentResolution);
     const checkDisabledFields = [
       $currentResolution.title?.trim(),
       $currentResolution.content?.trim(),
