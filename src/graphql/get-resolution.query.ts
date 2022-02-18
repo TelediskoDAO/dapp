@@ -2,9 +2,16 @@ import { gql } from "graphql-request";
 
 export const getResolutionQuery = gql`
   query GetResolution($id: String!) {
-    resolutionMockTest(id: $id) {
-      ipfsDataURI
-      approved
+    resolution(id: $id) {
+      id
+      title
+      content
+      isNegative
+      typeId
+      yesVotesTotal
+      approveTimestamp
+      createTimestamp
+      updateTimestamp
     }
   }
 `;

@@ -6,7 +6,11 @@
     currentResolution,
     emptyResolution,
   } from "../../state/resolutions/new";
-  import { resolutionContract, signer } from "../../state/eth";
+  import {
+    resolutionContract,
+    resolutionContractTypes,
+    signer,
+  } from "../../state/eth";
   import { add as addToIpfs } from "../../net/ipfs";
   import { title } from "../../state/runtime";
   import ResolutionForm from "../../components/ResolutionForm.svelte";
@@ -25,9 +29,7 @@
     awaitingConfirmation = false;
     try {
       const ipfsId = await addToIpfs($currentResolution);
-      const resolutionId = +new Date();
       const tx = await $resolutionContract.createResolution(
-        resolutionId,
         ipfsId,
         $currentResolution.type,
         $currentResolution.isNegative

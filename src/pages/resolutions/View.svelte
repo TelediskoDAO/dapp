@@ -6,8 +6,6 @@
   import ResolutionView from "../../components/ResolutionView.svelte";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
   import { graphQLClient } from "../../net/graphQl";
-  import { get } from "../../net/ipfs";
-  import { RESOLUTION_TYPES } from "../../state/resolutions/new";
 
   type Params = {
     resolutionId: string;
@@ -20,11 +18,10 @@
   let resolutionData;
 
   onMount(async () => {
-    const { resolutionMockTest } = await graphQLClient.request(
-      getResolutionQuery,
-      { id: params.resolutionId }
-    );
-    resolutionData = await get(resolutionMockTest.ipfsDataURI);
+    const { resolution } = await graphQLClient.request(getResolutionQuery, {
+      id: params.resolutionId,
+    });
+    resolutionData = resolution;
   });
 </script>
 
@@ -34,7 +31,7 @@
   <ResolutionView
     title={resolutionData.title}
     content={resolutionData.content}
-    type={RESOLUTION_TYPES[resolutionData.type]}
+    type={"asd"}
     state={resolutionData.state}
   />
 {/if}

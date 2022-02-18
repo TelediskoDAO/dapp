@@ -12,10 +12,11 @@
   import {
     currentResolution,
     emptyResolution,
+    getResolutionState,
     RESOLUTION_STATES,
   } from "../../state/resolutions/new";
 
-  import { add as addToIpfs, get } from "../../net/ipfs";
+  import { add as addToIpfs } from "../../net/ipfs";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
 
@@ -34,24 +35,34 @@
   let open = false;
 
   onMount(async () => {
-    const { resolutionMockTest } = await graphQLClient.request(
-      getResolutionQuery,
-      { id: params.resolutionId }
-    );
-    const ipfsData = await get(resolutionMockTest.ipfsDataURI);
-    resolutionData = {
-      ...ipfsData,
-    };
+    const { resolution } = await graphQLClient.request(getResolutionQuery, {
+      id: params.resolutionId,
+    });
 
-    if (resolutionMockTest.approved) {
+    resolutionData = resolution;
+
+    if (getResolutionState(resolution) !== RESOLUTION_STATES.PRE_DRAFT) {
       replace(`/resolutions/${params.resolutionId}`);
     }
 
-    $currentResolution = { ...resolutionData };
+    $currentResolution = {
+      title: resolutionData.title,
+      content: resolutionData.content,
+      isNegative: resolutionData.isNegative,
+      type: Number(resolutionData.typeId),
+    };
   });
 
   $: {
-    disabledUpdate = isEqual(resolutionData, $currentResolution);
+    disabledUpdate = isEqual(
+      {
+        title: resolutionData?.title,
+        content: resolutionData?.content,
+        isNegative: resolutionData?.isNegative,
+        type: Number(resolutionData?.typeId),
+      },
+      $currentResolution
+    );
   }
 
   async function handleUpdateResolution() {
@@ -129,7 +140,7 @@
   </Actions>
 </Dialog>
 
-{#if !resolutionData}
+{#if $currentResolution.type === null}
   <CircularProgress style="height: 32px; width: 32px;" indeterminate />
 {:else}
   <ResolutionForm

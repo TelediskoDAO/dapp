@@ -2,18 +2,8 @@ import { writable } from "svelte/store";
 
 export type ResolutionState = "pre-draft" | "notice" | "voting" | "ended";
 export type ResolutionStateKeys = "PRE_DRAFT" | "NOTICE" | "VOTING" | "ENDED";
-export type ResolutionType =
-  | "amendment"
-  | "capitalChange"
-  | "preclusion"
-  | "fundamentalOther"
-  | "significant"
-  | "dissolution"
-  | "routine";
-export type ResolutionTypeKeys = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 type ResolutionStates = Record<ResolutionStateKeys, ResolutionState>;
-type ResolutionTypes = Record<ResolutionTypeKeys, ResolutionType>;
 
 export interface Resolution {
   title: string;
@@ -21,17 +11,6 @@ export interface Resolution {
   type: number | null;
   isNegative: boolean | null;
 }
-
-// temporarily
-export const RESOLUTION_TYPES: ResolutionTypes = {
-  0: "amendment",
-  1: "capitalChange",
-  2: "preclusion",
-  3: "fundamentalOther",
-  4: "significant",
-  5: "dissolution",
-  6: "routine",
-};
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -49,6 +28,16 @@ export const emptyResolution: Resolution = {
   content: "",
   type: null,
   isNegative: false,
+};
+
+export const getResolutionState = (resolution): ResolutionState => {
+  if (resolution.approveTimestamp !== "0") {
+    // TODO
+    // we should check the resolution type and
+    // derive the state based on the approveTimestamp + notice/voting period
+    return RESOLUTION_STATES.NOTICE;
+  }
+  return RESOLUTION_STATES.PRE_DRAFT;
 };
 
 export const currentResolution = writable({ ...emptyResolution });

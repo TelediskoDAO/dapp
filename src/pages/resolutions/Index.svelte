@@ -6,28 +6,18 @@
   import CircularProgress from "@smui/circular-progress";
 
   import { title } from "../../state/runtime";
-  import { get } from "../../net/ipfs";
   import { onMount } from "svelte";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
+  import { getResolutionState } from "../../state/resolutions/new";
 
   let resolutions;
 
   onMount(async () => {
-    const { resolutionMockTests } = await graphQLClient.request(
+    const { resolutions: resolutionsData } = await graphQLClient.request(
       getResolutionsQuery
     );
-
-    resolutions = await Promise.all(
-      resolutionMockTests.map(async (item): Promise<any> => {
-        const ipfsData = await get(item.ipfsDataURI);
-        return {
-          ...ipfsData,
-          resolutionId: item.id,
-          approved: item.approved,
-        };
-      })
-    );
+    resolutions = resolutionsData;
   });
 
   title.set("Resolutions");
@@ -50,16 +40,21 @@
           <Card>
             <Content
               >{resolution.title}
-              <Chip chip><Text>{resolution.state}</Text></Chip></Content
+              <Chip chip><Text>{getResolutionState(resolution)}</Text></Chip
+              ></Content
             >
             <Actions>
               <Button
                 variant="raised"
-                href={`#/resolutions/${resolution.resolutionId}${
-                  !resolution.approved ? "/edit" : ""
+                href={`#/resolutions/${resolution.id}${
+                  resolution.approvedTimestamp !== "0" ? "/edit" : ""
                 }`}
               >
-                <Label>{!resolution.approved ? "Edit" : "View"}</Label>
+                <Label
+                  >{resolution.approvedTimestamp !== "0"
+                    ? "Edit"
+                    : "View"}</Label
+                >
               </Button>
             </Actions>
           </Card>

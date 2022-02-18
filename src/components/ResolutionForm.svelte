@@ -9,11 +9,9 @@
   import FormField from "@smui/form-field";
   import Checkbox from "@smui/checkbox";
 
-  import {
-    emptyResolution,
-    currentResolution,
-    RESOLUTION_TYPES,
-  } from "../state/resolutions/new";
+  import { emptyResolution, currentResolution } from "../state/resolutions/new";
+  import { resolutionContractTypes } from "../state/eth";
+  import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -30,21 +28,38 @@
   export let handleExport = noop;
 
   let disabled = false;
+  let resolutionTypes = [];
+  let selectedType: ResolutionManager.ResolutionTypeStructOutput | null = null;
 
   $: {
     const checkDisabledFields = [
       $currentResolution.title.trim(),
       $currentResolution.content.trim(),
-      $currentResolution.type,
+      $currentResolution.type !== null,
     ];
     disabled =
       checkDisabledFields.filter(Boolean).length < checkDisabledFields.length;
+
+    if (typeof $resolutionContractTypes !== "undefined") {
+      resolutionTypes = $resolutionContractTypes.map(([type], value) => ({
+        label: type,
+        value,
+      }));
+
+      selectedType = $currentResolution.type
+        ? $resolutionContractTypes[$currentResolution.type]
+        : null;
+    }
   }
 
   console.log("$currentResolution: ", $currentResolution);
 
   onDestroy(() => {
     $currentResolution = { ...emptyResolution };
+  });
+
+  currentResolution.subscribe((c) => {
+    console.log("updated ", c);
   });
 </script>
 
@@ -113,25 +128,31 @@
         </Cell>
       </InnerGrid>
     </Cell>
-    <Cell span={12}>
-      <InnerGrid>
-        <Cell span={3}>
-          <Select
-            class="field"
-            bind:value={$currentResolution.type}
-            label="Resolution Type"
-          >
-            {#each Object.entries(RESOLUTION_TYPES) as resolutionType}
-              <Option value={resolutionType[0]}>{resolutionType[1]}</Option>
-            {/each}
-          </Select>
-          <FormField>
-            <Checkbox bind:checked={$currentResolution.isNegative} />
-            <span slot="label"> Negative resolution. </span>
-          </FormField>
-        </Cell>
-      </InnerGrid>
-    </Cell>
+    {#if resolutionTypes.length > 0}
+      <Cell span={12}>
+        <InnerGrid>
+          <Cell span={3}>
+            <Select
+              class="field"
+              bind:value={$currentResolution.type}
+              label="Resolution Type"
+            >
+              {#each resolutionTypes as resolutionType}
+                <Option value={resolutionType.value}
+                  >{resolutionType.label}</Option
+                >
+              {/each}
+            </Select>
+            {#if selectedType?.canBeNegative}
+              <FormField>
+                <Checkbox bind:checked={$currentResolution.isNegative} />
+                <span slot="label"> Negative resolution. </span>
+              </FormField>
+            {/if}
+          </Cell>
+        </InnerGrid>
+      </Cell>
+    {/if}
     <Cell span={3}>
       {#if editMode}
         <Group variant="raised">

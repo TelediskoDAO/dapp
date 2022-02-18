@@ -70,9 +70,9 @@ export default [
           network,
           endpoint,
           oracleAddress,
-          ipfsEndpoint: "https://api.thegraph.com/ipfs/",
+          ipfsEndpoint: "https://api.thegraph.com/ipfs/api/v0",
           graphProtocolGQLEndpoint:
-            "https://api.thegraph.com/subgraphs/name/telediskodao/resolution-mock",
+            "https://api.thegraph.com/subgraphs/name/telediskodao/resolution",
           gitRevision,
         }),
       }),
