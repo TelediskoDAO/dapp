@@ -9,16 +9,42 @@
   import { onMount } from "svelte";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
-  import { getResolutionState } from "../../state/resolutions/new";
+  import {
+    getResolutionState,
+    RESOLUTION_STATES,
+  } from "../../state/resolutions/new";
+  import { resolutionContractTypes } from "../../state/eth";
+  import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
 
-  let resolutions;
+  let resolutions: ResolutionEntityEnhanced[];
 
   onMount(async () => {
-    const { resolutions: resolutionsData } = await graphQLClient.request(
-      getResolutionsQuery
-    );
+    const {
+      resolutions: resolutionsData,
+    }: { resolutions: ResolutionEntityEnhanced[] } =
+      await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
   });
+
+  $: {
+    if ($resolutionContractTypes && resolutions) {
+      const enhancedResolutions: ResolutionEntityEnhanced[] = resolutions.map(
+        (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
+          const state = getResolutionState(resolution);
+          return {
+            ...resolution,
+            typeName: $resolutionContractTypes[Number(resolution.typeId)].name,
+            state: getResolutionState(resolution),
+            href:
+              state === RESOLUTION_STATES.PRE_DRAFT
+                ? `#/resolutions/${resolution.id}/edit`
+                : `#/resolutions/${resolution.id}`,
+          };
+        }
+      );
+      resolutions = enhancedResolutions;
+    }
+  }
 
   title.set("Resolutions");
 </script>
@@ -30,28 +56,23 @@
       <Label>Create resolution</Label>
     </Button>
   </div>
-  {#if !resolutions}
+  {#if !resolutions || !$resolutionContractTypes}
     <CircularProgress style="height: 32px; width: 32px;" indeterminate />
   {/if}
-  {#if resolutions?.length > 0}
+  {#if resolutions?.length > 0 && $resolutionContractTypes}
     <LayoutGrid>
       {#each resolutions as resolution}
         <Cell span={4}>
           <Card>
             <Content
-              >{resolution.title}
-              <Chip chip><Text>{getResolutionState(resolution)}</Text></Chip
-              ></Content
-            >
+              >{resolution.title || "No title..."}
+              <Chip chip><Text>{getResolutionState(resolution)}</Text></Chip>
+              <Chip chip><Text>{resolution.typeName}</Text></Chip>
+            </Content>
             <Actions>
-              <Button
-                variant="raised"
-                href={`#/resolutions/${resolution.id}${
-                  resolution.approvedTimestamp !== "0" ? "/edit" : ""
-                }`}
-              >
+              <Button variant="raised" href={resolution.href}>
                 <Label
-                  >{resolution.approvedTimestamp !== "0"
+                  >{resolution.state === RESOLUTION_STATES.PRE_DRAFT
                     ? "Edit"
                     : "View"}</Label
                 >

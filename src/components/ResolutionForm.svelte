@@ -8,6 +8,7 @@
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
   import FormField from "@smui/form-field";
   import Checkbox from "@smui/checkbox";
+  import Tooltip, { Wrapper } from "@smui/tooltip";
 
   import { emptyResolution, currentResolution } from "../state/resolutions/new";
   import { resolutionContractTypes } from "../state/eth";
@@ -32,10 +33,11 @@
   let selectedType: ResolutionManager.ResolutionTypeStructOutput | null = null;
 
   $: {
+    console.log($currentResolution);
     const checkDisabledFields = [
-      $currentResolution.title.trim(),
-      $currentResolution.content.trim(),
-      $currentResolution.type !== null,
+      $currentResolution.title?.trim(),
+      $currentResolution.content?.trim(),
+      typeof $currentResolution.type === "number",
     ];
     disabled =
       checkDisabledFields.filter(Boolean).length < checkDisabledFields.length;
@@ -52,14 +54,8 @@
     }
   }
 
-  console.log("$currentResolution: ", $currentResolution);
-
   onDestroy(() => {
     $currentResolution = { ...emptyResolution };
-  });
-
-  currentResolution.subscribe((c) => {
-    console.log("updated ", c);
   });
 </script>
 
@@ -163,12 +159,38 @@
           >
             <Label>Update</Label>
           </Button>
-          <Button variant="raised" {disabled} on:click={handleExport}>
-            <Label>Export</Label>
-          </Button>
-          <Button variant="raised" {disabled} on:click={handleApprove}>
-            <Label>Approve</Label>
-          </Button>
+          <Wrapper>
+            <span tabindex="0">
+              <Button
+                variant="raised"
+                disabled={disabled || !disabledUpdate}
+                on:click={handleExport}
+              >
+                <Label>Export</Label>
+              </Button>
+            </span>
+            {#if disabled || !disabledUpdate}
+              <Tooltip unbounded
+                >It looks you need to update the resolution before exporting it</Tooltip
+              >
+            {/if}
+          </Wrapper>
+          <Wrapper>
+            <span tabindex="0">
+              <Button
+                variant="raised"
+                disabled={disabled || !disabledUpdate}
+                on:click={handleApprove}
+              >
+                <Label>Approve</Label>
+              </Button>
+            </span>
+            {#if disabled || !disabledUpdate}
+              <Tooltip unbounded
+                >It looks you need to update the resolution before approving it</Tooltip
+              >
+            {/if}
+          </Wrapper>
         </Group>
       {:else}
         <Button variant="raised" {disabled} on:click={handleSave}>

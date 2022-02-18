@@ -6,11 +6,7 @@
     currentResolution,
     emptyResolution,
   } from "../../state/resolutions/new";
-  import {
-    resolutionContract,
-    resolutionContractTypes,
-    signer,
-  } from "../../state/eth";
+  import { resolutionContract, signer } from "../../state/eth";
   import { add as addToIpfs } from "../../net/ipfs";
   import { title } from "../../state/runtime";
   import ResolutionForm from "../../components/ResolutionForm.svelte";

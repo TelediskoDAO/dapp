@@ -19,6 +19,7 @@
   import { add as addToIpfs } from "../../net/ipfs";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
+  import type { ResolutionEntity } from "../../types";
 
   type Params = {
     resolutionId: string;
@@ -28,16 +29,19 @@
     resolutionId: "",
   };
 
-  let resolutionData;
+  const WAIT_AFTER_UPDATED = 10000;
+
+  let resolutionData: ResolutionEntity;
   let disabledUpdate = true;
   let loading = false;
   let awaitingConfirmation = false;
   let open = false;
 
   onMount(async () => {
-    const { resolution } = await graphQLClient.request(getResolutionQuery, {
-      id: params.resolutionId,
-    });
+    const { resolution }: { resolution: ResolutionEntity } =
+      await graphQLClient.request(getResolutionQuery, {
+        id: params.resolutionId,
+      });
 
     resolutionData = resolution;
 
@@ -76,15 +80,18 @@
       const tx = await $resolutionContract.updateResolution(
         params.resolutionId,
         ipfsId,
-        $currentResolution.type
+        $currentResolution.type,
+        $currentResolution.isNegative
       );
       awaitingConfirmation = true;
       await tx.wait();
-      notifier.success("Resolution draft updated!", 5000);
+      awaitingConfirmation = false;
+      notifier.success("Resolution draft updated!", 9000);
+      setTimeout(() => location.reload(), WAIT_AFTER_UPDATED);
     } catch (err) {
       notifier.danger(err.message, 7000);
+      loading = false;
     }
-    loading = false;
   }
 
   function handleExport() {
@@ -108,12 +115,16 @@
       );
       awaitingConfirmation = true;
       await tx.wait();
-      notifier.success("Resolution approved!", 5000);
-      push(`/resolutions/${params.resolutionId}`);
+      awaitingConfirmation = false;
+      notifier.success("Resolution approved!", 9000);
+      setTimeout(
+        () => push(`/resolutions/${params.resolutionId}`),
+        WAIT_AFTER_UPDATED
+      );
     } catch (err) {
       notifier.danger(err.message, 7000);
+      loading = false;
     }
-    loading = false;
   }
 
   onDestroy(() => {
@@ -140,7 +151,7 @@
   </Actions>
 </Dialog>
 
-{#if $currentResolution.type === null}
+{#if typeof $currentResolution.type !== "number"}
   <CircularProgress style="height: 32px; width: 32px;" indeterminate />
 {:else}
   <ResolutionForm

@@ -1,16 +1,10 @@
 import { writable } from "svelte/store";
-
-export type ResolutionState = "pre-draft" | "notice" | "voting" | "ended";
-export type ResolutionStateKeys = "PRE_DRAFT" | "NOTICE" | "VOTING" | "ENDED";
-
-type ResolutionStates = Record<ResolutionStateKeys, ResolutionState>;
-
-export interface Resolution {
-  title: string;
-  content: string;
-  type: number | null;
-  isNegative: boolean | null;
-}
+import type {
+  ResolutionEntity,
+  ResolutionFormState,
+  ResolutionState,
+  ResolutionStates,
+} from "../../types";
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -22,7 +16,7 @@ export const RESOLUTION_STATES: ResolutionStates = {
   ENDED: "ended",
 };
 
-export const emptyResolution: Resolution = {
+export const emptyResolution: ResolutionFormState = {
   // editable from the UI
   title: "",
   content: "",
@@ -30,7 +24,9 @@ export const emptyResolution: Resolution = {
   isNegative: false,
 };
 
-export const getResolutionState = (resolution): ResolutionState => {
+export const getResolutionState = (
+  resolution: ResolutionEntity
+): ResolutionState => {
   if (resolution.approveTimestamp !== "0") {
     // TODO
     // we should check the resolution type and
