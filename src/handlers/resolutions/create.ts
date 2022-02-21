@@ -2,11 +2,7 @@ import { notifier } from "@beyonk/svelte-notifications";
 import { push } from "svelte-spa-router";
 import { add } from "../../net/ipfs";
 
-import {
-  formState,
-  currentResolution,
-  resetFormState,
-} from "../../state/resolutions/form";
+import { formState, resetFormState } from "../../state/resolutions/form";
 
 export async function handleCreate({
   $signer,
@@ -21,7 +17,7 @@ export async function handleCreate({
     awaitingConfirmation: false,
   });
   try {
-    const ipfsId = await add(currentResolution);
+    const ipfsId = await add($currentResolution);
     const tx = await $resolutionContract.createResolution(
       ipfsId,
       $currentResolution.type,
