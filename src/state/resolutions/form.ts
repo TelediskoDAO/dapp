@@ -2,13 +2,6 @@ import { writable } from "svelte/store";
 
 import type { ResolutionFormState } from "../../types";
 
-export const emptyResolution: ResolutionFormState = {
-  title: "",
-  content: "",
-  type: null,
-  isNegative: false,
-};
-
 export const defaultFormState: ResolutionFormState = {
   title: "",
   content: "",
