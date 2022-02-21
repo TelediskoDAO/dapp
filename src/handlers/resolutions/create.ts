@@ -3,6 +3,7 @@ import { push } from "svelte-spa-router";
 import { add } from "../../net/ipfs";
 
 import { formState, resetFormState } from "../../state/resolutions/form";
+import { wait } from "../../async";
 
 const WAIT_AFTER_CREATE = 7000;
 
@@ -35,9 +36,8 @@ export async function handleCreate({
       awaitingConfirmation: false,
     });
     notifier.success("Resolution draft created!", WAIT_AFTER_CREATE);
-    setTimeout(() => {
-      push("/resolutions");
-    }, WAIT_AFTER_CREATE);
+    await wait(WAIT_AFTER_CREATE);
+    push("/resolutions");
   } catch (err) {
     notifier.danger(err.message, 7000);
   }

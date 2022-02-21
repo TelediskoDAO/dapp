@@ -1,6 +1,7 @@
 import { push } from "svelte-spa-router";
 import { formState, resetFormState } from "../../state/resolutions/form";
 import { notifier } from "@beyonk/svelte-notifications";
+import { wait } from "../../async";
 
 const WAIT_AFTER_APPROVED = 10000;
 
@@ -27,8 +28,9 @@ export async function handleApprove(
       loading: true,
       awaitingConfirmation: false,
     });
-    notifier.success("Resolution approved!", 9000);
-    setTimeout(() => push(`/resolutions/${resolutionId}`), WAIT_AFTER_APPROVED);
+    notifier.success("Resolution approved!", WAIT_AFTER_APPROVED);
+    await wait(WAIT_AFTER_APPROVED);
+    push(`/resolutions/${resolutionId}`);
   } catch (err) {
     notifier.danger(err.message, 7000);
   }

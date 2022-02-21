@@ -80,7 +80,7 @@
     open = true;
   }
 
-  async function handleApproveResolution() {
+  function handleApproveResolution() {
     open = false;
     handleApprove(params.resolutionId, { $signer, $resolutionContract });
   }

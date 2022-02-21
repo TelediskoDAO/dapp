@@ -1,7 +1,9 @@
+import { notifier } from "@beyonk/svelte-notifications";
 import { push } from "svelte-spa-router";
+import { wait } from "../../async";
+
 import { add } from "../../net/ipfs";
 import { formState, resetFormState } from "../../state/resolutions/form";
-import { notifier } from "@beyonk/svelte-notifications";
 
 const WAIT_AFTER_UPDATED = 10000;
 
@@ -33,8 +35,9 @@ export async function handleUpdate(
       loading: true,
       awaitingConfirmation: false,
     });
-    notifier.success("Resolution draft updated!", 9000);
-    setTimeout(location.reload, WAIT_AFTER_UPDATED);
+    notifier.success("Resolution draft updated!", WAIT_AFTER_UPDATED);
+    await wait(WAIT_AFTER_UPDATED);
+    location.reload();
   } catch (err) {
     notifier.danger(err.message, 7000);
   }
