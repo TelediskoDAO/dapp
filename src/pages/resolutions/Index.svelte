@@ -11,8 +11,9 @@
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
   import { resolutionContractTypes } from "../../state/eth";
-  import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
+  import type { ResolutionEntityEnhanced } from "../../types";
   import {
+    getEnhancedResolutions,
     getResolutionState,
     RESOLUTION_STATES,
   } from "../../helpers/resolutions";
@@ -29,21 +30,10 @@
 
   $: {
     if ($resolutionContractTypes && resolutions) {
-      const enhancedResolutions: ResolutionEntityEnhanced[] = resolutions.map(
-        (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
-          const state = getResolutionState(resolution);
-          return {
-            ...resolution,
-            typeName: $resolutionContractTypes[Number(resolution.typeId)].name,
-            state: getResolutionState(resolution),
-            href:
-              state === RESOLUTION_STATES.PRE_DRAFT
-                ? `#/resolutions/${resolution.id}/edit`
-                : `#/resolutions/${resolution.id}`,
-          };
-        }
+      resolutions = getEnhancedResolutions(
+        resolutions,
+        $resolutionContractTypes
       );
-      resolutions = enhancedResolutions;
     }
   }
 

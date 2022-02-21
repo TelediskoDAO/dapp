@@ -1,5 +1,7 @@
+import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
 import type {
   ResolutionEntity,
+  ResolutionEntityEnhanced,
   ResolutionState,
   ResolutionStates,
 } from "../types";
@@ -25,3 +27,20 @@ export const getResolutionState = (
   }
   return RESOLUTION_STATES.PRE_DRAFT;
 };
+
+export const getEnhancedResolutions = (
+  resolutions: ResolutionEntity[],
+  $resolutionContractTypes: ResolutionManager.ResolutionTypeStructOutput[]
+): ResolutionEntityEnhanced[] =>
+  resolutions.map((resolution: ResolutionEntity): ResolutionEntityEnhanced => {
+    const state = getResolutionState(resolution);
+    return {
+      ...resolution,
+      typeName: $resolutionContractTypes[Number(resolution.typeId)].name,
+      state: getResolutionState(resolution),
+      href:
+        state === RESOLUTION_STATES.PRE_DRAFT
+          ? `#/resolutions/${resolution.id}/edit`
+          : `#/resolutions/${resolution.id}`,
+    };
+  });
