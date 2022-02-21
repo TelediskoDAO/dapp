@@ -1,52 +1,18 @@
 <script lang="ts">
-  import { push } from "svelte-spa-router";
-  import { notifier } from "@beyonk/svelte-notifications";
-
-  import {
-    currentResolution,
-    emptyResolution,
-  } from "../../state/resolutions/new";
-  import { resolutionContract, signer } from "../../state/eth";
-  import { add as addToIpfs } from "../../net/ipfs";
   import { title } from "../../state/runtime";
   import ResolutionForm from "../../components/ResolutionForm.svelte";
+  import { resolutionContract, signer } from "../../state/eth";
+  import { currentResolution, resetForm } from "../../state/resolutions/form";
   import { onMount } from "svelte";
+  import { handleCreate } from "../../handlers/resolutions/create";
 
   title.set("Resolutions");
 
-  let loading = false;
-  let awaitingConfirmation = false;
-
-  async function handleContractPreDraft() {
-    if (!$signer) {
-      return push("/connect/odoo");
-    }
-    loading = true;
-    awaitingConfirmation = false;
-    try {
-      const ipfsId = await addToIpfs($currentResolution);
-      const tx = await $resolutionContract.createResolution(
-        ipfsId,
-        $currentResolution.type,
-        $currentResolution.isNegative
-      );
-      awaitingConfirmation = true;
-      await tx.wait();
-      notifier.success("Resolution draft created!", 5000);
-      push("/resolutions");
-    } catch (err) {
-      notifier.danger(err.message, 7000);
-    }
-    loading = false;
+  function handleContractPreDraft() {
+    handleCreate({ $signer, $currentResolution, $resolutionContract });
   }
 
-  onMount(() => {
-    $currentResolution = { ...emptyResolution };
-  });
+  onMount(resetForm);
 </script>
 
-<ResolutionForm
-  {awaitingConfirmation}
-  handleSave={handleContractPreDraft}
-  {loading}
-/>
+<ResolutionForm handleSave={handleContractPreDraft} />

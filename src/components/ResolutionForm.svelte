@@ -10,9 +10,13 @@
   import Checkbox from "@smui/checkbox";
   import Tooltip, { Wrapper } from "@smui/tooltip";
 
-  import { emptyResolution, currentResolution } from "../state/resolutions/new";
   import { resolutionContractTypes } from "../state/eth";
   import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
+  import {
+    currentResolution,
+    formState,
+    resetForm,
+  } from "../state/resolutions/form";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -21,8 +25,6 @@
   const noop = () => {};
 
   export let editMode = false;
-  export let loading = false;
-  export let awaitingConfirmation = false;
   export let disabledUpdate = true;
   export let handleSave = noop;
   export let handleApprove = noop;
@@ -53,15 +55,13 @@
     }
   }
 
-  onDestroy(() => {
-    $currentResolution = { ...emptyResolution };
-  });
+  onDestroy(resetForm);
 </script>
 
 <section class="section">
-  {#if loading}
+  {#if $formState.loading}
     <div class="progress">
-      {#if awaitingConfirmation}
+      {#if $formState.awaitingConfirmation}
         Awaiting for the transaction to be put on a block... hold tight!
         <div style="width: 200px; margin-left: 16px;">
           <div

@@ -1,10 +1,8 @@
-import { writable } from "svelte/store";
 import type {
   ResolutionEntity,
-  ResolutionFormState,
   ResolutionState,
   ResolutionStates,
-} from "../../types";
+} from "../types";
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -14,14 +12,6 @@ export const RESOLUTION_STATES: ResolutionStates = {
   VOTING: "voting",
   // transition to when voting period ends
   ENDED: "ended",
-};
-
-export const emptyResolution: ResolutionFormState = {
-  // editable from the UI
-  title: "",
-  content: "",
-  type: null,
-  isNegative: false,
 };
 
 export const getResolutionState = (
@@ -35,5 +25,3 @@ export const getResolutionState = (
   }
   return RESOLUTION_STATES.PRE_DRAFT;
 };
-
-export const currentResolution = writable({ ...emptyResolution });

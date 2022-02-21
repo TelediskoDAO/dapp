@@ -9,12 +9,13 @@
   import { onMount } from "svelte";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
+
+  import { resolutionContractTypes } from "../../state/eth";
+  import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
   import {
     getResolutionState,
     RESOLUTION_STATES,
-  } from "../../state/resolutions/new";
-  import { resolutionContractTypes } from "../../state/eth";
-  import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
+  } from "../../helpers/resolutions";
 
   let resolutions: ResolutionEntityEnhanced[];
 

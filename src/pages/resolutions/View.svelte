@@ -7,8 +7,8 @@
   import { graphQLClient } from "../../net/graphQl";
   import { resolutionContractTypes } from "../../state/eth";
   import type { ResolutionEntity } from "../../types";
-  import { getResolutionState } from "../../state/resolutions/new";
   import type { ResolutionManager } from "../../../contracts/typechain";
+  import { getResolutionState } from "../../helpers/resolutions";
 
   type Params = {
     resolutionId: string;
