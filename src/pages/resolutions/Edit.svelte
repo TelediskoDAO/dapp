@@ -1,22 +1,24 @@
 <script lang="ts">
-  import { push, replace } from "svelte-spa-router";
-  import { notifier } from "@beyonk/svelte-notifications";
+  import { replace } from "svelte-spa-router";
   import isEqual from "lodash.isequal";
   import Dialog, { Title, Content, Actions } from "@smui/dialog";
   import { onDestroy, onMount } from "svelte";
   import Button, { Label } from "@smui/button";
+  import CircularProgress from "@smui/circular-progress";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
   import { resolutionContract, signer } from "../../state/eth";
-  import { resolutions } from "../../state/resolutions";
-  import {
-    currentResolution,
-    emptyResolution,
-    Resolution,
-    RESOLUTION_STATES,
-  } from "../../state/resolutions/new";
 
-  import { add as addToIpfs } from "../../net/ipfs";
+  import { graphQLClient } from "../../net/graphQl";
+  import { getResolutionQuery } from "../../graphql/get-resolution.query";
+  import type { ResolutionEntity } from "../../types";
+  import { handleUpdate } from "../../handlers/resolutions/update";
+  import { handleApprove } from "../../handlers/resolutions/approve";
+  import {
+    getResolutionState,
+    RESOLUTION_STATES,
+  } from "../../helpers/resolutions";
+  import { currentResolution, resetForm } from "../../state/resolutions/form";
 
   type Params = {
     resolutionId: string;
@@ -26,100 +28,64 @@
     resolutionId: "",
   };
 
-  let resolutionData = $resolutions.find(
-    (res: Resolution) => String(res.resolutionId) === params.resolutionId
-  );
-
-  $currentResolution = { ...resolutionData };
-
-  $: disabledUpdate = isEqual(resolutionData, $currentResolution);
-
-  let loading = false;
-  let receipt = null;
-  let awaitingConfirmation = false;
+  let resolutionData: ResolutionEntity;
+  let disabledUpdate = true;
   let open = false;
 
-  async function handleUpdateResolution() {
-    if (!$signer) {
-      return push("/connect/odoo");
-    }
-    receipt = null;
-    loading = true;
-    awaitingConfirmation = false;
-    try {
-      const ipfsId = await addToIpfs($currentResolution);
-      $currentResolution.ipfsId = ipfsId;
-      const tx = await $resolutionContract.updateResolution(
-        $currentResolution.resolutionId,
-        ipfsId,
-        $currentResolution.type
-      );
-      awaitingConfirmation = true;
-      receipt = await tx.wait();
-      $currentResolution.blockHash = receipt.blockHash;
-      notifier.success("Resolution draft updated!", 5000);
-      const currentResolutionIndex = $resolutions.findIndex(
-        (res: Resolution) =>
-          res.resolutionId === $currentResolution.resolutionId
-      );
-      $resolutions = Object.assign([], $resolutions, {
-        [currentResolutionIndex]: $currentResolution,
+  onMount(async () => {
+    const { resolution }: { resolution: ResolutionEntity } =
+      await graphQLClient.request(getResolutionQuery, {
+        id: params.resolutionId,
       });
-      resolutionData = { ...$currentResolution };
-    } catch (err) {
-      notifier.danger(err.message, 7000);
+
+    resolutionData = resolution;
+
+    if (getResolutionState(resolution) !== RESOLUTION_STATES.PRE_DRAFT) {
+      replace(`/resolutions/${params.resolutionId}`);
     }
-    loading = false;
+
+    $currentResolution = {
+      title: resolutionData.title,
+      content: resolutionData.content,
+      isNegative: resolutionData.isNegative,
+      type: Number(resolutionData.typeId),
+    };
+  });
+
+  $: {
+    disabledUpdate = isEqual(
+      {
+        title: resolutionData?.title,
+        content: resolutionData?.content,
+        isNegative: resolutionData?.isNegative,
+        type: Number(resolutionData?.typeId),
+      },
+      $currentResolution
+    );
+  }
+
+  function handleUpdateResolution() {
+    handleUpdate(params.resolutionId, {
+      $signer,
+      $currentResolution,
+      $resolutionContract,
+    });
   }
 
   function handleExport() {
-    window.open(`/#/resolutions/${$currentResolution.resolutionId}/print`);
+    window.open(`/#/resolutions/${params.resolutionId}/print`);
   }
 
   function handlePreApprove() {
     open = true;
   }
 
-  async function handleApprove() {
+  function handleApproveResolution() {
     open = false;
-    if (!$signer) {
-      return push("/connect/odoo");
-    }
-    receipt = null;
-    loading = true;
-    awaitingConfirmation = false;
-    try {
-      const tx = await $resolutionContract.approveResolution(
-        $currentResolution.resolutionId
-      );
-      awaitingConfirmation = true;
-      receipt = await tx.wait();
-      $currentResolution.blockHash = receipt.blockHash;
-      $currentResolution.state = RESOLUTION_STATES.NOTICE;
-      notifier.success("Resolution approved!", 5000);
-      const currentResolutionIndex = $resolutions.findIndex(
-        (res: Resolution) =>
-          res.resolutionId === $currentResolution.resolutionId
-      );
-      $resolutions = Object.assign([], $resolutions, {
-        [currentResolutionIndex]: $currentResolution,
-      });
-      push(`/resolutions/${$currentResolution.resolutionId}`);
-    } catch (err) {
-      notifier.danger(err.message, 7000);
-    }
-    loading = false;
+    handleApprove(params.resolutionId, { $signer, $resolutionContract });
   }
 
-  onDestroy(() => {
-    $currentResolution = { ...emptyResolution };
-  });
-
-  onMount(() => {
-    if ($currentResolution.state !== RESOLUTION_STATES.PRE_DRAFT) {
-      replace(`/resolutions/${$currentResolution.resolutionId}`);
-    }
-  });
+  onDestroy(resetForm);
 </script>
 
 <Dialog
@@ -135,18 +101,20 @@
     <Button on:click={() => (open = false)}>
       <Label>No</Label>
     </Button>
-    <Button on:click={handleApprove}>
+    <Button on:click={handleApproveResolution}>
       <Label>Yes, proceed</Label>
     </Button>
   </Actions>
 </Dialog>
 
-<ResolutionForm
-  {awaitingConfirmation}
-  handleSave={handleUpdateResolution}
-  {loading}
-  editMode
-  {handleExport}
-  handleApprove={handlePreApprove}
-  {disabledUpdate}
-/>
+{#if typeof $currentResolution.type !== "number"}
+  <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+{:else}
+  <ResolutionForm
+    handleSave={handleUpdateResolution}
+    editMode
+    {handleExport}
+    handleApprove={handlePreApprove}
+    {disabledUpdate}
+  />
+{/if}

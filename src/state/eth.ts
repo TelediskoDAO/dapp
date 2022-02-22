@@ -5,13 +5,11 @@ import { user } from "./odoo/user";
 import { get, set } from "./utils";
 import CONFIG from "../config";
 
-import networks from "../contracts/networks.json";
-import {
-  ERC20,
-  ERC20__factory,
-  ResolutionMock,
-  ResolutionMock__factory,
-} from "../contracts";
+import networks from "../../contracts/deployments/networks.json";
+import { ResolutionManager__factory } from "../../contracts/typechain/factories/ResolutionManager__factory";
+import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
+
+import { ERC20, ERC20__factory } from "../../contracts/typechain";
 
 declare global {
   interface Window {
@@ -152,16 +150,27 @@ export const balance = derived(
   }
 );
 
-export const resolutionContract: Readable<ResolutionMock> = derived(
+export const resolutionContract: Readable<ResolutionManager> = derived(
   signer,
   ($signer, set) => {
     (async () => {
       if ($signer) {
         const chainId = await $signer.getChainId();
-        const address = networks[chainId.toString()]["ResolutionMock"];
-        const contract = ResolutionMock__factory.connect(address, $signer);
+        const address = networks[chainId.toString()]["ResolutionManager"];
+        const contract = ResolutionManager__factory.connect(address, $signer);
         set(contract);
       }
     })();
   }
 );
+
+export const resolutionContractTypes: Readable<
+  ResolutionManager.ResolutionTypeStructOutput[]
+> = derived(resolutionContract, ($resolutionContract, set) => {
+  (async () => {
+    if ($resolutionContract) {
+      const resolutionTypes = await $resolutionContract.getResolutionTypes();
+      set(resolutionTypes);
+    }
+  })();
+});

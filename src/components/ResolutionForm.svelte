@@ -1,16 +1,22 @@
 <script lang="ts">
+  import { onDestroy } from "svelte";
   import Select, { Option } from "@smui/select";
   import Button, { Label, Group } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text";
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
+  import FormField from "@smui/form-field";
+  import Checkbox from "@smui/checkbox";
+  import Tooltip, { Wrapper } from "@smui/tooltip";
+
+  import { resolutionContractTypes } from "../state/eth";
+  import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
   import {
-    emptyResolution,
     currentResolution,
-    RESOLUTION_TYPES,
-  } from "../state/resolutions/new";
-  import { onDestroy } from "svelte";
+    formState,
+    resetForm,
+  } from "../state/resolutions/form";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -19,34 +25,43 @@
   const noop = () => {};
 
   export let editMode = false;
-  export let loading = false;
-  export let awaitingConfirmation = false;
   export let disabledUpdate = true;
   export let handleSave = noop;
   export let handleApprove = noop;
   export let handleExport = noop;
 
   let disabled = false;
+  let resolutionTypes = [];
+  let selectedType: ResolutionManager.ResolutionTypeStructOutput | null = null;
 
   $: {
     const checkDisabledFields = [
-      $currentResolution.title.trim(),
-      $currentResolution.content.trim(),
-      $currentResolution.type,
+      $currentResolution.title?.trim(),
+      $currentResolution.content?.trim(),
+      typeof $currentResolution.type === "number",
     ];
     disabled =
       checkDisabledFields.filter(Boolean).length < checkDisabledFields.length;
+
+    if (typeof $resolutionContractTypes !== "undefined") {
+      resolutionTypes = $resolutionContractTypes.map(([type], value) => ({
+        label: type,
+        value,
+      }));
+
+      selectedType = $currentResolution.type
+        ? $resolutionContractTypes[$currentResolution.type]
+        : null;
+    }
   }
 
-  onDestroy(() => {
-    $currentResolution = { ...emptyResolution };
-  });
+  onDestroy(resetForm);
 </script>
 
 <section class="section">
-  {#if loading}
+  {#if $formState.loading}
     <div class="progress">
-      {#if awaitingConfirmation}
+      {#if $formState.awaitingConfirmation}
         Awaiting for the transaction to be put on a block... hold tight!
         <div style="width: 200px; margin-left: 16px;">
           <div
@@ -108,21 +123,31 @@
         </Cell>
       </InnerGrid>
     </Cell>
-    <Cell span={12}>
-      <InnerGrid>
-        <Cell span={3}>
-          <Select
-            class="field"
-            bind:value={$currentResolution.type}
-            label="Resolution Type"
-          >
-            {#each Object.entries(RESOLUTION_TYPES) as resolutionType}
-              <Option value={resolutionType[0]}>{resolutionType[1]}</Option>
-            {/each}
-          </Select>
-        </Cell>
-      </InnerGrid>
-    </Cell>
+    {#if resolutionTypes.length > 0}
+      <Cell span={12}>
+        <InnerGrid>
+          <Cell span={3}>
+            <Select
+              class="field"
+              bind:value={$currentResolution.type}
+              label="Resolution Type"
+            >
+              {#each resolutionTypes as resolutionType}
+                <Option value={resolutionType.value}
+                  >{resolutionType.label}</Option
+                >
+              {/each}
+            </Select>
+            {#if selectedType?.canBeNegative}
+              <FormField>
+                <Checkbox bind:checked={$currentResolution.isNegative} />
+                <span slot="label"> Negative resolution. </span>
+              </FormField>
+            {/if}
+          </Cell>
+        </InnerGrid>
+      </Cell>
+    {/if}
     <Cell span={3}>
       {#if editMode}
         <Group variant="raised">
@@ -133,12 +158,38 @@
           >
             <Label>Update</Label>
           </Button>
-          <Button variant="raised" {disabled} on:click={handleExport}>
-            <Label>Export</Label>
-          </Button>
-          <Button variant="raised" {disabled} on:click={handleApprove}>
-            <Label>Approve</Label>
-          </Button>
+          <Wrapper>
+            <span tabindex="0">
+              <Button
+                variant="raised"
+                disabled={disabled || !disabledUpdate}
+                on:click={handleExport}
+              >
+                <Label>Export</Label>
+              </Button>
+            </span>
+            {#if disabled || !disabledUpdate}
+              <Tooltip unbounded
+                >It looks you need to update the resolution before exporting it</Tooltip
+              >
+            {/if}
+          </Wrapper>
+          <Wrapper>
+            <span tabindex="0">
+              <Button
+                variant="raised"
+                disabled={disabled || !disabledUpdate}
+                on:click={handleApprove}
+              >
+                <Label>Approve</Label>
+              </Button>
+            </span>
+            {#if disabled || !disabledUpdate}
+              <Tooltip unbounded
+                >It looks you need to update the resolution before approving it</Tooltip
+              >
+            {/if}
+          </Wrapper>
         </Group>
       {:else}
         <Button variant="raised" {disabled} on:click={handleSave}>

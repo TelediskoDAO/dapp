@@ -8,6 +8,7 @@ interface IConfig {
   endpoint: string;
   oracleAddress: string;
   ipfsEndpoint: string;
+  graphProtocolGQLEndpoint: string;
   gitRevision: string;
   env: Env;
 }
