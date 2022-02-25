@@ -14,6 +14,9 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
   state: ResolutionState;
   typeName: string;
   href: string;
+  createdAt: string;
+  updatedAt: string | null;
+  approvedAt: string | null;
 };
 
 export type ResolutionState = "pre-draft" | "notice" | "voting" | "ended";

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import formatRelative from "date-fns/formatRelative";
   import Chip, { Text } from "@smui/chips";
   import Card, { Content, Actions } from "@smui/card";
   import Button, { Label } from "@smui/button";
@@ -6,7 +7,7 @@
   import CircularProgress from "@smui/circular-progress";
 
   import { title } from "../../state/runtime";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
@@ -17,8 +18,10 @@
     getResolutionState,
     RESOLUTION_STATES,
   } from "../../helpers/resolutions";
+  import { currentTimestamp } from "../../state/resolutions";
 
   let resolutions: ResolutionEntityEnhanced[];
+  let interval = null;
 
   onMount(async () => {
     const {
@@ -26,13 +29,22 @@
     }: { resolutions: ResolutionEntityEnhanced[] } =
       await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
+
+    interval = setInterval(() => {
+      $currentTimestamp = +new Date();
+    }, 5000);
+  });
+
+  onDestroy(() => {
+    clearInterval(interval);
   });
 
   $: {
     if ($resolutionContractTypes && resolutions) {
       resolutions = getEnhancedResolutions(
         resolutions,
-        $resolutionContractTypes
+        $resolutionContractTypes,
+        $currentTimestamp
       );
     }
   }
@@ -53,12 +65,19 @@
   {#if resolutions?.length > 0 && $resolutionContractTypes}
     <LayoutGrid>
       {#each resolutions as resolution}
-        <Cell span={4}>
+        <Cell span={12}>
           <Card>
             <Content
               >{resolution.title || "No title..."}
-              <Chip chip><Text>{getResolutionState(resolution)}</Text></Chip>
+              <Chip chip><Text>{resolution.state}</Text></Chip>
               <Chip chip><Text>{resolution.typeName}</Text></Chip>
+              <div>Created: {resolution.createdAt}</div>
+              {#if resolution.updatedAt}
+                <div>Updated: {resolution.updatedAt}</div>
+              {/if}
+              {#if resolution.approvedAt}
+                <div>Approved: {resolution.approvedAt}</div>
+              {/if}
             </Content>
             <Actions>
               <Button variant="raised" href={resolution.href}>
