@@ -9,6 +9,7 @@
   import type { ResolutionEntity } from "../../types";
   import type { ResolutionManager } from "../../../contracts/typechain";
   import { getResolutionState } from "../../helpers/resolutions";
+  import { currentTimestamp } from "../../state/resolutions";
 
   type Params = {
     resolutionId: string;
@@ -43,7 +44,11 @@
     title={resolutionData.title}
     content={resolutionData.content}
     type={resolutionType.name}
-    state={getResolutionState(resolutionData)}
+    state={getResolutionState(
+      resolutionData,
+      $currentTimestamp,
+      resolutionType
+    )}
     isNegative={resolutionData.isNegative}
   />
 {/if}

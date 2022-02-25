@@ -2,15 +2,19 @@
   import { onMount } from "svelte";
   import SvelteMarkdown from "svelte-markdown";
   import { location } from "svelte-spa-router";
+  import { RESOLUTION_STATES } from "../helpers/resolutions";
+  import VotingWidget from "./VotingWidget.svelte";
 
   export let title;
   export let content;
   export let type;
   export let state;
   export let isNegative;
+  let isPrint;
 
   onMount(() => {
-    if (/\/print$/.test($location)) {
+    isPrint = /\/print$/.test($location);
+    if (isPrint) {
       window.print();
       window.close();
     }
@@ -26,10 +30,19 @@
   {#if isNegative}
     <small><em>Negative resolution</em></small>
   {/if}
+  {#if !isPrint && state === RESOLUTION_STATES.VOTING}
+    <div class="voting">
+      <VotingWidget />
+    </div>
+  {/if}
 </div>
 
 <style>
   .resolution-view {
     padding: 40px;
+  }
+
+  .voting {
+    width: 30%;
   }
 </style>

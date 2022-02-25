@@ -1,5 +1,4 @@
 <script lang="ts">
-  import formatRelative from "date-fns/formatRelative";
   import Chip, { Text } from "@smui/chips";
   import Card, { Content, Actions } from "@smui/card";
   import Button, { Label } from "@smui/button";
@@ -15,7 +14,6 @@
   import type { ResolutionEntityEnhanced } from "../../types";
   import {
     getEnhancedResolutions,
-    getResolutionState,
     RESOLUTION_STATES,
   } from "../../helpers/resolutions";
   import { currentTimestamp } from "../../state/resolutions";
@@ -72,20 +70,33 @@
               <Chip chip><Text>{resolution.state}</Text></Chip>
               <Chip chip><Text>{resolution.typeName}</Text></Chip>
               <div>Created: {resolution.createdAt}</div>
-              {#if resolution.updatedAt}
+              {#if resolution.updatedAt && resolution.state !== RESOLUTION_STATES.ENDED}
                 <div>Updated: {resolution.updatedAt}</div>
               {/if}
-              {#if resolution.approvedAt}
+              {#if resolution.approvedAt && resolution.state !== RESOLUTION_STATES.ENDED}
                 <div>Approved: {resolution.approvedAt}</div>
+                <div>
+                  Voting starts: {resolution.resolutionTypeInfo
+                    .noticePeriodEndsAt}
+                </div>
+                <div>
+                  Voting ends: {resolution.resolutionTypeInfo.votingEndsAt}
+                </div>
+              {/if}
+              {#if resolution.state === RESOLUTION_STATES.ENDED}
+                <div>
+                  Resolution closed on: {resolution.resolutionTypeInfo
+                    .votingEnds}
+                </div>
               {/if}
             </Content>
             <Actions>
-              <Button variant="raised" href={resolution.href}>
-                <Label
-                  >{resolution.state === RESOLUTION_STATES.PRE_DRAFT
-                    ? "Edit"
-                    : "View"}</Label
-                >
+              <Button
+                variant="raised"
+                href={resolution.href}
+                disabled={resolution.action.disabled}
+              >
+                <Label>{resolution.action.label}</Label>
               </Button>
             </Actions>
           </Card>

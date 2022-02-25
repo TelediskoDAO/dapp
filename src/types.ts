@@ -10,6 +10,18 @@ export type ResolutionEntity = {
   updateTimestamp: string;
 };
 
+export type ResolutionAction = {
+  label: string;
+  disabled: boolean;
+};
+
+export type ResolutionTypeInfo = {
+  noticePeriodEnds: Date | null;
+  noticePeriodEndsAt: string | null;
+  votingEnds: Date | null;
+  votingEndsAt: string | null;
+};
+
 export type ResolutionEntityEnhanced = ResolutionEntity & {
   state: ResolutionState;
   typeName: string;
@@ -17,6 +29,8 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
   createdAt: string;
   updatedAt: string | null;
   approvedAt: string | null;
+  action: ResolutionAction;
+  resolutionTypeInfo: ResolutionTypeInfo;
 };
 
 export type ResolutionState = "pre-draft" | "notice" | "voting" | "ended";
