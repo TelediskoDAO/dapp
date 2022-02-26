@@ -20,6 +20,7 @@
   import { handleApprove } from "../../handlers/resolutions/approve";
   import {
     getResolutionState,
+    getResolutionTypeInfo,
     RESOLUTION_STATES,
   } from "../../helpers/resolutions";
   import { currentResolution, resetForm } from "../../state/resolutions/form";
@@ -64,20 +65,23 @@
       $currentResolution
     );
 
-    const resolutionType =
+    const resolutionTypeInfo =
       resolutionData && $resolutionContractTypes
-        ? $resolutionContractTypes[Number(resolutionData.typeId)]
+        ? getResolutionTypeInfo(
+            resolutionData,
+            $resolutionContractTypes[Number(resolutionData.typeId)]
+          )
         : null;
 
     if (
-      resolutionType &&
-      getResolutionState(resolutionData, +new Date(), resolutionType) !==
+      resolutionTypeInfo &&
+      getResolutionState(resolutionData, +new Date(), resolutionTypeInfo) !==
         RESOLUTION_STATES.PRE_DRAFT
     ) {
       replace(`/resolutions/${params.resolutionId}`);
     }
 
-    if (resolutionType) {
+    if (resolutionTypeInfo) {
       loaded = true;
     }
   }

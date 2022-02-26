@@ -1,6 +1,6 @@
 import { addSeconds, format, formatRelative, isBefore } from "date-fns";
 import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
-import { ResolutionTypeInfo } from "../types";
+import type { ResolutionTypeInfo } from "../types";
 import type {
   ResolutionEntity,
   ResolutionEntityEnhanced,
@@ -91,12 +91,12 @@ export const getResolutionState = (
   return RESOLUTION_STATES.PRE_DRAFT;
 };
 
-export const getEnhancedResolutions = (
-  resolutions: ResolutionEntity[],
-  $resolutionContractTypes: ResolutionManager.ResolutionTypeStructOutput[],
-  $currentTimestamp: number
-): ResolutionEntityEnhanced[] =>
-  resolutions.map((resolution: ResolutionEntity): ResolutionEntityEnhanced => {
+export const getEnhancedResolutionMapper =
+  (
+    $resolutionContractTypes: ResolutionManager.ResolutionTypeStructOutput[],
+    $currentTimestamp: number
+  ) =>
+  (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
     const resolutionTypeInfo = getResolutionTypeInfo(
       resolution,
       $resolutionContractTypes[Number(resolution.typeId)]
@@ -126,4 +126,13 @@ export const getEnhancedResolutions = (
       action: RESOLUTION_ACTIONS[state](),
       resolutionTypeInfo,
     };
-  });
+  };
+
+export const getEnhancedResolutions = (
+  resolutions: ResolutionEntity[],
+  $resolutionContractTypes: ResolutionManager.ResolutionTypeStructOutput[],
+  $currentTimestamp: number
+): ResolutionEntityEnhanced[] =>
+  resolutions.map(
+    getEnhancedResolutionMapper($resolutionContractTypes, $currentTimestamp)
+  );

@@ -6,10 +6,10 @@
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
   import { graphQLClient } from "../../net/graphQl";
   import { resolutionContractTypes } from "../../state/eth";
-  import type { ResolutionEntity } from "../../types";
-  import type { ResolutionManager } from "../../../contracts/typechain";
-  import { getResolutionState } from "../../helpers/resolutions";
+  import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
+  import { getEnhancedResolutionMapper } from "../../helpers/resolutions";
   import { currentTimestamp } from "../../state/resolutions";
+  import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
 
   type Params = {
     resolutionId: string;
@@ -20,7 +20,7 @@
   };
 
   let resolutionData: ResolutionEntity;
-  let resolutionType: ResolutionManager.ResolutionTypeStructOutput;
+  let resolutionDataEnhanced: ResolutionEntityEnhanced;
 
   onMount(async () => {
     const { resolution }: { resolution: ResolutionEntity } =
@@ -31,24 +31,18 @@
   });
 
   $: {
-    if ($resolutionContractTypes && resolutionData) {
-      resolutionType = $resolutionContractTypes[Number(resolutionData.typeId)];
+    if (resolutionData && $resolutionContractTypes) {
+      resolutionDataEnhanced = getEnhancedResolutionMapper(
+        $resolutionContractTypes,
+        $currentTimestamp
+      )(resolutionData);
     }
   }
 </script>
 
-{#if !resolutionData || !resolutionType}
+{#if !resolutionDataEnhanced}
   <CircularProgress style="height: 32px; width: 32px;" indeterminate />
 {:else}
-  <ResolutionView
-    title={resolutionData.title}
-    content={resolutionData.content}
-    type={resolutionType.name}
-    state={getResolutionState(
-      resolutionData,
-      $currentTimestamp,
-      resolutionType
-    )}
-    isNegative={resolutionData.isNegative}
-  />
+  <CurrentTimestamp />
+  <ResolutionView resolution={resolutionDataEnhanced} />
 {/if}
