@@ -49,15 +49,14 @@ export const getResolutionTypeInfo = (
       votingEndsAt: null,
     };
   }
-
   const noticePeriodEnds = addSeconds(
     getDateFromUnixTimestamp(resolution.approveTimestamp),
-    Number(resolutionType.noticePeriod)
+    Number(resolutionType[2]._hex)
   );
 
   const votingEnds = addSeconds(
     noticePeriodEnds,
-    Number(resolutionType.votingPeriod)
+    Number(resolutionType[3]._hex)
   );
 
   return {
