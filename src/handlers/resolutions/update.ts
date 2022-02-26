@@ -1,15 +1,26 @@
 import { notifier } from "@beyonk/svelte-notifications";
 import { push } from "svelte-spa-router";
-import { wait } from "../../async";
 
+import { wait } from "../../async";
 import { add } from "../../net/ipfs";
 import { formState, resetFormState } from "../../state/resolutions/form";
+import type { ResolutionFormState } from "../../types";
+import type { Signer } from "ethers";
+import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
 
 const WAIT_AFTER_UPDATED = 10000;
 
 export async function handleUpdate(
   resolutionId: string,
-  { $signer, $currentResolution, $resolutionContract }
+  {
+    $signer,
+    $currentResolution,
+    $resolutionContract,
+  }: {
+    $signer: Signer;
+    $resolutionContract: ResolutionManager;
+    $currentResolution: ResolutionFormState;
+  }
 ) {
   if (!$signer) {
     return push("/connect/odoo");

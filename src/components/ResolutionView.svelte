@@ -1,7 +1,7 @@
 <script type="ts">
   import { onMount } from "svelte";
   import SvelteMarkdown from "svelte-markdown";
-  import { location } from "svelte-spa-router";
+  import { location, params } from "svelte-spa-router";
   import { RESOLUTION_STATES } from "../helpers/resolutions";
   import VotingWidget from "./VotingWidget.svelte";
   import type { ResolutionEntityEnhanced } from "../types";
@@ -28,7 +28,7 @@
   {/if}
   {#if !isPrint && resolution.state === RESOLUTION_STATES.VOTING}
     <div class="voting">
-      <VotingWidget />
+      <VotingWidget resolutionId={resolution.id} />
     </div>
   {/if}
 </div>

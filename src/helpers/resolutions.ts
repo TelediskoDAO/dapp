@@ -8,11 +8,6 @@ import type {
   ResolutionStates,
 } from "../types";
 
-export const VOTING = {
-  YES: "yes",
-  NO: "no",
-};
-
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
   // transition to when approved
