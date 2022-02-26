@@ -9,8 +9,7 @@
     "test": "mocha test/**/*.ts --recursive --timeout 60000 --exit",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "prepare": "husky install",
-    "pre-commit": "lint-staged",
-    "pre-push": "pnpm t"
+    "pre-commit": "lint-staged"
   },
   "author": "vrde",
   "license": "MPL-2.0",
