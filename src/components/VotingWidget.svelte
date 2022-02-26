@@ -9,8 +9,6 @@
   export let resolutionId: string;
 
   function handleVoting(isYes: boolean) {
-    console.log("resolutionId: ", resolutionId);
-    console.log("isYes: ", isYes);
     handleVote(resolutionId, isYes, {
       $signer,
       $resolutionContract,
