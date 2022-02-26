@@ -102,7 +102,7 @@ export const getEnhancedResolutionMapper =
     );
     return {
       ...resolution,
-      typeName: $resolutionContractTypes[Number(resolution.typeId)].name,
+      typeName: $resolutionContractTypes[Number(resolution.typeId)][0],
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
       updatedAt:

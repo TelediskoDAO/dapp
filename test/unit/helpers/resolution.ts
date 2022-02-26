@@ -1,7 +1,11 @@
 import { expect } from "chai";
 
-import { createResolutionEntity } from "../mocks/resolutionEntityFactory";
+import {
+  createResolutionEntity,
+  createEnhancedResolutionEntity,
+} from "../mocks/resolutionEntityFactory";
 import resolutionContractTypes from "../mocks/resolutionContractTypes.json";
+import { getEnhancedResolutionMapper } from "../../../src/helpers/resolutions";
 import {
   RESOLUTION_STATES,
   getResolutionState,
@@ -11,20 +15,21 @@ import {
   getRelativeDateFromUnixTimestamp,
   getResolutionTypeInfo,
 } from "../../../src/helpers/resolutions";
+import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
 
-const APPROVE_UNIX_TS = "1645808255"; // Fri Feb 25 2022 17:57:35
-const NOTICE_TS = 1645915897665; // Sat Feb 26 2022 23:51:37 GMT+0100 (Central European Standard Time)
-const VOTING_TS = 1646445817665; // Sat Mar 05 2022 03:03:37 GMT+0100 (Central European Standard Time)
-const ENDED_TS = 1646945817665; // Thu Mar 10 2022 21:56:57 GMT+0100 (Central European Standard Time)
+const FEB_25_2022_UNIX_TS = "1645808255"; // Fri Feb 25 2022 17:57:35
+const FEB_26_2022_TS = 1645915897665; // Sat Feb 26 2022 23:51:37 GMT+0100 (Central European Standard Time)
+const MAR_05_2022_TS = 1646445817665; // Sat Mar 05 2022 03:03:37 GMT+0100 (Central European Standard Time)
+const MAR_10_2022_TS = 1646945817665; // Thu Mar 10 2022 21:56:57 GMT+0100 (Central European Standard Time)
 
 describe("Resolution helpers", () => {
   it("should get a date from a unix timestamp", () => {
-    const unixTs = APPROVE_UNIX_TS;
+    const unixTs = FEB_25_2022_UNIX_TS;
     expect(getDateFromUnixTimestamp(unixTs)).to.be.an.instanceof(Date);
   });
 
   it("should get a relative date from a unix timestamp", () => {
-    const unixTs = APPROVE_UNIX_TS;
+    const unixTs = FEB_25_2022_UNIX_TS;
     const fixedDate = new Date(1645802279713);
     expect(getRelativeDateFromUnixTimestamp(unixTs, fixedDate)).to.eq(
       "today at 5:57 PM"
@@ -50,7 +55,7 @@ describe("Resolution helpers", () => {
 
     it("should correctly handle an approved resolution", () => {
       const resolutionEntity = createResolutionEntity({
-        approveTimestamp: APPROVE_UNIX_TS,
+        approveTimestamp: FEB_25_2022_UNIX_TS,
       });
       const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
       const resolutionTypeInfo = getResolutionTypeInfo(
@@ -86,7 +91,7 @@ describe("Resolution helpers", () => {
 
     it("should correctly return a NOTICE state", () => {
       const resolutionEntity = createResolutionEntity({
-        approveTimestamp: APPROVE_UNIX_TS,
+        approveTimestamp: FEB_25_2022_UNIX_TS,
       });
       const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
       const resolutionTypeInfo = getResolutionTypeInfo(
@@ -95,7 +100,7 @@ describe("Resolution helpers", () => {
       );
       const resolutionState = getResolutionState(
         resolutionEntity,
-        NOTICE_TS,
+        FEB_26_2022_TS,
         resolutionTypeInfo
       );
 
@@ -104,7 +109,7 @@ describe("Resolution helpers", () => {
 
     it("should correctly return a VOTING state", () => {
       const resolutionEntity = createResolutionEntity({
-        approveTimestamp: APPROVE_UNIX_TS,
+        approveTimestamp: FEB_25_2022_UNIX_TS,
       });
       const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
       const resolutionTypeInfo = getResolutionTypeInfo(
@@ -113,7 +118,7 @@ describe("Resolution helpers", () => {
       );
       const resolutionState = getResolutionState(
         resolutionEntity,
-        VOTING_TS,
+        MAR_05_2022_TS,
         resolutionTypeInfo
       );
 
@@ -122,7 +127,7 @@ describe("Resolution helpers", () => {
 
     it("should correctly return an ENDED state", () => {
       const resolutionEntity = createResolutionEntity({
-        approveTimestamp: APPROVE_UNIX_TS,
+        approveTimestamp: FEB_25_2022_UNIX_TS,
       });
       const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
       const resolutionTypeInfo = getResolutionTypeInfo(
@@ -131,11 +136,27 @@ describe("Resolution helpers", () => {
       );
       const resolutionState = getResolutionState(
         resolutionEntity,
-        ENDED_TS,
+        MAR_10_2022_TS,
         resolutionTypeInfo
       );
 
       expect(resolutionState).to.eq(RESOLUTION_STATES.ENDED);
+    });
+  });
+
+  describe("getEnhancedResolutionMapper", () => {
+    it("should correctly enhance a resolution entity coming from subgraph", () => {
+      const resolutionEntity = createResolutionEntity();
+
+      const mapper = getEnhancedResolutionMapper(
+        resolutionContractTypes as ResolutionManager.ResolutionTypeStructOutput[],
+        Number(FEB_25_2022_UNIX_TS) * 1000
+      );
+      const enhancedResolution = mapper(resolutionEntity);
+
+      const exptectedOutput = createEnhancedResolutionEntity();
+
+      expect(enhancedResolution).to.deep.equal(exptectedOutput);
     });
   });
 });
