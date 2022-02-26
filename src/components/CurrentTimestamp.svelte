@@ -6,7 +6,7 @@
   let interval = null;
   export let intervalMs = 5000;
 
-  onMount(async () => {
+  onMount(() => {
     interval = setInterval(() => {
       $currentTimestamp = +new Date();
     }, intervalMs);
