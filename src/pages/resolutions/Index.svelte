@@ -40,7 +40,7 @@
 </script>
 
 <section>
-  <CurrentTimestamp />
+  <CurrentTimestamp intervalMs={3000} />
   <div class="header">
     <h1>Resolutions</h1>
     <Button variant="raised" href="#/resolutions/new">

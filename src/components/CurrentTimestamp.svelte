@@ -4,11 +4,12 @@
   import { currentTimestamp } from "../state/resolutions";
 
   let interval = null;
+  export let intervalMs = 5000;
 
   onMount(async () => {
     interval = setInterval(() => {
       $currentTimestamp = +new Date();
-    }, 5000);
+    }, intervalMs);
   });
 
   onDestroy(() => {
