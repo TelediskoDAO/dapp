@@ -7,11 +7,7 @@
   import CircularProgress from "@smui/circular-progress";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
-  import {
-    resolutionContract,
-    resolutionContractTypes,
-    signer,
-  } from "../../state/eth";
+  import { resolutionContract, signer } from "../../state/eth";
 
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
@@ -39,10 +35,13 @@
   let loaded = false;
 
   onMount(async () => {
-    const { resolution }: { resolution: ResolutionEntity } =
-      await graphQLClient.request(getResolutionQuery, {
-        id: params.resolutionId,
-      });
+    const {
+      resolution,
+    }: {
+      resolution: ResolutionEntity;
+    } = await graphQLClient.request(getResolutionQuery, {
+      id: params.resolutionId,
+    });
 
     resolutionData = resolution;
 
@@ -50,7 +49,7 @@
       title: resolutionData.title,
       content: resolutionData.content,
       isNegative: resolutionData.isNegative,
-      type: Number(resolutionData.typeId),
+      typeId: resolutionData.resolutionType.id,
     };
   });
 
@@ -60,18 +59,14 @@
         title: resolutionData?.title,
         content: resolutionData?.content,
         isNegative: resolutionData?.isNegative,
-        type: Number(resolutionData?.typeId),
+        typeId: resolutionData?.resolutionType.id,
       },
       $currentResolution
     );
 
-    const resolutionTypeInfo =
-      resolutionData && $resolutionContractTypes
-        ? getResolutionTypeInfo(
-            resolutionData,
-            $resolutionContractTypes[Number(resolutionData.typeId)]
-          )
-        : null;
+    const resolutionTypeInfo = resolutionData
+      ? getResolutionTypeInfo(resolutionData)
+      : null;
 
     if (
       resolutionTypeInfo &&

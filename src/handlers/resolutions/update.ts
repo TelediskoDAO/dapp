@@ -34,7 +34,7 @@ export async function handleUpdate(
     const tx = await $resolutionContract.updateResolution(
       resolutionId,
       ipfsId,
-      $currentResolution.type,
+      Number($currentResolution.typeId),
       $currentResolution.isNegative
     );
     formState.set({

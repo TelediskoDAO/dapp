@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import Select, { Option } from "@smui/select";
   import Button, { Label, Group } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
@@ -10,13 +10,14 @@
   import Checkbox from "@smui/checkbox";
   import Tooltip, { Wrapper } from "@smui/tooltip";
 
-  import { resolutionContractTypes } from "../state/eth";
-  import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
   import {
     currentResolution,
     formState,
     resetForm,
   } from "../state/resolutions/form";
+  import type { ResolutionTypeEntity } from "../types";
+  import { graphQLClient } from "../net/graphQl";
+  import { getResolutionTypesQuery } from "../graphql/get-resolution-types.query";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -31,27 +32,31 @@
   export let handleExport = noop;
 
   let disabled = false;
-  let resolutionTypes = [];
-  let selectedType: ResolutionManager.ResolutionTypeStructOutput | null = null;
+  let resolutionTypes: ResolutionTypeEntity[];
+  let selectedType: ResolutionTypeEntity = null;
+
+  onMount(async () => {
+    const {
+      resolutionTypes: resolutionsTypesData,
+    }: {
+      resolutionTypes: ResolutionTypeEntity[];
+    } = await graphQLClient.request(getResolutionTypesQuery);
+    resolutionTypes = resolutionsTypesData;
+  });
 
   $: {
     const checkDisabledFields = [
       $currentResolution.title?.trim(),
       $currentResolution.content?.trim(),
-      typeof $currentResolution.type === "number",
+      typeof $currentResolution.typeId === "string",
     ];
     disabled =
       checkDisabledFields.filter(Boolean).length < checkDisabledFields.length;
 
-    if (typeof $resolutionContractTypes !== "undefined") {
-      resolutionTypes = $resolutionContractTypes.map(([type], value) => ({
-        label: type,
-        value,
-      }));
-
-      selectedType = $currentResolution.type
-        ? $resolutionContractTypes[$currentResolution.type]
-        : null;
+    if (Array.isArray(resolutionTypes)) {
+      selectedType = resolutionTypes.find(
+        (resolutionType) => resolutionType.id === $currentResolution.typeId
+      );
     }
   }
 
@@ -123,19 +128,17 @@
         </Cell>
       </InnerGrid>
     </Cell>
-    {#if resolutionTypes.length > 0}
+    {#if resolutionTypes?.length > 0}
       <Cell span={12}>
         <InnerGrid>
           <Cell span={3}>
             <Select
               class="field"
-              bind:value={$currentResolution.type}
+              bind:value={$currentResolution.typeId}
               label="Resolution Type"
             >
               {#each resolutionTypes as resolutionType}
-                <Option value={resolutionType.value}
-                  >{resolutionType.label}</Option
-                >
+                <Option value={resolutionType.id}>{resolutionType.name}</Option>
               {/each}
             </Select>
             {#if selectedType?.canBeNegative}

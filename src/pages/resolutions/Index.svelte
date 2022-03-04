@@ -19,29 +19,23 @@
   import ResolutionDetails from "../../components/ResolutionDetails.svelte";
 
   let resolutions: ResolutionEntityEnhanced[];
-  let resolutionTypes: ResolutionTypeEntity[];
-  let loaded = false;
+  let ready = false;
+  let empty = false;
 
   onMount(async () => {
     const {
       resolutions: resolutionsData,
-      resolutionTypes: resolutionTypesData,
     }: {
       resolutions: ResolutionEntityEnhanced[];
-      resolutionTypes: ResolutionTypeEntity[];
     } = await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
-    resolutionTypes = resolutionTypesData;
-    loaded = true;
   });
 
   $: {
-    if (resolutionTypes && resolutions) {
-      resolutions = getEnhancedResolutions(
-        resolutions,
-        resolutionTypes,
-        $currentTimestamp
-      );
+    if (resolutions) {
+      resolutions = getEnhancedResolutions(resolutions, $currentTimestamp);
+      ready = true;
+      empty = resolutions.length === 0;
     }
   }
 
@@ -52,14 +46,16 @@
   <CurrentTimestamp intervalMs={3000} />
   <div class="header">
     <h1>Resolutions</h1>
-    <Button variant="raised" href="#/resolutions/new">
-      <Label>Create resolution</Label>
-    </Button>
+    {#if !empty && ready}
+      <Button variant="raised" href="#/resolutions/new">
+        <Label>Create resolution</Label>
+      </Button>
+    {/if}
   </div>
-  {#if !loaded}
+  {#if !ready}
     <CircularProgress style="height: 32px; width: 32px;" indeterminate />
   {/if}
-  {#if resolutions?.length > 0 && resolutionTypes}
+  {#if !empty && ready}
     <LayoutGrid>
       {#each resolutions as resolution}
         <Cell span={12}>
@@ -80,6 +76,11 @@
         </Cell>
       {/each}
     </LayoutGrid>
+  {/if}
+  {#if empty && ready}
+    <Button variant="raised" href="#/resolutions/new">
+      <Label>Create resolution</Label>
+    </Button>
   {/if}
 </section>
 

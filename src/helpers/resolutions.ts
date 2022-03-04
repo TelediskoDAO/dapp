@@ -38,8 +38,7 @@ export const getRelativeDateFromUnixTimestamp = (
 ) => formatRelative(getDateFromUnixTimestamp(unixTs), baseDate);
 
 export const getResolutionTypeInfo = (
-  resolution: ResolutionEntity,
-  resolutionType: ResolutionTypeEntity
+  resolution: ResolutionEntity
 ): ResolutionTypeInfo => {
   if (resolution.approveTimestamp === "0") {
     return {
@@ -51,12 +50,12 @@ export const getResolutionTypeInfo = (
   }
   const noticePeriodEnds = addSeconds(
     getDateFromUnixTimestamp(resolution.approveTimestamp),
-    Number(resolutionType.noticePeriod)
+    Number(resolution.resolutionType.noticePeriod)
   );
 
   const votingEnds = addSeconds(
     noticePeriodEnds,
-    Number(resolutionType.votingPeriod)
+    Number(resolution.resolutionType.votingPeriod)
   );
 
   return {
@@ -86,15 +85,9 @@ export const getResolutionState = (
 };
 
 export const getEnhancedResolutionMapper =
-  (resolutionTypes: ResolutionTypeEntity[], $currentTimestamp: number) =>
+  ($currentTimestamp: number) =>
   (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
-    const resolutionType = resolutionTypes.find(
-      (res) => res.id === resolution.typeId
-    );
-    const resolutionTypeInfo = getResolutionTypeInfo(
-      resolution,
-      resolutionType
-    );
+    const resolutionTypeInfo = getResolutionTypeInfo(resolution);
     const state = getResolutionState(
       resolution,
       $currentTimestamp,
@@ -102,7 +95,6 @@ export const getEnhancedResolutionMapper =
     );
     return {
       ...resolution,
-      resolutionType,
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
       updatedAt:
@@ -124,12 +116,8 @@ export const getEnhancedResolutionMapper =
 
 export const getEnhancedResolutions = (
   resolutions: ResolutionEntity[],
-  resolutionTypes: ResolutionTypeEntity[],
   $currentTimestamp: number
 ): ResolutionEntityEnhanced[] => {
-  const mapper = getEnhancedResolutionMapper(
-    resolutionTypes,
-    $currentTimestamp
-  );
+  const mapper = getEnhancedResolutionMapper($currentTimestamp);
   return resolutions.map(mapper);
 };

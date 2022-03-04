@@ -7,20 +7,18 @@ export const getResolutionsQuery = gql`
       title
       content
       isNegative
-      typeId
+      resolutionType {
+        id
+        name
+        quorum
+        noticePeriod
+        votingPeriod
+        canBeNegative
+      }
       yesVotesTotal
       approveTimestamp
       createTimestamp
       updateTimestamp
-    }
-
-    resolutionTypes {
-      id
-      name
-      quorum
-      noticePeriod
-      votingPeriod
-      canBeNegative
     }
   }
 `;

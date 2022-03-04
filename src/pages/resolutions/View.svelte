@@ -5,7 +5,6 @@
   import ResolutionView from "../../components/ResolutionView.svelte";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
   import { graphQLClient } from "../../net/graphQl";
-  import { resolutionContractTypes } from "../../state/eth";
   import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
   import { getEnhancedResolutionMapper } from "../../helpers/resolutions";
   import { currentTimestamp } from "../../state/resolutions";
@@ -23,24 +22,25 @@
   let resolutionDataEnhanced: ResolutionEntityEnhanced;
 
   onMount(async () => {
-    const { resolution }: { resolution: ResolutionEntity } =
-      await graphQLClient.request(getResolutionQuery, {
-        id: params.resolutionId,
-      });
+    const {
+      resolution,
+    }: {
+      resolution: ResolutionEntity;
+    } = await graphQLClient.request(getResolutionQuery, {
+      id: params.resolutionId,
+    });
     resolutionData = resolution;
   });
 
   $: {
-    if (resolutionData && $resolutionContractTypes) {
-      resolutionDataEnhanced = getEnhancedResolutionMapper(
-        $resolutionContractTypes,
-        $currentTimestamp
-      )(resolutionData);
+    if (resolutionData) {
+      resolutionDataEnhanced =
+        getEnhancedResolutionMapper($currentTimestamp)(resolutionData);
     }
   }
 </script>
 
-{#if !resolutionDataEnhanced}
+{#if !resolutionData}
   <CircularProgress style="height: 32px; width: 32px;" indeterminate />
 {:else}
   <CurrentTimestamp />

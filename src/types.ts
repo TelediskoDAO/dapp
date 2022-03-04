@@ -1,15 +1,3 @@
-export type ResolutionEntity = {
-  id: string;
-  title: string;
-  content: string;
-  isNegative: boolean;
-  typeId: string;
-  yesVotesTotal: string;
-  approveTimestamp: string;
-  createTimestamp: string;
-  updateTimestamp: string;
-};
-
 export type ResolutionTypeEntity = {
   id: string;
   name: string;
@@ -17,6 +5,18 @@ export type ResolutionTypeEntity = {
   noticePeriod: string;
   votingPeriod: string;
   canBeNegative: boolean;
+};
+
+export type ResolutionEntity = {
+  id: string;
+  title: string;
+  content: string;
+  isNegative: boolean;
+  resolutionType: ResolutionTypeEntity;
+  yesVotesTotal: string;
+  approveTimestamp: string;
+  createTimestamp: string;
+  updateTimestamp: string;
 };
 
 export type ResolutionAction = {
@@ -33,7 +33,6 @@ export type ResolutionTypeInfo = {
 
 export type ResolutionEntityEnhanced = ResolutionEntity & {
   state: ResolutionState;
-  resolutionType: ResolutionTypeEntity;
   href: string;
   createdAt: string;
   updatedAt: string | null;
@@ -50,6 +49,6 @@ export type ResolutionStates = Record<ResolutionStateKeys, ResolutionState>;
 export type ResolutionFormState = {
   title: string;
   content: string;
-  type: number | null;
+  typeId: string | null;
   isNegative: boolean | null;
 };
