@@ -1,9 +1,12 @@
 import { notifier } from "@beyonk/svelte-notifications";
 import { push } from "svelte-spa-router";
-import { add } from "../../net/ipfs";
 
+import { add } from "../../net/ipfs";
 import { formState, resetFormState } from "../../state/resolutions/form";
 import { wait } from "../../async";
+import type { ResolutionFormState } from "../../types";
+import type { Signer } from "ethers";
+import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
 
 const WAIT_AFTER_CREATE = 7000;
 
@@ -11,6 +14,10 @@ export async function handleCreate({
   $signer,
   $currentResolution,
   $resolutionContract,
+}: {
+  $signer: Signer;
+  $resolutionContract: ResolutionManager;
+  $currentResolution: ResolutionFormState;
 }) {
   if (!$signer) {
     return push("/connect/odoo");

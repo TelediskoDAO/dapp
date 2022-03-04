@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 
 export const getResolutionsQuery = gql`
   query GetResolutions {
-    resolutions {
+    resolutions(orderBy: createTimestamp, orderDirection: desc) {
       id
       title
       content

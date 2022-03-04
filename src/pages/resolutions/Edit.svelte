@@ -7,7 +7,11 @@
   import CircularProgress from "@smui/circular-progress";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
-  import { resolutionContract, signer } from "../../state/eth";
+  import {
+    resolutionContract,
+    resolutionContractTypes,
+    signer,
+  } from "../../state/eth";
 
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
@@ -16,6 +20,7 @@
   import { handleApprove } from "../../handlers/resolutions/approve";
   import {
     getResolutionState,
+    getResolutionTypeInfo,
     RESOLUTION_STATES,
   } from "../../helpers/resolutions";
   import { currentResolution, resetForm } from "../../state/resolutions/form";
@@ -31,6 +36,7 @@
   let resolutionData: ResolutionEntity;
   let disabledUpdate = true;
   let open = false;
+  let loaded = false;
 
   onMount(async () => {
     const { resolution }: { resolution: ResolutionEntity } =
@@ -39,10 +45,6 @@
       });
 
     resolutionData = resolution;
-
-    if (getResolutionState(resolution) !== RESOLUTION_STATES.PRE_DRAFT) {
-      replace(`/resolutions/${params.resolutionId}`);
-    }
 
     $currentResolution = {
       title: resolutionData.title,
@@ -62,6 +64,26 @@
       },
       $currentResolution
     );
+
+    const resolutionTypeInfo =
+      resolutionData && $resolutionContractTypes
+        ? getResolutionTypeInfo(
+            resolutionData,
+            $resolutionContractTypes[Number(resolutionData.typeId)]
+          )
+        : null;
+
+    if (
+      resolutionTypeInfo &&
+      getResolutionState(resolutionData, +new Date(), resolutionTypeInfo) !==
+        RESOLUTION_STATES.PRE_DRAFT
+    ) {
+      replace(`/resolutions/${params.resolutionId}`);
+    }
+
+    if (resolutionTypeInfo) {
+      loaded = true;
+    }
   }
 
   function handleUpdateResolution() {
@@ -107,7 +129,7 @@
   </Actions>
 </Dialog>
 
-{#if typeof $currentResolution.type !== "number"}
+{#if !loaded}
   <CircularProgress style="height: 32px; width: 32px;" indeterminate />
 {:else}
   <ResolutionForm

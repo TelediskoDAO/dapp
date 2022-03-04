@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Chip, { Text } from "@smui/chips";
   import Card, { Content, Actions } from "@smui/card";
   import Button, { Label } from "@smui/button";
   import LayoutGrid, { Cell } from "@smui/layout-grid";
@@ -12,11 +11,10 @@
 
   import { resolutionContractTypes } from "../../state/eth";
   import type { ResolutionEntityEnhanced } from "../../types";
-  import {
-    getEnhancedResolutions,
-    getResolutionState,
-    RESOLUTION_STATES,
-  } from "../../helpers/resolutions";
+  import { getEnhancedResolutions } from "../../helpers/resolutions";
+  import { currentTimestamp } from "../../state/resolutions";
+  import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
+  import ResolutionDetails from "../../components/ResolutionDetails.svelte";
 
   let resolutions: ResolutionEntityEnhanced[];
 
@@ -32,7 +30,8 @@
     if ($resolutionContractTypes && resolutions) {
       resolutions = getEnhancedResolutions(
         resolutions,
-        $resolutionContractTypes
+        $resolutionContractTypes,
+        $currentTimestamp
       );
     }
   }
@@ -41,6 +40,7 @@
 </script>
 
 <section>
+  <CurrentTimestamp intervalMs={3000} />
   <div class="header">
     <h1>Resolutions</h1>
     <Button variant="raised" href="#/resolutions/new">
@@ -53,20 +53,18 @@
   {#if resolutions?.length > 0 && $resolutionContractTypes}
     <LayoutGrid>
       {#each resolutions as resolution}
-        <Cell span={4}>
+        <Cell span={12}>
           <Card>
-            <Content
-              >{resolution.title || "No title..."}
-              <Chip chip><Text>{getResolutionState(resolution)}</Text></Chip>
-              <Chip chip><Text>{resolution.typeName}</Text></Chip>
+            <Content>
+              <ResolutionDetails {resolution} />
             </Content>
             <Actions>
-              <Button variant="raised" href={resolution.href}>
-                <Label
-                  >{resolution.state === RESOLUTION_STATES.PRE_DRAFT
-                    ? "Edit"
-                    : "View"}</Label
-                >
+              <Button
+                variant="raised"
+                href={resolution.href}
+                disabled={resolution.action.disabled}
+              >
+                <Label>{resolution.action.label}</Label>
               </Button>
             </Actions>
           </Card>

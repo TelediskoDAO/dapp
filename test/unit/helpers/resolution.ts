@@ -1,0 +1,162 @@
+import { expect } from "chai";
+
+import {
+  createResolutionEntity,
+  createEnhancedResolutionEntity,
+} from "../mocks/resolutionEntityFactory";
+import resolutionContractTypes from "../mocks/resolutionContractTypes.json";
+import { getEnhancedResolutionMapper } from "../../../src/helpers/resolutions";
+import {
+  RESOLUTION_STATES,
+  getResolutionState,
+} from "../../../src/helpers/resolutions";
+import {
+  getDateFromUnixTimestamp,
+  getRelativeDateFromUnixTimestamp,
+  getResolutionTypeInfo,
+} from "../../../src/helpers/resolutions";
+import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+
+const FEB_25_2022_UNIX_TS = "1645808255"; // Fri Feb 25 2022 17:57:35
+const FEB_26_2022_TS = 1645915897665; // Sat Feb 26 2022 23:51:37 GMT+0100 (Central European Standard Time)
+const MAR_05_2022_TS = 1646445817665; // Sat Mar 05 2022 03:03:37 GMT+0100 (Central European Standard Time)
+const MAR_10_2022_TS = 1646945817665; // Thu Mar 10 2022 21:56:57 GMT+0100 (Central European Standard Time)
+
+describe("Resolution helpers", () => {
+  it("should get a date from a unix timestamp", () => {
+    const unixTs = FEB_25_2022_UNIX_TS;
+    expect(getDateFromUnixTimestamp(unixTs)).to.be.an.instanceof(Date);
+  });
+
+  it("should get a relative date from a unix timestamp", () => {
+    const unixTs = FEB_25_2022_UNIX_TS;
+    const fixedDate = new Date(1645802279713);
+    expect(getRelativeDateFromUnixTimestamp(unixTs, fixedDate)).to.eq(
+      "today at 5:57 PM"
+    );
+  });
+
+  describe("getResolutionTypeInfo", () => {
+    it("should correctly handle a non approved resolution", () => {
+      const resolutionEntity = createResolutionEntity();
+      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
+      const resolutionTypeInfo = getResolutionTypeInfo(
+        resolutionEntity,
+        resolutionType
+      );
+
+      expect(resolutionTypeInfo).to.deep.equal({
+        noticePeriodEnds: null,
+        noticePeriodEndsAt: null,
+        votingEnds: null,
+        votingEndsAt: null,
+      });
+    });
+
+    it("should correctly handle an approved resolution", () => {
+      const resolutionEntity = createResolutionEntity({
+        approveTimestamp: FEB_25_2022_UNIX_TS,
+      });
+      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
+      const resolutionTypeInfo = getResolutionTypeInfo(
+        resolutionEntity,
+        resolutionType
+      );
+
+      expect(resolutionTypeInfo).to.deep.equal({
+        noticePeriodEnds: new Date("2022-03-03T16:57:35.000Z"),
+        noticePeriodEndsAt: "03 Mar 2022, 17:57:35",
+        votingEnds: new Date("2022-03-07T16:57:35.000Z"),
+        votingEndsAt: "07 Mar 2022, 17:57:35",
+      });
+    });
+  });
+
+  describe("getResolutionState", () => {
+    it("should correctly return a PRE_DRAFT state", () => {
+      const resolutionEntity = createResolutionEntity();
+      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
+      const resolutionTypeInfo = getResolutionTypeInfo(
+        resolutionEntity,
+        resolutionType
+      );
+      const resolutionState = getResolutionState(
+        resolutionEntity,
+        +new Date(),
+        resolutionTypeInfo
+      );
+
+      expect(resolutionState).to.eq(RESOLUTION_STATES.PRE_DRAFT);
+    });
+
+    it("should correctly return a NOTICE state", () => {
+      const resolutionEntity = createResolutionEntity({
+        approveTimestamp: FEB_25_2022_UNIX_TS,
+      });
+      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
+      const resolutionTypeInfo = getResolutionTypeInfo(
+        resolutionEntity,
+        resolutionType
+      );
+      const resolutionState = getResolutionState(
+        resolutionEntity,
+        FEB_26_2022_TS,
+        resolutionTypeInfo
+      );
+
+      expect(resolutionState).to.eq(RESOLUTION_STATES.NOTICE);
+    });
+
+    it("should correctly return a VOTING state", () => {
+      const resolutionEntity = createResolutionEntity({
+        approveTimestamp: FEB_25_2022_UNIX_TS,
+      });
+      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
+      const resolutionTypeInfo = getResolutionTypeInfo(
+        resolutionEntity,
+        resolutionType
+      );
+      const resolutionState = getResolutionState(
+        resolutionEntity,
+        MAR_05_2022_TS,
+        resolutionTypeInfo
+      );
+
+      expect(resolutionState).to.eq(RESOLUTION_STATES.VOTING);
+    });
+
+    it("should correctly return an ENDED state", () => {
+      const resolutionEntity = createResolutionEntity({
+        approveTimestamp: FEB_25_2022_UNIX_TS,
+      });
+      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
+      const resolutionTypeInfo = getResolutionTypeInfo(
+        resolutionEntity,
+        resolutionType
+      );
+      const resolutionState = getResolutionState(
+        resolutionEntity,
+        MAR_10_2022_TS,
+        resolutionTypeInfo
+      );
+
+      expect(resolutionState).to.eq(RESOLUTION_STATES.ENDED);
+    });
+  });
+
+  describe("getEnhancedResolutionMapper", () => {
+    it("should correctly enhance a resolution entity coming from subgraph", () => {
+      const resolutionEntity = createResolutionEntity();
+
+      const mapper = getEnhancedResolutionMapper(
+        resolutionContractTypes as ResolutionManager.ResolutionTypeStructOutput[],
+        Number(FEB_25_2022_UNIX_TS) * 1000
+      );
+      const enhancedResolution = mapper(resolutionEntity);
+
+      const exptectedOutput = createEnhancedResolutionEntity();
+
+      expect(enhancedResolution).to.deep.equal(exptectedOutput);
+    });
+  });
+});
