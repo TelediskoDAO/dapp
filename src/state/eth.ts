@@ -163,14 +163,3 @@ export const resolutionContract: Readable<ResolutionManager> = derived(
     })();
   }
 );
-
-export const resolutionContractTypes: Readable<
-  ResolutionManager.ResolutionTypeStructOutput[]
-> = derived(resolutionContract, ($resolutionContract, set) => {
-  (async () => {
-    if ($resolutionContract) {
-      const resolutionTypes = await $resolutionContract.getResolutionTypes();
-      set(resolutionTypes);
-    }
-  })();
-});

@@ -9,28 +9,37 @@
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
-  import { resolutionContractTypes } from "../../state/eth";
-  import type { ResolutionEntityEnhanced } from "../../types";
+  import type {
+    ResolutionEntityEnhanced,
+    ResolutionTypeEntity,
+  } from "../../types";
   import { getEnhancedResolutions } from "../../helpers/resolutions";
   import { currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
   import ResolutionDetails from "../../components/ResolutionDetails.svelte";
 
   let resolutions: ResolutionEntityEnhanced[];
+  let resolutionTypes: ResolutionTypeEntity[];
+  let loaded = false;
 
   onMount(async () => {
     const {
       resolutions: resolutionsData,
-    }: { resolutions: ResolutionEntityEnhanced[] } =
-      await graphQLClient.request(getResolutionsQuery);
+      resolutionTypes: resolutionTypesData,
+    }: {
+      resolutions: ResolutionEntityEnhanced[];
+      resolutionTypes: ResolutionTypeEntity[];
+    } = await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
+    resolutionTypes = resolutionTypesData;
+    loaded = true;
   });
 
   $: {
-    if ($resolutionContractTypes && resolutions) {
+    if (resolutionTypes && resolutions) {
       resolutions = getEnhancedResolutions(
         resolutions,
-        $resolutionContractTypes,
+        resolutionTypes,
         $currentTimestamp
       );
     }
@@ -47,10 +56,10 @@
       <Label>Create resolution</Label>
     </Button>
   </div>
-  {#if !resolutions || !$resolutionContractTypes}
+  {#if !loaded}
     <CircularProgress style="height: 32px; width: 32px;" indeterminate />
   {/if}
-  {#if resolutions?.length > 0 && $resolutionContractTypes}
+  {#if resolutions?.length > 0 && resolutionTypes}
     <LayoutGrid>
       {#each resolutions as resolution}
         <Cell span={12}>

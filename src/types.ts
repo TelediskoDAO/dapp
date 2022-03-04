@@ -10,6 +10,15 @@ export type ResolutionEntity = {
   updateTimestamp: string;
 };
 
+export type ResolutionTypeEntity = {
+  id: string;
+  name: string;
+  quorum: string;
+  noticePeriod: string;
+  votingPeriod: string;
+  canBeNegative: boolean;
+};
+
 export type ResolutionAction = {
   label: string;
   disabled: boolean;
@@ -24,7 +33,7 @@ export type ResolutionTypeInfo = {
 
 export type ResolutionEntityEnhanced = ResolutionEntity & {
   state: ResolutionState;
-  typeName: string;
+  resolutionType: ResolutionTypeEntity;
   href: string;
   createdAt: string;
   updatedAt: string | null;

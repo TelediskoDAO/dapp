@@ -13,5 +13,14 @@ export const getResolutionsQuery = gql`
       createTimestamp
       updateTimestamp
     }
+
+    resolutionTypes {
+      id
+      name
+      quorum
+      noticePeriod
+      votingPeriod
+      canBeNegative
+    }
   }
 `;

@@ -11,7 +11,7 @@
 <div>
   {resolution.title || "No title..."}
   <Chip chip><Text>{resolution.state}</Text></Chip>
-  <Chip chip><Text>{resolution.typeName}</Text></Chip>
+  <Chip chip><Text>{resolution.resolutionType.name}</Text></Chip>
   <div>Created: {resolution.createdAt}</div>
   {#if resolution.updatedAt && resolution.state !== RESOLUTION_STATES.ENDED}
     <div>Updated: {resolution.updatedAt}</div>
