@@ -1,31 +1,39 @@
-import type { ResolutionEntity } from "../../../src/types";
-import type { ResolutionEntityEnhanced } from "../../../src/types";
+import type {
+  ResolutionEntity,
+  ResolutionEntityEnhanced,
+  ResolutionTypeEntity,
+} from "../../../src/types";
 
-const defaultEntity = {
+import resolutionTypes from "./resolutionTypes.json";
+
+const defaultResolutionType: ResolutionTypeEntity = resolutionTypes.find(
+  (res) => res.id === "4"
+);
+
+const defaultEntity: ResolutionEntity = {
   id: "42",
   title: "A new hope",
   content: "Another resolution",
   isNegative: false,
-  typeId: "4",
+  resolutionType: defaultResolutionType,
   yesVotesTotal: "0",
   approveTimestamp: "0",
   createTimestamp: "1645808255",
   updateTimestamp: "0",
 };
 
-const enhancedEntity = {
+const enhancedEntity: ResolutionEntityEnhanced = {
   id: "42",
   title: "A new hope",
   content: "Another resolution",
   isNegative: false,
-  typeId: "4",
+  resolutionType: defaultResolutionType,
   yesVotesTotal: "0",
   approveTimestamp: "0",
   createTimestamp: "1645808255",
   updateTimestamp: "0",
-  typeName: "significant",
   state: "pre-draft",
-  createdAt: "last Friday at 5:57 PM",
+  createdAt: "02/25/2022",
   updatedAt: null,
   approvedAt: null,
   href: "#/resolutions/42/edit",

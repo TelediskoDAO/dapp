@@ -4,7 +4,6 @@ import {
   createResolutionEntity,
   createEnhancedResolutionEntity,
 } from "../mocks/resolutionEntityFactory";
-import resolutionContractTypes from "../mocks/resolutionContractTypes.json";
 import { getEnhancedResolutionMapper } from "../../../src/helpers/resolutions";
 import {
   RESOLUTION_STATES,
@@ -39,11 +38,7 @@ describe("Resolution helpers", () => {
   describe("getResolutionTypeInfo", () => {
     it("should correctly handle a non approved resolution", () => {
       const resolutionEntity = createResolutionEntity();
-      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
-      const resolutionTypeInfo = getResolutionTypeInfo(
-        resolutionEntity,
-        resolutionType
-      );
+      const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
 
       expect(resolutionTypeInfo).to.deep.equal({
         noticePeriodEnds: null,
@@ -57,11 +52,7 @@ describe("Resolution helpers", () => {
       const resolutionEntity = createResolutionEntity({
         approveTimestamp: FEB_25_2022_UNIX_TS,
       });
-      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
-      const resolutionTypeInfo = getResolutionTypeInfo(
-        resolutionEntity,
-        resolutionType
-      );
+      const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
 
       expect(resolutionTypeInfo).to.deep.equal({
         noticePeriodEnds: new Date("2022-03-03T16:57:35.000Z"),
@@ -75,11 +66,7 @@ describe("Resolution helpers", () => {
   describe("getResolutionState", () => {
     it("should correctly return a PRE_DRAFT state", () => {
       const resolutionEntity = createResolutionEntity();
-      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
-      const resolutionTypeInfo = getResolutionTypeInfo(
-        resolutionEntity,
-        resolutionType
-      );
+      const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
       const resolutionState = getResolutionState(
         resolutionEntity,
         +new Date(),
@@ -93,11 +80,7 @@ describe("Resolution helpers", () => {
       const resolutionEntity = createResolutionEntity({
         approveTimestamp: FEB_25_2022_UNIX_TS,
       });
-      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
-      const resolutionTypeInfo = getResolutionTypeInfo(
-        resolutionEntity,
-        resolutionType
-      );
+      const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
       const resolutionState = getResolutionState(
         resolutionEntity,
         FEB_26_2022_TS,
@@ -111,11 +94,7 @@ describe("Resolution helpers", () => {
       const resolutionEntity = createResolutionEntity({
         approveTimestamp: FEB_25_2022_UNIX_TS,
       });
-      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
-      const resolutionTypeInfo = getResolutionTypeInfo(
-        resolutionEntity,
-        resolutionType
-      );
+      const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
       const resolutionState = getResolutionState(
         resolutionEntity,
         MAR_05_2022_TS,
@@ -129,11 +108,7 @@ describe("Resolution helpers", () => {
       const resolutionEntity = createResolutionEntity({
         approveTimestamp: FEB_25_2022_UNIX_TS,
       });
-      const resolutionType = resolutionContractTypes[resolutionEntity.typeId];
-      const resolutionTypeInfo = getResolutionTypeInfo(
-        resolutionEntity,
-        resolutionType
-      );
+      const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
       const resolutionState = getResolutionState(
         resolutionEntity,
         MAR_10_2022_TS,
@@ -149,7 +124,6 @@ describe("Resolution helpers", () => {
       const resolutionEntity = createResolutionEntity();
 
       const mapper = getEnhancedResolutionMapper(
-        resolutionContractTypes as ResolutionManager.ResolutionTypeStructOutput[],
         Number(FEB_25_2022_UNIX_TS) * 1000
       );
       const enhancedResolution = mapper(resolutionEntity);
