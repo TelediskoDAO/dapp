@@ -1,14 +1,12 @@
 import { gql } from "graphql-request";
+import { resolutionTypeFragment } from "./resolution-type.fragment";
 
 export const getResolutionTypesQuery = gql`
   query GetResolutionTypes {
     resolutionTypes {
-      id
-      name
-      quorum
-      noticePeriod
-      votingPeriod
-      canBeNegative
+      ...resolutionTypeFragment
     }
   }
+
+  ${resolutionTypeFragment}
 `;

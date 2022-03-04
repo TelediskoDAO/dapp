@@ -9,10 +9,7 @@
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
-  import type {
-    ResolutionEntityEnhanced,
-    ResolutionTypeEntity,
-  } from "../../types";
+  import type { ResolutionEntityEnhanced } from "../../types";
   import { getEnhancedResolutions } from "../../helpers/resolutions";
   import { currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
