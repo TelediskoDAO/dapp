@@ -1,11 +1,11 @@
 import { addSeconds, format, formatRelative, isBefore } from "date-fns";
-import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
 import type { ResolutionTypeInfo } from "../types";
 import type {
   ResolutionEntity,
   ResolutionEntityEnhanced,
   ResolutionState,
   ResolutionStates,
+  ResolutionTypeEntity,
 } from "../types";
 
 export const RESOLUTION_STATES: ResolutionStates = {
@@ -38,8 +38,7 @@ export const getRelativeDateFromUnixTimestamp = (
 ) => formatRelative(getDateFromUnixTimestamp(unixTs), baseDate);
 
 export const getResolutionTypeInfo = (
-  resolution: ResolutionEntity,
-  resolutionType: ResolutionManager.ResolutionTypeStructOutput
+  resolution: ResolutionEntity
 ): ResolutionTypeInfo => {
   if (resolution.approveTimestamp === "0") {
     return {
@@ -51,12 +50,12 @@ export const getResolutionTypeInfo = (
   }
   const noticePeriodEnds = addSeconds(
     getDateFromUnixTimestamp(resolution.approveTimestamp),
-    Number(resolutionType[2]._hex)
+    Number(resolution.resolutionType.noticePeriod)
   );
 
   const votingEnds = addSeconds(
     noticePeriodEnds,
-    Number(resolutionType[3]._hex)
+    Number(resolution.resolutionType.votingPeriod)
   );
 
   return {
@@ -86,15 +85,9 @@ export const getResolutionState = (
 };
 
 export const getEnhancedResolutionMapper =
-  (
-    $resolutionContractTypes: ResolutionManager.ResolutionTypeStructOutput[],
-    $currentTimestamp: number
-  ) =>
+  ($currentTimestamp: number) =>
   (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
-    const resolutionTypeInfo = getResolutionTypeInfo(
-      resolution,
-      $resolutionContractTypes[Number(resolution.typeId)]
-    );
+    const resolutionTypeInfo = getResolutionTypeInfo(resolution);
     const state = getResolutionState(
       resolution,
       $currentTimestamp,
@@ -102,7 +95,6 @@ export const getEnhancedResolutionMapper =
     );
     return {
       ...resolution,
-      typeName: $resolutionContractTypes[Number(resolution.typeId)][0],
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
       updatedAt:
@@ -124,9 +116,8 @@ export const getEnhancedResolutionMapper =
 
 export const getEnhancedResolutions = (
   resolutions: ResolutionEntity[],
-  $resolutionContractTypes: ResolutionManager.ResolutionTypeStructOutput[],
   $currentTimestamp: number
-): ResolutionEntityEnhanced[] =>
-  resolutions.map(
-    getEnhancedResolutionMapper($resolutionContractTypes, $currentTimestamp)
-  );
+): ResolutionEntityEnhanced[] => {
+  const mapper = getEnhancedResolutionMapper($currentTimestamp);
+  return resolutions.map(mapper);
+};

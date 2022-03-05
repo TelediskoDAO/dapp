@@ -1,17 +1,12 @@
 import { gql } from "graphql-request";
+import { resolutionFragment } from "./resolution.fragment";
 
 export const getResolutionsQuery = gql`
   query GetResolutions {
     resolutions(orderBy: createTimestamp, orderDirection: desc) {
-      id
-      title
-      content
-      isNegative
-      typeId
-      yesVotesTotal
-      approveTimestamp
-      createTimestamp
-      updateTimestamp
+      ...resolutionFragment
     }
   }
+
+  ${resolutionFragment}
 `;

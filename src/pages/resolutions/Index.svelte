@@ -9,7 +9,6 @@
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
-  import { resolutionContractTypes } from "../../state/eth";
   import type { ResolutionEntityEnhanced } from "../../types";
   import { getEnhancedResolutions } from "../../helpers/resolutions";
   import { currentTimestamp } from "../../state/resolutions";
@@ -17,22 +16,23 @@
   import ResolutionDetails from "../../components/ResolutionDetails.svelte";
 
   let resolutions: ResolutionEntityEnhanced[];
+  let ready = false;
+  let empty = false;
 
   onMount(async () => {
     const {
       resolutions: resolutionsData,
-    }: { resolutions: ResolutionEntityEnhanced[] } =
-      await graphQLClient.request(getResolutionsQuery);
+    }: {
+      resolutions: ResolutionEntityEnhanced[];
+    } = await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
   });
 
   $: {
-    if ($resolutionContractTypes && resolutions) {
-      resolutions = getEnhancedResolutions(
-        resolutions,
-        $resolutionContractTypes,
-        $currentTimestamp
-      );
+    if (resolutions) {
+      resolutions = getEnhancedResolutions(resolutions, $currentTimestamp);
+      ready = true;
+      empty = resolutions.length === 0;
     }
   }
 
@@ -43,14 +43,16 @@
   <CurrentTimestamp intervalMs={3000} />
   <div class="header">
     <h1>Resolutions</h1>
-    <Button variant="raised" href="#/resolutions/new">
-      <Label>Create resolution</Label>
-    </Button>
+    {#if !empty && ready}
+      <Button variant="raised" href="#/resolutions/new">
+        <Label>Create resolution</Label>
+      </Button>
+    {/if}
   </div>
-  {#if !resolutions || !$resolutionContractTypes}
+  {#if !ready}
     <CircularProgress style="height: 32px; width: 32px;" indeterminate />
   {/if}
-  {#if resolutions?.length > 0 && $resolutionContractTypes}
+  {#if !empty && ready}
     <LayoutGrid>
       {#each resolutions as resolution}
         <Cell span={12}>
@@ -71,6 +73,11 @@
         </Cell>
       {/each}
     </LayoutGrid>
+  {/if}
+  {#if empty && ready}
+    <Button variant="raised" href="#/resolutions/new">
+      <Label>Create resolution</Label>
+    </Button>
   {/if}
 </section>
 

@@ -5,7 +5,7 @@ import type { ResolutionFormState } from "../../types";
 export const defaultFormState: ResolutionFormState = {
   title: "",
   content: "",
-  type: null,
+  typeId: null,
   isNegative: false,
 };
 

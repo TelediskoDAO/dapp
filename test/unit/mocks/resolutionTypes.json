@@ -1,0 +1,58 @@
+[
+  {
+    "id": "0",
+    "name": "amendment",
+    "quorum": "66",
+    "noticePeriod": "1209600",
+    "votingPeriod": "518400",
+    "canBeNegative": false
+  },
+  {
+    "id": "1",
+    "name": "capitalChange",
+    "quorum": "66",
+    "noticePeriod": "1209600",
+    "votingPeriod": "518400",
+    "canBeNegative": false
+  },
+  {
+    "id": "2",
+    "name": "preclusion",
+    "quorum": "75",
+    "noticePeriod": "1209600",
+    "votingPeriod": "518400",
+    "canBeNegative": false
+  },
+  {
+    "id": "3",
+    "name": "fundamentalOther",
+    "quorum": "51",
+    "noticePeriod": "1209600",
+    "votingPeriod": "518400",
+    "canBeNegative": false
+  },
+  {
+    "id": "4",
+    "name": "significant",
+    "quorum": "51",
+    "noticePeriod": "518400",
+    "votingPeriod": "345600",
+    "canBeNegative": false
+  },
+  {
+    "id": "5",
+    "name": "dissolution",
+    "quorum": "66",
+    "noticePeriod": "1209600",
+    "votingPeriod": "518400",
+    "canBeNegative": false
+  },
+  {
+    "id": "6",
+    "name": "routine",
+    "quorum": "51",
+    "noticePeriod": "259200",
+    "votingPeriod": "172800",
+    "canBeNegative": true
+  }
+]
