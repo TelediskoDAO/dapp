@@ -35,6 +35,9 @@
   let open = false;
   let loaded = false;
 
+  // TODO, should we spin a timeout here? if i.e. after 5 seconds acl is still not loaded, probably
+  // we can display a message to the user with "You should re-connect your wallet"? or we shouldn't care?
+
   onMount(async () => {
     const {
       resolution,
@@ -127,7 +130,7 @@
   </Actions>
 </Dialog>
 
-{#if !loaded}
+{#if !loaded || !$acl.loaded}
   <CircularProgress style="height: 32px; width: 32px;" indeterminate />
 {:else}
   <ResolutionForm
