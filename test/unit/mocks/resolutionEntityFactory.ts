@@ -41,7 +41,7 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   updatedAt: null,
   approvedAt: null,
   href: "#/resolutions/42/edit",
-  action: { label: "Edit", disabled: false },
+  action: { label: "Edit or Approve", disabled: false },
   resolutionTypeInfo: {
     noticePeriodEnds: null,
     noticePeriodEndsAt: null,
