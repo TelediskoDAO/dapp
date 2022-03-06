@@ -7,6 +7,15 @@ export type ResolutionTypeEntity = {
   canBeNegative: boolean;
 };
 
+export type ResolutionManagerEntity = {
+  id: string;
+  name: string;
+  quorum: string;
+  noticePeriod: string;
+  votingPeriod: string;
+  canBeNegative: boolean;
+};
+
 export type ResolutionEntity = {
   id: string;
   title: string;
@@ -14,9 +23,12 @@ export type ResolutionEntity = {
   isNegative: boolean;
   resolutionType: ResolutionTypeEntity;
   yesVotesTotal: string;
-  approveTimestamp: string;
   createTimestamp: string;
   updateTimestamp: string;
+  approveTimestamp: string;
+  createBy: string;
+  updateBy: string;
+  approveBy: string;
 };
 
 export type ResolutionAction = {

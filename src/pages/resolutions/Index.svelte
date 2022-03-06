@@ -9,27 +9,36 @@
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
-  import type { ResolutionEntityEnhanced } from "../../types";
+  import type {
+    ResolutionEntityEnhanced,
+    ResolutionManagerEntity,
+    ResolutionTypeEntity,
+  } from "../../types";
   import { getEnhancedResolutions } from "../../helpers/resolutions";
   import { currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
   import ResolutionDetails from "../../components/ResolutionDetails.svelte";
 
   let resolutions: ResolutionEntityEnhanced[];
+  let resolutionManager: ResolutionManagerEntity;
   let ready = false;
   let empty = false;
 
   onMount(async () => {
     const {
       resolutions: resolutionsData,
+      resolutionManager: resolutionManagerData,
     }: {
       resolutions: ResolutionEntityEnhanced[];
+      resolutionManager: ResolutionManagerEntity;
     } = await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
+    resolutionManager = resolutionManagerData;
   });
 
   $: {
-    if (resolutions) {
+    if (resolutions && resolutionManager) {
+      console.log("resolutionManager: ", resolutionManager);
       resolutions = getEnhancedResolutions(resolutions, $currentTimestamp);
       ready = true;
       empty = resolutions.length === 0;

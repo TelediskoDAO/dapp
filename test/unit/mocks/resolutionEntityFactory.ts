@@ -6,16 +6,16 @@ import type {
 
 import resolutionTypes from "./resolutionTypes.json";
 
-const defaultResolutionType: ResolutionTypeEntity = resolutionTypes.find(
-  (res) => res.id === "4"
-);
+const defaultResolutionType: (id: string) => ResolutionTypeEntity = (
+  id: string
+) => resolutionTypes.find((res) => res.id === id);
 
 const defaultEntity: ResolutionEntity = {
   id: "42",
   title: "A new hope",
   content: "Another resolution",
   isNegative: false,
-  resolutionType: defaultResolutionType,
+  resolutionType: defaultResolutionType("4"),
   yesVotesTotal: "0",
   approveTimestamp: "0",
   createTimestamp: "1645808255",
@@ -27,7 +27,7 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   title: "A new hope",
   content: "Another resolution",
   isNegative: false,
-  resolutionType: defaultResolutionType,
+  resolutionType: defaultResolutionType("4"),
   yesVotesTotal: "0",
   approveTimestamp: "0",
   createTimestamp: "1645808255",
