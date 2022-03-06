@@ -9,37 +9,32 @@
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
-  import type {
-    ResolutionEntityEnhanced,
-    ResolutionManagerEntity,
-    ResolutionTypeEntity,
-  } from "../../types";
+  import type { ResolutionEntityEnhanced } from "../../types";
   import { getEnhancedResolutions } from "../../helpers/resolutions";
-  import { currentTimestamp } from "../../state/resolutions";
+  import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
   import ResolutionDetails from "../../components/ResolutionDetails.svelte";
 
   let resolutions: ResolutionEntityEnhanced[];
-  let resolutionManager: ResolutionManagerEntity;
   let ready = false;
   let empty = false;
 
   onMount(async () => {
     const {
       resolutions: resolutionsData,
-      resolutionManager: resolutionManagerData,
     }: {
       resolutions: ResolutionEntityEnhanced[];
-      resolutionManager: ResolutionManagerEntity;
     } = await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
-    resolutionManager = resolutionManagerData;
   });
 
   $: {
-    if (resolutions && resolutionManager) {
-      console.log("resolutionManager: ", resolutionManager);
-      resolutions = getEnhancedResolutions(resolutions, $currentTimestamp);
+    if (resolutions && $currentTimestamp && $acl) {
+      resolutions = getEnhancedResolutions(
+        resolutions,
+        $currentTimestamp,
+        $acl
+      );
       ready = true;
       empty = resolutions.length === 0;
     }
@@ -52,7 +47,7 @@
   <CurrentTimestamp intervalMs={3000} />
   <div class="header">
     <h1>Resolutions</h1>
-    {#if !empty && ready}
+    {#if !empty && ready && $acl?.canCreate}
       <Button variant="raised" href="#/resolutions/new">
         <Label>Create resolution</Label>
       </Button>
@@ -83,7 +78,7 @@
       {/each}
     </LayoutGrid>
   {/if}
-  {#if empty && ready}
+  {#if empty && ready && $acl?.canCreate}
     <Button variant="raised" href="#/resolutions/new">
       <Label>Create resolution</Label>
     </Button>

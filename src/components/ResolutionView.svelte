@@ -6,6 +6,7 @@
   import VotingWidget from "./VotingWidget.svelte";
   import type { ResolutionEntityEnhanced } from "../types";
   import ResolutionDetails from "./ResolutionDetails.svelte";
+  import { acl } from "../state/resolutions";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint: boolean;
@@ -26,7 +27,7 @@
   {#if resolution.isNegative}
     <small><em>Negative resolution</em></small>
   {/if}
-  {#if !isPrint && resolution.state === RESOLUTION_STATES.VOTING}
+  {#if !isPrint && resolution.state === RESOLUTION_STATES.VOTING && $acl.canVote(resolution.voters)}
     <div class="voting">
       <VotingWidget resolutionId={resolution.id} />
     </div>

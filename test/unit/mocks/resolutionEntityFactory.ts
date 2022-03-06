@@ -20,6 +20,10 @@ const defaultEntity: ResolutionEntity = {
   approveTimestamp: "0",
   createTimestamp: "1645808255",
   updateTimestamp: "0",
+  voters: [],
+  createBy: "42",
+  updateBy: "42",
+  approveBy: "42",
 };
 
 const enhancedEntity: ResolutionEntityEnhanced = {
@@ -44,6 +48,10 @@ const enhancedEntity: ResolutionEntityEnhanced = {
     votingEnds: null,
     votingEndsAt: null,
   },
+  voters: [],
+  createBy: "42",
+  updateBy: "42",
+  approveBy: "42",
 };
 
 export const createResolutionEntity = (

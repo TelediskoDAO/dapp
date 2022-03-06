@@ -17,6 +17,10 @@ export const resolutionFragment = gql`
     createBy
     updateBy
     approveBy
+    voters {
+      votingPower
+      address
+    }
   }
 
   ${resolutionTypeFragment}

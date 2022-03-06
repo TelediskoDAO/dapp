@@ -20,6 +20,7 @@
     RESOLUTION_STATES,
   } from "../../helpers/resolutions";
   import { currentResolution, resetForm } from "../../state/resolutions/form";
+  import { acl } from "../../state/resolutions";
 
   type Params = {
     resolutionId: string;
@@ -68,11 +69,13 @@
       ? getResolutionTypeInfo(resolutionData)
       : null;
 
-    if (
-      resolutionTypeInfo &&
-      getResolutionState(resolutionData, +new Date(), resolutionTypeInfo) !==
-        RESOLUTION_STATES.PRE_DRAFT
-    ) {
+    const shouldRedirectToView =
+      (resolutionTypeInfo &&
+        getResolutionState(resolutionData, +new Date(), resolutionTypeInfo) !==
+          RESOLUTION_STATES.PRE_DRAFT) ||
+      ($acl.loaded && !$acl.canUpdate);
+
+    if (shouldRedirectToView) {
       replace(`/resolutions/${params.resolutionId}`);
     }
 

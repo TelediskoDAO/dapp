@@ -7,12 +7,7 @@ export const getResolutionQuery = gql`
     resolution(id: $id) {
       ...resolutionFragment
     }
-
-    resolutionManager(id: "0") {
-      ...resolutionManagerFragment
-    }
   }
 
   ${resolutionFragment}
-  ${resolutionManagerFragment}
 `;
