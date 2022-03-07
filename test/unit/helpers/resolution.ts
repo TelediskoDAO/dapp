@@ -69,7 +69,7 @@ describe("Resolution helpers", () => {
       const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
       const resolutionState = getResolutionState(
         resolutionEntity,
-        +new Date(),
+        Date.now(),
         resolutionTypeInfo
       );
 

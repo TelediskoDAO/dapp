@@ -1,6 +1,6 @@
 <script type="ts">
   import CircularProgress from "@smui/circular-progress";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   import Ethereum from "../pages/connect/odoo/Ethereum.svelte";
   import { acl } from "../state/resolutions";
@@ -12,6 +12,7 @@
     timeout = setTimeout(() => {
       displayConnect = true;
     }, 3000);
+    return () => clearTimeout(timeout);
   });
 
   $: {
@@ -19,10 +20,6 @@
       clearTimeout(timeout);
     }
   }
-
-  onDestroy(() => {
-    clearTimeout(timeout);
-  });
 </script>
 
 {#if !$acl.loaded}

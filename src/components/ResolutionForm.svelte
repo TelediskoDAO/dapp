@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import Select, { Option } from "@smui/select";
   import Button, { Label, Group } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
@@ -43,6 +43,8 @@
       resolutionTypes: ResolutionTypeEntity[];
     } = await graphQLClient.request(getResolutionTypesQuery);
     resolutionTypes = resolutionsTypesData;
+
+    return resetForm;
   });
 
   $: {
@@ -60,8 +62,6 @@
       );
     }
   }
-
-  onDestroy(resetForm);
 </script>
 
 <section class="section">

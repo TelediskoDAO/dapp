@@ -2,7 +2,7 @@
   import { replace } from "svelte-spa-router";
   import isEqual from "lodash.isequal";
   import Dialog, { Title, Content, Actions } from "@smui/dialog";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import Button, { Label } from "@smui/button";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
@@ -52,6 +52,8 @@
       isNegative: resolutionData.isNegative,
       typeId: resolutionData.resolutionType.id,
     };
+
+    return resetForm;
   });
 
   $: {
@@ -71,7 +73,7 @@
 
     const shouldRedirectToView =
       (resolutionTypeInfo &&
-        getResolutionState(resolutionData, +new Date(), resolutionTypeInfo) !==
+        getResolutionState(resolutionData, Date.now(), resolutionTypeInfo) !==
           RESOLUTION_STATES.PRE_DRAFT) ||
       ($acl.loaded && !$acl.canUpdate);
 
@@ -104,8 +106,6 @@
     open = false;
     handleApprove(params.resolutionId, { $signer, $resolutionContract });
   }
-
-  onDestroy(resetForm);
 </script>
 
 <Dialog

@@ -8,7 +8,7 @@ import type {
 import { graphQLClient } from "../../net/graphQl";
 import { getResolutionManagerQuery } from "../../graphql/get-resolution-manager.query";
 
-export const currentTimestamp = writable(+new Date());
+export const currentTimestamp = writable(Date.now());
 
 export const acl: Readable<ResolutionsAcl> = derived(signer, ($signer, set) => {
   (async () => {

@@ -1,5 +1,5 @@
 <script type="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   import { currentTimestamp } from "../state/resolutions";
 
@@ -8,11 +8,9 @@
 
   onMount(() => {
     interval = setInterval(() => {
-      $currentTimestamp = +new Date();
+      $currentTimestamp = Date.now();
     }, intervalMs);
-  });
 
-  onDestroy(() => {
-    clearInterval(interval);
+    return () => clearInterval(interval);
   });
 </script>
