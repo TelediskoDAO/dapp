@@ -4,7 +4,6 @@
   import Dialog, { Title, Content, Actions } from "@smui/dialog";
   import { onDestroy, onMount } from "svelte";
   import Button, { Label } from "@smui/button";
-  import CircularProgress from "@smui/circular-progress";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
   import { resolutionContract, signer } from "../../state/eth";
@@ -21,6 +20,7 @@
   } from "../../helpers/resolutions";
   import { currentResolution, resetForm } from "../../state/resolutions/form";
   import { acl } from "../../state/resolutions";
+  import AclCheck from "../../components/AclCheck.svelte";
 
   type Params = {
     resolutionId: string;
@@ -34,9 +34,6 @@
   let disabledUpdate = true;
   let open = false;
   let loaded = false;
-
-  // TODO, should we spin a timeout here? if i.e. after 5 seconds acl is still not loaded, probably
-  // we can display a message to the user with "You should re-connect your wallet"? or we shouldn't care?
 
   onMount(async () => {
     const {
@@ -131,7 +128,7 @@
 </Dialog>
 
 {#if !loaded || !$acl.loaded}
-  <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+  <AclCheck />
 {:else}
   <ResolutionForm
     handleSave={handleUpdateResolution}

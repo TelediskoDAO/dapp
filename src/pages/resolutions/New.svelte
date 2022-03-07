@@ -1,6 +1,5 @@
 <script lang="ts">
   import { notifier } from "@beyonk/svelte-notifications";
-  import CircularProgress from "@smui/circular-progress";
   import { replace } from "svelte-spa-router";
   import { onMount } from "svelte";
 
@@ -10,6 +9,7 @@
   import { currentResolution, resetForm } from "../../state/resolutions/form";
   import { handleCreate } from "../../handlers/resolutions/create";
   import { acl } from "../../state/resolutions";
+  import AclCheck from "../../components/AclCheck.svelte";
 
   title.set("Resolutions");
 
@@ -18,9 +18,6 @@
   }
 
   onMount(resetForm);
-
-  // TODO, should we spin a timeout here? if i.e. after 5 seconds acl is still not loaded, probably
-  // we can display a message to the user with "You should re-connect your wallet"? or we shouldn't care?
 
   $: {
     if ($acl.loaded && !$acl.canCreate) {
@@ -34,7 +31,7 @@
 </script>
 
 {#if !$acl.loaded}
-  <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+  <AclCheck />
 {:else}
   <ResolutionForm handleSave={handleContractPreDraft} />
 {/if}
