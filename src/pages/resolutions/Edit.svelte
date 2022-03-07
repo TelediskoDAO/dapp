@@ -127,9 +127,9 @@
   </Actions>
 </Dialog>
 
-{#if !loaded || !$acl.loaded}
-  <AclCheck />
-{:else}
+<AclCheck />
+
+{#if loaded}
   <ResolutionForm
     handleSave={handleUpdateResolution}
     editMode

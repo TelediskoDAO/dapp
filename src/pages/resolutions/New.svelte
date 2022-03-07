@@ -30,8 +30,8 @@
   }
 </script>
 
-{#if !$acl.loaded}
-  <AclCheck />
-{:else}
+<AclCheck />
+
+{#if $acl.loaded}
   <ResolutionForm handleSave={handleContractPreDraft} />
 {/if}
