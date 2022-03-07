@@ -1,11 +1,12 @@
 import { addSeconds, format, formatRelative, isBefore } from "date-fns";
-import type { ResolutionTypeInfo } from "../types";
 import type {
   ResolutionEntity,
   ResolutionEntityEnhanced,
   ResolutionState,
   ResolutionStates,
-  ResolutionTypeEntity,
+  ResolutionTypeInfo,
+  ResolutionsAcl,
+  ResolutionVoter,
 } from "../types";
 
 export const RESOLUTION_STATES: ResolutionStates = {
@@ -18,12 +19,17 @@ export const RESOLUTION_STATES: ResolutionStates = {
   ENDED: "ended",
 };
 
-// TODO, once we will have the ACL, we will do the logic here in the function to disable or not the action button
 export const RESOLUTION_ACTIONS = {
-  [RESOLUTION_STATES.PRE_DRAFT]: () => ({ label: "Edit", disabled: false }),
+  [RESOLUTION_STATES.PRE_DRAFT]: ($acl: ResolutionsAcl) => ({
+    label: $acl.canUpdate ? "Edit or Approve" : "View",
+    disabled: false,
+  }),
   [RESOLUTION_STATES.NOTICE]: () => ({ label: "View", disabled: false }),
-  [RESOLUTION_STATES.VOTING]: () => ({
-    label: "View and vote",
+  [RESOLUTION_STATES.VOTING]: (
+    $acl: ResolutionsAcl,
+    resolutionVoters: ResolutionVoter[]
+  ) => ({
+    label: $acl.canVote(resolutionVoters) ? "View and vote" : "View",
     disabled: false,
   }),
   [RESOLUTION_STATES.ENDED]: () => ({ label: "View", disabled: false }),
@@ -85,7 +91,7 @@ export const getResolutionState = (
 };
 
 export const getEnhancedResolutionMapper =
-  ($currentTimestamp: number) =>
+  ($currentTimestamp: number, $acl: ResolutionsAcl) =>
   (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
     const resolutionTypeInfo = getResolutionTypeInfo(resolution);
     const state = getResolutionState(
@@ -106,18 +112,19 @@ export const getEnhancedResolutionMapper =
           ? getRelativeDateFromUnixTimestamp(resolution.approveTimestamp)
           : null,
       href:
-        state === RESOLUTION_STATES.PRE_DRAFT
+        state === RESOLUTION_STATES.PRE_DRAFT && $acl?.canUpdate
           ? `#/resolutions/${resolution.id}/edit`
           : `#/resolutions/${resolution.id}`,
-      action: RESOLUTION_ACTIONS[state](),
+      action: RESOLUTION_ACTIONS[state]($acl, resolution.voters),
       resolutionTypeInfo,
     };
   };
 
 export const getEnhancedResolutions = (
   resolutions: ResolutionEntity[],
-  $currentTimestamp: number
+  $currentTimestamp: number,
+  $acl: ResolutionsAcl
 ): ResolutionEntityEnhanced[] => {
-  const mapper = getEnhancedResolutionMapper($currentTimestamp);
+  const mapper = getEnhancedResolutionMapper($currentTimestamp, $acl);
   return resolutions.map(mapper);
 };

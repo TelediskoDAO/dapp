@@ -11,9 +11,16 @@ export const resolutionFragment = gql`
       ...resolutionTypeFragment
     }
     yesVotesTotal
-    approveTimestamp
     createTimestamp
     updateTimestamp
+    approveTimestamp
+    createBy
+    updateBy
+    approveBy
+    voters {
+      votingPower
+      address
+    }
   }
 
   ${resolutionTypeFragment}

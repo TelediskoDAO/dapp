@@ -6,20 +6,24 @@ import type {
 
 import resolutionTypes from "./resolutionTypes.json";
 
-const defaultResolutionType: ResolutionTypeEntity = resolutionTypes.find(
-  (res) => res.id === "4"
-);
+const defaultResolutionType: (id: string) => ResolutionTypeEntity = (
+  id: string
+) => resolutionTypes.find((res) => res.id === id);
 
 const defaultEntity: ResolutionEntity = {
   id: "42",
   title: "A new hope",
   content: "Another resolution",
   isNegative: false,
-  resolutionType: defaultResolutionType,
+  resolutionType: defaultResolutionType("4"),
   yesVotesTotal: "0",
   approveTimestamp: "0",
   createTimestamp: "1645808255",
   updateTimestamp: "0",
+  voters: [],
+  createBy: "42",
+  updateBy: "42",
+  approveBy: "42",
 };
 
 const enhancedEntity: ResolutionEntityEnhanced = {
@@ -27,7 +31,7 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   title: "A new hope",
   content: "Another resolution",
   isNegative: false,
-  resolutionType: defaultResolutionType,
+  resolutionType: defaultResolutionType("4"),
   yesVotesTotal: "0",
   approveTimestamp: "0",
   createTimestamp: "1645808255",
@@ -37,13 +41,17 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   updatedAt: null,
   approvedAt: null,
   href: "#/resolutions/42/edit",
-  action: { label: "Edit", disabled: false },
+  action: { label: "Edit or Approve", disabled: false },
   resolutionTypeInfo: {
     noticePeriodEnds: null,
     noticePeriodEndsAt: null,
     votingEnds: null,
     votingEndsAt: null,
   },
+  voters: [],
+  createBy: "42",
+  updateBy: "42",
+  approveBy: "42",
 };
 
 export const createResolutionEntity = (

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import Select, { Option } from "@smui/select";
   import Button, { Label, Group } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
@@ -18,6 +18,7 @@
   import type { ResolutionTypeEntity } from "../types";
   import { graphQLClient } from "../net/graphQl";
   import { getResolutionTypesQuery } from "../graphql/get-resolution-types.query";
+  import { acl } from "../state/resolutions";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -42,6 +43,8 @@
       resolutionTypes: ResolutionTypeEntity[];
     } = await graphQLClient.request(getResolutionTypesQuery);
     resolutionTypes = resolutionsTypesData;
+
+    return resetForm;
   });
 
   $: {
@@ -59,8 +62,6 @@
       );
     }
   }
-
-  onDestroy(resetForm);
 </script>
 
 <section class="section">
@@ -144,7 +145,7 @@
             {#if selectedType?.canBeNegative}
               <FormField>
                 <Checkbox bind:checked={$currentResolution.isNegative} />
-                <span slot="label"> Negative resolution. </span>
+                <span slot="label">Negative resolution.</span>
               </FormField>
             {/if}
           </Cell>
@@ -177,22 +178,25 @@
               >
             {/if}
           </Wrapper>
-          <Wrapper>
-            <span tabindex="0">
-              <Button
-                variant="raised"
-                disabled={disabled || !disabledUpdate}
-                on:click={handleApprove}
-              >
-                <Label>Approve</Label>
-              </Button>
-            </span>
-            {#if disabled || !disabledUpdate}
-              <Tooltip unbounded
-                >It looks you need to update the resolution before approving it</Tooltip
-              >
-            {/if}
-          </Wrapper>
+          {#if $acl.canApprove}
+            <Wrapper>
+              <span tabindex="0">
+                <Button
+                  variant="raised"
+                  disabled={disabled || !disabledUpdate}
+                  on:click={handleApprove}
+                >
+                  <Label>Approve</Label>
+                </Button>
+              </span>
+              {#if disabled || !disabledUpdate}
+                <Tooltip unbounded
+                  >It looks you need to update the resolution before approving
+                  it</Tooltip
+                >
+              {/if}
+            </Wrapper>
+          {/if}
         </Group>
       {:else}
         <Button variant="raised" {disabled} on:click={handleSave}>

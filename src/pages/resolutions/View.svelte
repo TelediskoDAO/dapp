@@ -7,7 +7,7 @@
   import { graphQLClient } from "../../net/graphQl";
   import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
   import { getEnhancedResolutionMapper } from "../../helpers/resolutions";
-  import { currentTimestamp } from "../../state/resolutions";
+  import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
 
   type Params = {
@@ -33,14 +33,16 @@
   });
 
   $: {
-    if (resolutionData) {
-      resolutionDataEnhanced =
-        getEnhancedResolutionMapper($currentTimestamp)(resolutionData);
+    if (resolutionData && $acl) {
+      resolutionDataEnhanced = getEnhancedResolutionMapper(
+        $currentTimestamp,
+        $acl
+      )(resolutionData);
     }
   }
 </script>
 
-{#if !resolutionData}
+{#if !resolutionDataEnhanced}
   <CircularProgress style="height: 32px; width: 32px;" indeterminate />
 {:else}
   <CurrentTimestamp />

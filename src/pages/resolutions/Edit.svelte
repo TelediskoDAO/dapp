@@ -2,9 +2,8 @@
   import { replace } from "svelte-spa-router";
   import isEqual from "lodash.isequal";
   import Dialog, { Title, Content, Actions } from "@smui/dialog";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import Button, { Label } from "@smui/button";
-  import CircularProgress from "@smui/circular-progress";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
   import { resolutionContract, signer } from "../../state/eth";
@@ -20,6 +19,8 @@
     RESOLUTION_STATES,
   } from "../../helpers/resolutions";
   import { currentResolution, resetForm } from "../../state/resolutions/form";
+  import { acl } from "../../state/resolutions";
+  import AclCheck from "../../components/AclCheck.svelte";
 
   type Params = {
     resolutionId: string;
@@ -51,6 +52,8 @@
       isNegative: resolutionData.isNegative,
       typeId: resolutionData.resolutionType.id,
     };
+
+    return resetForm;
   });
 
   $: {
@@ -68,11 +71,13 @@
       ? getResolutionTypeInfo(resolutionData)
       : null;
 
-    if (
-      resolutionTypeInfo &&
-      getResolutionState(resolutionData, +new Date(), resolutionTypeInfo) !==
-        RESOLUTION_STATES.PRE_DRAFT
-    ) {
+    const shouldRedirectToView =
+      (resolutionTypeInfo &&
+        getResolutionState(resolutionData, Date.now(), resolutionTypeInfo) !==
+          RESOLUTION_STATES.PRE_DRAFT) ||
+      ($acl.loaded && !$acl.canUpdate);
+
+    if (shouldRedirectToView) {
       replace(`/resolutions/${params.resolutionId}`);
     }
 
@@ -101,8 +106,6 @@
     open = false;
     handleApprove(params.resolutionId, { $signer, $resolutionContract });
   }
-
-  onDestroy(resetForm);
 </script>
 
 <Dialog
@@ -124,9 +127,9 @@
   </Actions>
 </Dialog>
 
-{#if !loaded}
-  <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-{:else}
+<AclCheck />
+
+{#if loaded && $acl.loaded}
   <ResolutionForm
     handleSave={handleUpdateResolution}
     editMode

@@ -5,6 +5,7 @@ import {
   createEnhancedResolutionEntity,
 } from "../mocks/resolutionEntityFactory";
 import { getEnhancedResolutionMapper } from "../../../src/helpers/resolutions";
+import { createResolutionsAcl } from "../mocks/resolutionsAclFactory";
 import {
   RESOLUTION_STATES,
   getResolutionState,
@@ -14,7 +15,6 @@ import {
   getRelativeDateFromUnixTimestamp,
   getResolutionTypeInfo,
 } from "../../../src/helpers/resolutions";
-import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
 
 const FEB_25_2022_UNIX_TS = "1645808255"; // Fri Feb 25 2022 17:57:35
 const FEB_26_2022_TS = 1645915897665; // Sat Feb 26 2022 23:51:37 GMT+0100 (Central European Standard Time)
@@ -69,7 +69,7 @@ describe("Resolution helpers", () => {
       const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
       const resolutionState = getResolutionState(
         resolutionEntity,
-        +new Date(),
+        Date.now(),
         resolutionTypeInfo
       );
 
@@ -122,15 +122,58 @@ describe("Resolution helpers", () => {
   describe("getEnhancedResolutionMapper", () => {
     it("should correctly enhance a resolution entity coming from subgraph", () => {
       const resolutionEntity = createResolutionEntity();
+      const acl = createResolutionsAcl();
 
       const mapper = getEnhancedResolutionMapper(
-        Number(FEB_25_2022_UNIX_TS) * 1000
+        Number(FEB_25_2022_UNIX_TS) * 1000,
+        acl
       );
       const enhancedResolution = mapper(resolutionEntity);
 
       const exptectedOutput = createEnhancedResolutionEntity();
 
       expect(enhancedResolution).to.deep.equal(exptectedOutput);
+    });
+
+    describe("ACL", () => {
+      it("should correctly map a resolution for a FOUNDER", () => {
+        const resolutionEntity = createResolutionEntity();
+        const acl = createResolutionsAcl();
+
+        const mapper = getEnhancedResolutionMapper(
+          Number(FEB_25_2022_UNIX_TS) * 1000,
+          acl
+        );
+        const enhancedResolution = mapper(resolutionEntity);
+
+        const exptectedOutput = createEnhancedResolutionEntity();
+
+        expect(enhancedResolution).to.deep.equal(exptectedOutput);
+      });
+
+      it("should correctly map a resolution for a CONTRIBUTOR", () => {
+        const resolutionEntity = createResolutionEntity();
+        const acl = createResolutionsAcl({
+          canApprove: false,
+          canUpdate: false,
+        });
+
+        const mapper = getEnhancedResolutionMapper(
+          Number(FEB_25_2022_UNIX_TS) * 1000,
+          acl
+        );
+        const enhancedResolution = mapper(resolutionEntity);
+
+        const exptectedOutput = createEnhancedResolutionEntity({
+          href: "#/resolutions/42",
+          action: {
+            label: "View",
+            disabled: false,
+          },
+        });
+
+        expect(enhancedResolution).to.deep.equal(exptectedOutput);
+      });
     });
   });
 });

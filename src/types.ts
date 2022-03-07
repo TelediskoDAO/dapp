@@ -1,3 +1,17 @@
+export type ResolutionVoter = {
+  id: string;
+  votingPower: number;
+  address: string;
+};
+
+export type ResolutionsAcl = {
+  canCreate: boolean;
+  canUpdate: boolean;
+  canApprove: boolean;
+  canVote: (voters: ResolutionVoter[]) => boolean;
+  loaded: boolean;
+};
+
 export type ResolutionTypeEntity = {
   id: string;
   name: string;
@@ -7,6 +21,15 @@ export type ResolutionTypeEntity = {
   canBeNegative: boolean;
 };
 
+export type ResolutionManagerEntity = {
+  id: string;
+  contributorsAddresses: string[];
+  foundersAddresses: string[];
+  shareholdersAddresses: string[];
+  investorsAddresses: string[];
+  resolutionTypes: ResolutionTypeEntity[];
+};
+
 export type ResolutionEntity = {
   id: string;
   title: string;
@@ -14,9 +37,13 @@ export type ResolutionEntity = {
   isNegative: boolean;
   resolutionType: ResolutionTypeEntity;
   yesVotesTotal: string;
-  approveTimestamp: string;
   createTimestamp: string;
   updateTimestamp: string;
+  approveTimestamp: string;
+  createBy: string;
+  updateBy: string;
+  approveBy: string;
+  voters: ResolutionVoter[];
 };
 
 export type ResolutionAction = {
