@@ -117,6 +117,16 @@ export const getEnhancedResolutionMapper =
           : `#/resolutions/${resolution.id}`,
       action: RESOLUTION_ACTIONS[state]($acl, resolution.voters),
       resolutionTypeInfo,
+      votingStatus: {
+        votersHaveNotVoted: resolution.voters.filter((v) => !v.hasVoted),
+        votersHaveVoted: resolution.voters.filter((v) => v.hasVoted),
+        votersHaveVotedYes: resolution.voters.filter(
+          (v) => v.hasVoted && v.hasVotedYes
+        ),
+        votersHaveVotedNo: resolution.voters.filter(
+          (v) => v.hasVoted && !v.hasVotedYes
+        ),
+      },
     };
   };
 

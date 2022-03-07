@@ -25,9 +25,33 @@
       Voting ends: {resolution.resolutionTypeInfo.votingEndsAt}
     </div>
   {/if}
+  {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
+    <div>
+      <div>
+        Total voters: {resolution.votingStatus.votersHaveVoted.length} out of {resolution
+          .voters.length}
+      </div>
+      <div>
+        Total voters Yes: {resolution.votingStatus.votersHaveVotedYes.length}
+      </div>
+      <div>
+        Total voters No: {resolution.votingStatus.votersHaveVotedNo.length}
+      </div>
+      <ul>
+        {#each resolution.voters.filter((v) => v.hasVoted) as resolutionVoter}
+          <li>
+            Voter {resolutionVoter.address} has voted {resolutionVoter.hasVotedYes
+              ? "Yes"
+              : "No"} with voting power {resolutionVoter.votingPower}
+          </li>
+        {/each}
+      </ul>
+      <p>Quorum: {resolution.hasQuorum ? "Yes" : "No"}</p>
+    </div>
+  {/if}
   {#if resolution.state === RESOLUTION_STATES.ENDED}
     <div>
-      Resolution closed on: {resolution.resolutionTypeInfo.votingEnds}
+      Resolution closed on: {resolution.resolutionTypeInfo.votingEndsAt}
     </div>
   {/if}
 </div>
