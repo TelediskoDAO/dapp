@@ -129,7 +129,7 @@
 
 <AclCheck />
 
-{#if loaded}
+{#if loaded && $acl.loaded}
   <ResolutionForm
     handleSave={handleUpdateResolution}
     editMode
