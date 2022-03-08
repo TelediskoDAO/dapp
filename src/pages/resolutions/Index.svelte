@@ -4,9 +4,10 @@
   import IconButton, { Icon } from "@smui/icon-button";
   import { Svg } from "@smui/common/elements";
   import Tooltip, { Wrapper } from "@smui/tooltip";
+  import { onMount } from "svelte";
+  import { fade, fly } from "svelte/transition";
 
   import { title } from "../../state/runtime";
-  import { onMount } from "svelte";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
@@ -25,7 +26,7 @@
   let ready = false;
   let empty = false;
   let stateFilter: ResolutionState | "all" = "all";
-  let possibleFilters: ResolutionState[] = [];
+  let possibleFilters: Record<string, number> = { all: 0 };
 
   onMount(async () => {
     const {
@@ -48,11 +49,10 @@
         $acl
       );
       possibleFilters = resolutions.reduce((filters, resolution) => {
-        if (!filters.includes(resolution.state)) {
-          return [...filters, resolution.state];
-        }
+        const filterKey = resolution.state;
+        filters[filterKey] = filters[filterKey] + 1 || 1;
         return filters;
-      }, []);
+      }, {});
       ready = true;
     }
   }
@@ -68,12 +68,14 @@
         <Label>Create resolution</Label>
       </Button>
     {/if}
-    {#if ready && possibleFilters.length > 1}
+    {#if ready && Object.keys(possibleFilters).length > 1}
       <div>
         <Select bind:value={stateFilter} label="Filter by state">
-          <Option value={"all"}>all</Option>
-          {#each possibleFilters as resolutionState}
-            <Option value={resolutionState}>{resolutionState}</Option>
+          <Option value={"all"}>all ({resolutions.length})</Option>
+          {#each Object.keys(possibleFilters) as resolutionState}
+            <Option value={resolutionState}>
+              {resolutionState} ({possibleFilters[resolutionState]})</Option
+            >
           {/each}
         </Select>
       </div>
@@ -103,6 +105,7 @@
                 {#if resolution.state === RESOLUTION_STATES.NOTICE}
                   <small class="resolution-detail-sm"
                     ><span>Voting starts on</span>
+                    <!-- TODO if voting starts within 10 mins, show a counter (small component for it) -->
                     {resolution.resolutionTypeInfo.noticePeriodEndsAt}</small
                   >
                 {/if}
