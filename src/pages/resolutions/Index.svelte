@@ -1,23 +1,31 @@
 <script lang="ts">
-  import Card, { Content, Actions } from "@smui/card";
   import Button, { Label } from "@smui/button";
-  import LayoutGrid, { Cell } from "@smui/layout-grid";
-  import CircularProgress from "@smui/circular-progress";
+  import DataTable, { Body, Cell, Row } from "@smui/data-table";
+  import IconButton, { Icon } from "@smui/icon-button";
+  import { Svg } from "@smui/common/elements";
+  import Tooltip, { Wrapper } from "@smui/tooltip";
 
   import { title } from "../../state/runtime";
   import { onMount } from "svelte";
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionsQuery } from "../../graphql/get-resolutions.query";
 
-  import type { ResolutionEntityEnhanced } from "../../types";
-  import { getEnhancedResolutions } from "../../helpers/resolutions";
+  import type { ResolutionEntityEnhanced, ResolutionState } from "../../types";
+  import {
+    getEnhancedResolutions,
+    RESOLUTION_STATES,
+  } from "../../helpers/resolutions";
   import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
-  import ResolutionDetails from "../../components/ResolutionDetails.svelte";
+  import ResolutionStateTag from "../../components/ResolutionStateTag.svelte";
+  import Skeleton from "../../components/Skeleton.svelte";
+  import Select, { Option } from "@smui/select";
 
-  let resolutions: ResolutionEntityEnhanced[];
+  let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
   let empty = false;
+  let stateFilter: ResolutionState | "all" = "all";
+  let possibleFilters: ResolutionState[] = [];
 
   onMount(async () => {
     const {
@@ -26,17 +34,26 @@
       resolutions: ResolutionEntityEnhanced[];
     } = await graphQLClient.request(getResolutionsQuery);
     resolutions = resolutionsData;
+    empty = resolutions.length === 0;
+    if (empty) {
+      ready = true;
+    }
   });
 
   $: {
-    if (resolutions && $currentTimestamp && $acl) {
+    if (resolutions.length > 0 && $currentTimestamp && $acl) {
       resolutions = getEnhancedResolutions(
         resolutions,
         $currentTimestamp,
         $acl
       );
+      possibleFilters = resolutions.reduce((filters, resolution) => {
+        if (!filters.includes(resolution.state)) {
+          return [...filters, resolution.state];
+        }
+        return filters;
+      }, []);
       ready = true;
-      empty = resolutions.length === 0;
     }
   }
 
@@ -46,49 +63,121 @@
 <section>
   <CurrentTimestamp intervalMs={3000} />
   <div class="header">
-    <h1>Resolutions</h1>
     {#if !empty && ready && $acl?.canCreate}
-      <Button variant="raised" href="#/resolutions/new">
+      <Button variant="outlined" href="#/resolutions/new">
         <Label>Create resolution</Label>
       </Button>
     {/if}
+    {#if ready && possibleFilters.length > 1}
+      <div>
+        <Select bind:value={stateFilter} label="Filter by state">
+          <Option value={"all"}>all</Option>
+          {#each possibleFilters as resolutionState}
+            <Option value={resolutionState}>{resolutionState}</Option>
+          {/each}
+        </Select>
+      </div>
+    {/if}
   </div>
   {#if !ready}
-    <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-  {/if}
-  {#if !empty && ready}
-    <LayoutGrid>
-      {#each resolutions as resolution}
-        <Cell span={12}>
-          <Card>
-            <Content>
-              <ResolutionDetails {resolution} />
-            </Content>
-            <Actions>
-              <Button
-                variant="raised"
-                href={resolution.href}
-                disabled={resolution.action.disabled}
-              >
-                <Label>{resolution.action.label}</Label>
-              </Button>
-            </Actions>
-          </Card>
-        </Cell>
-      {/each}
-    </LayoutGrid>
+    <Skeleton height={300} style="margin-top: 42px">
+      <rect width="100%" height="67" x="0" y="0" rx="6px" ry="6px" />
+      <rect width="100%" height="67" x="0" y="69" rx="6px" ry="6px" />
+      <rect width="100%" height="67" x="0" y="138" rx="6px" ry="6px" />
+    </Skeleton>
+  {:else}
+    <DataTable table$aria-label="Resolutions list" style="width: 100%;">
+      <Body>
+        {#each resolutions.filter((res) => stateFilter === "all" || res.state === stateFilter) as resolution}
+          <Row>
+            <Cell width="80%">
+              <div class="resolution-info">
+                <h4 class="resolution-title">{resolution.title}</h4>
+                {#if resolution.state === RESOLUTION_STATES.PRE_DRAFT}
+                  <small class="resolution-detail-sm"
+                    ><span>Created on</span>
+                    {resolution.createdAt} <b>by</b>
+                    {resolution.createBy}</small
+                  >
+                {/if}
+                {#if resolution.state === RESOLUTION_STATES.NOTICE}
+                  <small class="resolution-detail-sm"
+                    ><span>Voting starts on</span>
+                    {resolution.resolutionTypeInfo.noticePeriodEndsAt}</small
+                  >
+                {/if}
+                {#if resolution.state === RESOLUTION_STATES.VOTING}
+                  <small class="resolution-detail-sm"
+                    ><span>Voting ends on</span>
+                    {resolution.resolutionTypeInfo.votingEndsAt}</small
+                  >
+                {/if}
+                {#if resolution.state === RESOLUTION_STATES.ENDED}
+                  <small class="resolution-detail-sm"
+                    ><span
+                      >{resolution.hasQuorum
+                        ? "Has reached quorum"
+                        : "Has not reached quorum"}</span
+                    >
+                    and has ended on
+                    {resolution.resolutionTypeInfo.votingEndsAt}.
+                  </small>
+                {/if}
+              </div>
+            </Cell>
+            <Cell><ResolutionStateTag label={resolution.state} /></Cell>
+            <Cell>
+              <Wrapper>
+                <IconButton
+                  class="material-icons"
+                  size="button"
+                  href={resolution.href}
+                >
+                  <Icon component={Svg} viewBox="0 0 24 24">
+                    <path fill="#777" d={resolution.action.icon} />
+                  </Icon>
+                </IconButton>
+                <Tooltip yPos="above">{resolution.action.label}</Tooltip>
+              </Wrapper>
+            </Cell>
+          </Row>
+        {/each}
+      </Body>
+    </DataTable>
   {/if}
   {#if empty && ready && $acl?.canCreate}
-    <Button variant="raised" href="#/resolutions/new">
+    <Button variant="outlined" href="#/resolutions/new">
       <Label>Create resolution</Label>
     </Button>
   {/if}
 </section>
 
 <style>
+  .resolution-info {
+    padding: 1rem 0;
+  }
+  .resolution-title {
+    margin: 0;
+    padding: 0;
+  }
+  .resolution-detail-sm {
+    display: block;
+    color: var(--color-gray-7);
+    line-height: 15px;
+  }
+
+  .resolution-detail-sm > span {
+    font-weight: bold;
+  }
+
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-bottom: 1rem;
+  }
+
+  .header > div {
+    margin-left: auto;
   }
 </style>

@@ -52,6 +52,7 @@ export type ResolutionEntity = {
 export type ResolutionAction = {
   label: string;
   disabled: boolean;
+  icon: string;
 };
 
 export type ResolutionTypeInfo = {

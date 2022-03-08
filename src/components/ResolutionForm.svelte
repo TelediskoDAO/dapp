@@ -66,7 +66,6 @@
     if (validTypeId && prevSelectedTypeId !== $currentResolution.typeId) {
       $currentResolution.isNegative = false;
     }
-    console.log("$currentResolution: ", $currentResolution);
     prevSelectedTypeId = $currentResolution.typeId;
   }
 </script>

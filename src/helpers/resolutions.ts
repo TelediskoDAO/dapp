@@ -8,6 +8,7 @@ import type {
   ResolutionsAcl,
   ResolutionVoter,
 } from "../types";
+import { mdiEye, mdiBookEditOutline, mdiVoteOutline } from "@mdi/js";
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -23,16 +24,26 @@ export const RESOLUTION_ACTIONS = {
   [RESOLUTION_STATES.PRE_DRAFT]: ($acl: ResolutionsAcl) => ({
     label: $acl.canUpdate ? "Edit or Approve" : "View",
     disabled: false,
+    icon: $acl.canUpdate ? mdiBookEditOutline : mdiEye,
   }),
-  [RESOLUTION_STATES.NOTICE]: () => ({ label: "View", disabled: false }),
+  [RESOLUTION_STATES.NOTICE]: () => ({
+    label: "View",
+    disabled: false,
+    icon: mdiEye,
+  }),
   [RESOLUTION_STATES.VOTING]: (
     $acl: ResolutionsAcl,
     resolutionVoters: ResolutionVoter[]
   ) => ({
     label: $acl.canVote(resolutionVoters) ? "View and vote" : "View",
     disabled: false,
+    icon: $acl.canVote(resolutionVoters) ? mdiVoteOutline : mdiEye,
   }),
-  [RESOLUTION_STATES.ENDED]: () => ({ label: "View", disabled: false }),
+  [RESOLUTION_STATES.ENDED]: () => ({
+    label: "View",
+    disabled: false,
+    icon: mdiEye,
+  }),
 };
 
 export const getDateFromUnixTimestamp = (unixTs: string) =>
