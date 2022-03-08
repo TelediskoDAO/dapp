@@ -35,6 +35,7 @@
   let disabled = false;
   let resolutionTypes: ResolutionTypeEntity[];
   let selectedType: ResolutionTypeEntity = null;
+  let prevSelectedTypeId;
 
   onMount(async () => {
     const {
@@ -48,10 +49,11 @@
   });
 
   $: {
+    const validTypeId = typeof $currentResolution.typeId === "string";
     const checkDisabledFields = [
       $currentResolution.title?.trim(),
       $currentResolution.content?.trim(),
-      typeof $currentResolution.typeId === "string",
+      validTypeId,
     ];
     disabled =
       checkDisabledFields.filter(Boolean).length < checkDisabledFields.length;
@@ -61,6 +63,11 @@
         (resolutionType) => resolutionType.id === $currentResolution.typeId
       );
     }
+    if (validTypeId && prevSelectedTypeId !== $currentResolution.typeId) {
+      $currentResolution.isNegative = false;
+    }
+    console.log("$currentResolution: ", $currentResolution);
+    prevSelectedTypeId = $currentResolution.typeId;
   }
 </script>
 
@@ -142,12 +149,17 @@
                 <Option value={resolutionType.id}>{resolutionType.name}</Option>
               {/each}
             </Select>
-            {#if selectedType?.canBeNegative}
-              <FormField>
-                <Checkbox bind:checked={$currentResolution.isNegative} />
-                <span slot="label">Negative resolution.</span>
-              </FormField>
-            {/if}
+            <FormField
+              style={!selectedType?.canBeNegative
+                ? "display: none"
+                : "display: flex"}
+            >
+              <Checkbox
+                bind:checked={$currentResolution.isNegative}
+                disabled={!selectedType?.canBeNegative}
+              />
+              <span slot="label">Negative resolution.</span>
+            </FormField>
           </Cell>
         </InnerGrid>
       </Cell>

@@ -38,6 +38,7 @@ export async function handleApprove(
     await wait(WAIT_AFTER_APPROVED);
     push(`/resolutions/${resolutionId}`);
   } catch (err) {
+    console.log("err: ", err);
     notifier.danger(err.message, 7000);
   }
 
