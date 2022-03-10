@@ -20,6 +20,7 @@
   import ResolutionStateTag from "../../components/ResolutionStateTag.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
   import Select, { Option } from "@smui/select";
+  import Countdown from "../../components/Countdown.svelte";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
@@ -103,14 +104,19 @@
                 {/if}
                 {#if resolution.state === RESOLUTION_STATES.NOTICE}
                   <small class="resolution-detail-sm"
-                    ><span>Voting starts on</span>
-                    {resolution.resolutionTypeInfo.noticePeriodEndsAt}</small
+                    ><Countdown
+                      targetDate={resolution.resolutionTypeInfo
+                        .noticePeriodEnds}
+                      prefixLabel="Voting starts"
+                    /></small
                   >
                 {/if}
                 {#if resolution.state === RESOLUTION_STATES.VOTING}
                   <small class="resolution-detail-sm"
-                    ><span>Voting ends on</span>
-                    {resolution.resolutionTypeInfo.votingEndsAt}</small
+                    ><Countdown
+                      targetDate={resolution.resolutionTypeInfo.votingEnds}
+                      prefixLabel="Voting ends"
+                    /></small
                   >
                 {/if}
                 {#if resolution.state === RESOLUTION_STATES.ENDED}
@@ -121,7 +127,7 @@
                         : "Has not reached quorum"}</span
                     >
                     and has ended on
-                    {resolution.resolutionTypeInfo.votingEndsAt}.
+                    {resolution.resolutionTypeInfo.votingEndsAt}
                   </small>
                 {/if}
               </div>
