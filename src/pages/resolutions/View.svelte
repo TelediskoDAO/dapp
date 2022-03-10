@@ -42,9 +42,11 @@
   }
 </script>
 
-{#if !resolutionDataEnhanced}
-  <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-{:else}
-  <CurrentTimestamp />
-  <ResolutionView resolution={resolutionDataEnhanced} />
-{/if}
+<section>
+  {#if !resolutionDataEnhanced}
+    <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+  {:else}
+    <CurrentTimestamp />
+    <ResolutionView resolution={resolutionDataEnhanced} />
+  {/if}
+</section>

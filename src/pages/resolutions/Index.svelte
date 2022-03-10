@@ -5,7 +5,6 @@
   import { Svg } from "@smui/common/elements";
   import Tooltip, { Wrapper } from "@smui/tooltip";
   import { onMount } from "svelte";
-  import { fade, fly } from "svelte/transition";
 
   import { title } from "../../state/runtime";
   import { graphQLClient } from "../../net/graphQl";
@@ -105,7 +104,6 @@
                 {#if resolution.state === RESOLUTION_STATES.NOTICE}
                   <small class="resolution-detail-sm"
                     ><span>Voting starts on</span>
-                    <!-- TODO if voting starts within 10 mins, show a counter (small component for it) -->
                     {resolution.resolutionTypeInfo.noticePeriodEndsAt}</small
                   >
                 {/if}
@@ -128,6 +126,11 @@
                 {/if}
               </div>
             </Cell>
+            <Cell
+              ><span class="resolution-type"
+                ><small>{resolution.resolutionType.name}</small></span
+              ></Cell
+            >
             <Cell><ResolutionStateTag label={resolution.state} /></Cell>
             <Cell>
               <Wrapper>
@@ -162,6 +165,9 @@
   .resolution-title {
     margin: 0;
     padding: 0;
+  }
+  .resolution-type {
+    color: var(--color-gray-7);
   }
   .resolution-detail-sm {
     display: block;
