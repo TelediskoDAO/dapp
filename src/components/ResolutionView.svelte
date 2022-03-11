@@ -143,7 +143,7 @@
       </div>
       {#if resolution.state === RESOLUTION_STATES.VOTING}
         <hr />
-        {#if !$acl.canVote(resolution.voters) && !isPrint}
+        {#if $acl.canVote(resolution.voters) && !isPrint}
           <VotingWidget resolutionId={resolution.id} {signerVoted} />
         {/if}
         {#if !$acl.canVote(resolution.voters) && !isPrint}
