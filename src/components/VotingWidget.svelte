@@ -68,9 +68,6 @@
   </FormField>
   {#if $votingState.loading || $votingState.awaitingConfirmation}
     <div class="progress">
-      {#if $votingState.loading}
-        <Alert message="Awaiting wallet confirmation" />
-      {/if}
       {#if $votingState.awaitingConfirmation}
         <Alert message="Awaiting for the transaction to be put on a block" />
       {/if}

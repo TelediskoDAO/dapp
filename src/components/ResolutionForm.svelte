@@ -139,9 +139,6 @@
     <Cell span={6}>
       {#if $formState.loading || $formState.awaitingConfirmation}
         <div class="progress">
-          {#if $formState.loading}
-            <Alert message="Awaiting wallet confirmation" />
-          {/if}
           {#if $formState.awaitingConfirmation}
             <Alert
               message="Awaiting for the transaction to be put on a block"

@@ -38,7 +38,7 @@ export async function handleApprove(
     await tx.wait();
     clearTimeout(timeout);
     formState.set({
-      loading: false,
+      loading: true,
       awaitingConfirmation: false,
     });
     notifier.success("Resolution approved!", WAIT_AFTER_APPROVED);
