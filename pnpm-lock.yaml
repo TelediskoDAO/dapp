@@ -24,6 +24,7 @@ specifiers:
   '@smui/linear-progress': ^6.0.0-beta.15
   '@smui/paper': ^6.0.0-beta.13
   '@smui/select': ^6.0.0-beta.13
+  '@smui/switch': ^6.0.0-beta.15
   '@smui/textfield': ^6.0.0-beta.13
   '@smui/tooltip': ^6.0.0-beta.14
   '@tsconfig/svelte': ^2.0.0
@@ -104,6 +105,7 @@ devDependencies:
   '@smui/linear-progress': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
   '@smui/paper': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/select': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+  '@smui/switch': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
   '@smui/textfield': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/tooltip': 6.0.0-beta.14_svelte@3.46.4+typescript@4.5.5
   '@tsconfig/svelte': 2.0.1
@@ -929,7 +931,6 @@ packages:
       '@material/theme': 13.0.0
       '@material/tokens': 13.0.0
       tslib: 2.3.1
-    dev: false
 
   /@material/tab-bar/13.0.0:
     resolution: {integrity: sha512-GLODDvwKiN867weT+WiSR/4Oum2hw0Ipl1vcJxtZeE6C3PmGWBE316j8a5DLYvf9bjIPLYLNLUzLU3QnJB6T5w==}
@@ -1689,19 +1690,18 @@ packages:
       - typescript
     dev: false
 
-  /@smui/switch/6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5:
-    resolution: {integrity: sha512-jdnvbZrnRkEhFG7SDsstGQXUzpIDxeeMGQmYSgLp/wVXD1OED7TPvCUn5G/5zWt+Y4gc9GDhqZUugzcj3JPq1g==}
+  /@smui/switch/6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5:
+    resolution: {integrity: sha512-Vwr1ZY3YXFVrBLSxgr8ryjxDG/FVqTMWRYzKheYjQRfUW+WHS+WSHMRFBgfrNM+vqANWp3ZocJjabVv4w4of9Q==}
     dependencies:
       '@material/feature-targeting': 13.0.0
       '@material/switch': 13.0.0
       '@material/theme': 13.0.0
       '@smui/common': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
-      '@smui/ripple': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+      '@smui/ripple': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
       svelte2tsx: 0.4.14_svelte@3.46.4+typescript@4.5.5
     transitivePeerDependencies:
       - svelte
       - typescript
-    dev: false
 
   /@smui/tab-bar/6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5:
     resolution: {integrity: sha512-ie0dp256hpOtbo2GjFbZ7bcf1WGkBTKZMNqlDn6l7NdWXzcTsCQdQumXdL0+VrHcnBKepuR9T2zQE/j+qLxyWw==}
@@ -3584,7 +3584,7 @@ packages:
       '@smui/select': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/slider': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/snackbar': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
-      '@smui/switch': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+      '@smui/switch': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
       '@smui/tab': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/tab-bar': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/tab-indicator': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5

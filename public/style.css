@@ -49,6 +49,10 @@
   --rust: #bb3e03ff;
   --rufous: #ae2012ff;
   --ruby-red: #9b2226ff;
+
+  /* MDC overrides */
+  --mdc-theme-primary: #353535;
+  --mdc-typography-subtitle2-font-weight: 700;
 }
 
 /* # Basic */
@@ -361,4 +365,10 @@ label[for="sidebar--toggle"] {
   color: white;
   padding: var(--size-xs);
   font-weight: bold;
+}
+
+/* MDC wrong styles overrides (it seems they don't use var() everywhere) */
+
+.mdc-floating-label {
+  color: var(--mdc-theme-primary) !important;
 }

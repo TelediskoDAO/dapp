@@ -26,12 +26,19 @@ export async function handleApprove(
   try {
     const tx = await $resolutionContract.approveResolution(resolutionId);
     formState.set({
-      loading: true,
+      loading: false,
       awaitingConfirmation: true,
     });
+    const timeout = setTimeout(() => {
+      notifier.danger(
+        "It looks there's some congestion in the network, please try again later!",
+        5000
+      );
+    }, 20000);
     await tx.wait();
+    clearTimeout(timeout);
     formState.set({
-      loading: true,
+      loading: false,
       awaitingConfirmation: false,
     });
     notifier.success("Resolution approved!", WAIT_AFTER_APPROVED);

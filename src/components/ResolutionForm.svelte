@@ -19,6 +19,7 @@
   import { graphQLClient } from "../net/graphQl";
   import { getResolutionTypesQuery } from "../graphql/get-resolution-types.query";
   import { acl } from "../state/resolutions";
+  import Alert from "./Alert.svelte";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -71,34 +72,6 @@
 </script>
 
 <section class="section">
-  {#if $formState.loading}
-    <div class="progress">
-      {#if $formState.awaitingConfirmation}
-        Awaiting for the transaction to be put on a block... hold tight!
-        <div style="width: 200px; margin-left: 16px;">
-          <div
-            class="tenor-gif-embed"
-            data-postid="10743923"
-            data-share-method="host"
-            data-aspect-ratio="1.15741"
-            data-width="100%"
-          >
-            <a
-              href="https://tenor.com/view/ethereum-eth-homer-simpson-cryptocurrency-altcoins-gif-10743923"
-              >Ethereum Homer Simpson GIF</a
-            >from
-            <a href="https://tenor.com/search/ethereum-gifs">Ethereum GIFs</a>
-          </div>
-          <script
-            type="text/javascript"
-            async
-            src="https://tenor.com/embed.js"></script>
-        </div>
-      {:else}
-        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-      {/if}
-    </div>
-  {/if}
   <LayoutGrid>
     <Cell span={12}>
       <h1>
@@ -163,54 +136,56 @@
         </InnerGrid>
       </Cell>
     {/if}
-    <Cell span={3}>
-      {#if editMode}
-        <Group variant="raised">
-          <Button
-            variant="raised"
-            disabled={disabled || disabledUpdate}
-            on:click={handleSave}
-          >
+    <Cell span={6}>
+      {#if $formState.loading || $formState.awaitingConfirmation}
+        <div class="progress">
+          {#if $formState.loading}
+            <Alert message="Awaiting wallet confirmation" />
+          {/if}
+          {#if $formState.awaitingConfirmation}
+            <Alert
+              message="Awaiting for the transaction to be put on a block"
+            />
+          {/if}
+          <div style="text-align: center">
+            <CircularProgress
+              style="height: 32px; width: 32px;"
+              indeterminate
+            />
+          </div>
+        </div>
+      {/if}
+      {#if editMode && !$formState.loading && !$formState.awaitingConfirmation}
+        {#if !disabledUpdate}
+          <Button variant="outlined" {disabled} on:click={handleSave}>
             <Label>Update</Label>
           </Button>
-          <Wrapper>
-            <span tabindex="0">
-              <Button
-                variant="raised"
-                disabled={disabled || !disabledUpdate}
-                on:click={handleExport}
-              >
-                <Label>Export</Label>
-              </Button>
-            </span>
-            {#if disabled || !disabledUpdate}
-              <Tooltip unbounded
-                >It looks you need to update the resolution before exporting it</Tooltip
-              >
-            {/if}
-          </Wrapper>
+          <Alert
+            type="info"
+            message="Heads up: Whenever you edit a resolution, you need to update it before exporting/approving it"
+            marginTop
+          />
+        {:else}
+          <Button
+            variant="outlined"
+            disabled={disabled || !disabledUpdate}
+            on:click={handleExport}
+          >
+            <Label>Export to pdf</Label>
+          </Button>
           {#if $acl.canApprove}
-            <Wrapper>
-              <span tabindex="0">
-                <Button
-                  variant="raised"
-                  disabled={disabled || !disabledUpdate}
-                  on:click={handleApprove}
-                >
-                  <Label>Approve</Label>
-                </Button>
-              </span>
-              {#if disabled || !disabledUpdate}
-                <Tooltip unbounded
-                  >It looks you need to update the resolution before approving
-                  it</Tooltip
-                >
-              {/if}
-            </Wrapper>
+            <Button
+              variant="outlined"
+              disabled={disabled || !disabledUpdate}
+              on:click={handleApprove}
+            >
+              <Label>Approve</Label>
+            </Button>
           {/if}
-        </Group>
-      {:else}
-        <Button variant="raised" {disabled} on:click={handleSave}>
+        {/if}
+      {/if}
+      {#if !editMode && !$formState.loading && !$formState.awaitingConfirmation}
+        <Button variant="outlined" {disabled} on:click={handleSave}>
           <Label>Save pre draft</Label>
         </Button>
       {/if}
@@ -225,21 +200,5 @@
 
   :global(.field input) {
     box-shadow: none;
-  }
-
-  .section {
-    position: relative;
-  }
-
-  .progress {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(3px);
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 </style>

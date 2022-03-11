@@ -41,7 +41,14 @@ export async function handleUpdate(
       loading: true,
       awaitingConfirmation: true,
     });
+    const timeout = setTimeout(() => {
+      notifier.danger(
+        "It looks there's some congestion in the network, please try again later!",
+        WAIT_AFTER_UPDATED
+      );
+    }, 20000);
     await tx.wait();
+    clearTimeout(timeout);
     formState.set({
       loading: true,
       awaitingConfirmation: false,

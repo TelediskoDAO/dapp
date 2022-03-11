@@ -30,7 +30,14 @@ export async function handleVote(
       loading: true,
       awaitingConfirmation: true,
     });
+    const timeout = setTimeout(() => {
+      notifier.danger(
+        "It looks there's some congestion in the network, please try again later!",
+        5000
+      );
+    }, 20000);
     await tx.wait();
+    clearTimeout(timeout);
     votingState.set({
       loading: true,
       awaitingConfirmation: false,

@@ -2,13 +2,20 @@
   import { onMount } from "svelte";
   import SvelteMarkdown from "svelte-markdown";
   import { location } from "svelte-spa-router";
-  import { RESOLUTION_STATES } from "../helpers/resolutions";
+  import {
+    getDateFromUnixTimestamp,
+    RESOLUTION_STATES,
+  } from "../helpers/resolutions";
   import VotingWidget from "./VotingWidget.svelte";
   import type { ResolutionEntityEnhanced, ResolutionVoter } from "../types";
   import { acl } from "../state/resolutions";
-  import ResolutionStateTag from "./ResolutionStateTag.svelte";
   import Countdown from "./Countdown.svelte";
   import { signerAddress } from "../state/eth";
+  import DataTable from "@smui/data-table/src/DataTable.svelte";
+  import { Body, Head, Row, Cell } from "@smui/data-table";
+  import Alert from "./Alert.svelte";
+  import { format } from "date-fns";
+  import Tag from "./Tag.svelte";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint: boolean;
@@ -25,7 +32,7 @@
   $: {
     if ($signerAddress) {
       signerVoted = resolution.votingStatus.votersHaveVoted.find(
-        (voter) => voter.address === $signerAddress
+        (voter) => voter.address === $signerAddress.toLowerCase()
       );
     }
   }
@@ -34,13 +41,96 @@
 <div class="view">
   <div class="info">
     <h1>{resolution.title}</h1>
-    <small>Created on {resolution.createdAt} by {resolution.createBy}</small>
+    <small>Created: {resolution.createdAt} by {resolution.createBy}</small>
     <h3 class="secondary-title">Content of the resolution:</h3>
     <div class="content">
       <SvelteMarkdown source={resolution.content} />
     </div>
     {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
-      <h3 class="secondary-title">Voting breakdown</h3>
+      <h3 class="secondary-title">Voting breakdown:</h3>
+      <div class="voting-breakdown">
+        <div class="voting-breakdown__item-yes">
+          <div class="voting-breakdown__value">
+            {resolution.votingStatus.votersHaveVotedYes.length} <b>YES</b>
+          </div>
+        </div>
+        <div class="voting-breakdown__item-no">
+          <div class="voting-breakdown__value">
+            {resolution.votingStatus.votersHaveVotedNo.length} <b>NO</b>
+          </div>
+        </div>
+      </div>
+      <Alert
+        message={`${resolution.votingStatus.votersHaveVoted.length} out of ${resolution.voters.length} have voted`}
+        type="info"
+      />
+      <Alert
+        message={resolution.hasQuorum ? "Quorum reached" : "Quorum not reached"}
+        type={resolution.hasQuorum ? "success" : "info"}
+      />
+      <DataTable
+        table$aria-label="Resolutions voters list"
+        style="width: 100%;"
+      >
+        <Head>
+          <Row>
+            <Cell>Address / name</Cell>
+            <Cell>Voting outcome</Cell>
+            <Cell numeric>Voting power</Cell>
+          </Row>
+        </Head>
+        <Body>
+          {#each resolution.voters as resolutionVoter}
+            <Row>
+              <Cell width="80%">
+                {resolutionVoter.address}
+                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
+                  <Tag label="you" size="sm" />
+                {/if}
+              </Cell>
+              <Cell>
+                {#if resolutionVoter.hasVoted && resolutionVoter.hasVotedYes}
+                  Yes
+                {/if}
+                {#if resolutionVoter.hasVoted && !resolutionVoter.hasVotedYes}
+                  No
+                {/if}
+                {#if !resolutionVoter.hasVoted}
+                  <span class="not-yet-voted">Not voted</span>
+                {/if}
+              </Cell>
+              <Cell numeric>{resolutionVoter.votingPower}</Cell>
+            </Row>
+          {/each}
+        </Body>
+      </DataTable>
+    {/if}
+    {#if resolution.state === RESOLUTION_STATES.NOTICE}
+      <h3 class="secondary-title">Possible voters:</h3>
+      <DataTable
+        table$aria-label="Resolutions possible voters list"
+        style="width: 100%;"
+      >
+        <Head>
+          <Row>
+            <Cell>Address / name</Cell>
+            <Cell numeric>Voting power</Cell>
+          </Row>
+        </Head>
+        <Body>
+          {#each resolution.voters as resolutionVoter}
+            <Row>
+              <Cell width="80%">
+                {resolutionVoter.address}
+                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
+                  <Tag label="you" size="sm" />
+                {/if}
+              </Cell>
+              <Cell numeric>{resolutionVoter.votingPower}</Cell>
+            </Row>
+          {/each}
+        </Body>
+      </DataTable>
     {/if}
   </div>
   <div class="extra">
@@ -49,31 +139,46 @@
         <h4 class="secondary-title">
           {resolution.resolutionType.name}
         </h4>
-        <ResolutionStateTag label={resolution.state} />
+        <Tag label={resolution.state} />
       </div>
-      {#if RESOLUTION_STATES.PRE_DRAFT !== resolution.state}
+      {#if resolution.state === RESOLUTION_STATES.VOTING}
         <hr />
-      {/if}
-      {#if RESOLUTION_STATES.VOTING !== resolution.state && !isPrint && $acl.canVote(resolution.voters)}
-        <div class="voting">
-          <VotingWidget resolutionId={resolution.id} />
+        {#if !$acl.canVote(resolution.voters) && !isPrint}
+          <VotingWidget resolutionId={resolution.id} {signerVoted} />
+        {/if}
+        {#if !$acl.canVote(resolution.voters) && !isPrint}
+          <Alert message="You're not entitled to vote" type="warning" />
+        {/if}
+        <div class="voting-countdown">
+          <Countdown
+            targetDate={resolution.resolutionTypeInfo.votingEnds}
+            prefixLabel="Voting ends"
+            inline={false}
+            disableCountdown={isPrint}
+          />
         </div>
       {/if}
-      {#if RESOLUTION_STATES.ENDED === resolution.state}
-        <div>
-          Total voters: {resolution.votingStatus.votersHaveVoted.length} out of {resolution
-            .voters.length}
-        </div>
-        <div>
-          Voted yes: {resolution.votingStatus.votersHaveVotedYes.length}
-        </div>
-        <div>Voted no: {resolution.votingStatus.votersHaveVotedNo.length}</div>
-        <div>Quorum: {resolution.hasQuorum ? "Reached" : "Not Reached"}</div>
+      {#if resolution.state === RESOLUTION_STATES.ENDED}
+        <hr />
+        <Alert
+          message={`Resolution has ended on ${format(
+            new Date(resolution.resolutionTypeInfo.votingEnds),
+            "dd LLL yyyy"
+          )}. Scroll down for the outcome`}
+          type={resolution.hasQuorum ? "success" : "info"}
+        />
       {/if}
-      {#if RESOLUTION_STATES.NOTICE === resolution.state}
+      {#if resolution.state === RESOLUTION_STATES.NOTICE}
+        <hr />
         <div class="centered">
-          <p>Resolution has been approved.</p>
-          <div class="voting-starts">
+          <Alert
+            message={`Resolution has been approved on ${format(
+              getDateFromUnixTimestamp(resolution.approveTimestamp),
+              "dd LLL yyyy"
+            )}`}
+            type="success"
+          />
+          <div class="voting-countdown">
             <Countdown
               targetDate={resolution.resolutionTypeInfo.noticePeriodEnds}
               prefixLabel="Voting starts"
@@ -83,8 +188,11 @@
         </div>
       {/if}
       {#if resolution.isNegative}
-        <hr />
-        <small><em>Note: this is a <b>negative resolution</b></em></small>
+        <Alert
+          message="This is a negative resolution"
+          type="warning"
+          marginTop
+        />
       {/if}
     </div>
   </div>
@@ -105,12 +213,15 @@
     text-align: center;
   }
 
-  .voting-starts :global(.label) {
+  .voting-countdown {
+    text-align: center;
+  }
+  .voting-countdown :global(.label) {
     color: var(--color-gray-7);
     font-weight: 300;
   }
 
-  .voting-starts :global(.value) {
+  .voting-countdown :global(.value) {
     padding-top: 0.2rem;
     font-size: 1.2rem;
     color: var(--color-gray-9);
@@ -139,6 +250,8 @@
     width: 30%;
   }
   .extra > div {
+    position: sticky;
+    top: 60px;
     padding: 2em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
@@ -151,6 +264,49 @@
   .extra__heading > h4 {
     margin: 0;
     padding: 0;
+  }
+
+  .not-yet-voted {
+    color: var(--color-gray-5);
+  }
+
+  .voting-breakdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    cursor: default;
+  }
+
+  .voting-breakdown > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    margin: 0 1rem;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+  }
+
+  .voting-breakdown__item-yes {
+    background: linear-gradient(
+      129deg,
+      rgba(206, 240, 197, 1) 0%,
+      rgba(165, 205, 151, 1) 100%
+    );
+    color: var(--color-white);
+  }
+
+  .voting-breakdown__item-no {
+    background: linear-gradient(
+      129deg,
+      rgba(254, 113, 113, 1) 0%,
+      rgba(184, 75, 75, 1) 100%
+    );
+    color: var(--color-white);
   }
 
   hr {

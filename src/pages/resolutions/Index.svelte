@@ -17,10 +17,10 @@
   } from "../../helpers/resolutions";
   import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
-  import ResolutionStateTag from "../../components/ResolutionStateTag.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
   import Select, { Option } from "@smui/select";
   import Countdown from "../../components/Countdown.svelte";
+  import Tag from "../../components/Tag.svelte";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
@@ -57,6 +57,11 @@
     }
   }
 
+  function goToResolutionDetails(e: CustomEvent) {
+    const target = e.target as HTMLElement;
+    target?.closest(".mdc-data-table__row")?.querySelector("a")?.click();
+  }
+
   title.set("Resolutions");
 </script>
 
@@ -91,7 +96,7 @@
     <DataTable table$aria-label="Resolutions list" style="width: 100%;">
       <Body>
         {#each resolutions.filter((res) => stateFilter === "all" || res.state === stateFilter) as resolution}
-          <Row>
+          <Row style="cursor: pointer" on:click={goToResolutionDetails}>
             <Cell width="80%">
               <div class="resolution-info">
                 <h4 class="resolution-title">{resolution.title}</h4>
@@ -137,7 +142,7 @@
                 ><small>{resolution.resolutionType.name}</small></span
               ></Cell
             >
-            <Cell><ResolutionStateTag label={resolution.state} /></Cell>
+            <Cell><Tag label={resolution.state} /></Cell>
             <Cell>
               <Wrapper>
                 <IconButton
