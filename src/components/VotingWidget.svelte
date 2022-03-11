@@ -76,9 +76,15 @@
       </div>
     </div>
   {/if}
-  {#if (votedYes || votedNo) && !$votingState.loading && !$votingState.awaitingConfirmation}
+  {#if ((typeof votedYes === "boolean" && votedYes) || (typeof votedNo === "boolean" && votedNo)) && !$votingState.loading && !$votingState.awaitingConfirmation}
     <Button variant="outlined" on:click={handleVoting} style="width: 100%">
       Submit
     </Button>
   {/if}
 </div>
+
+<style>
+  .voting-widget {
+    margin-bottom: 1rem;
+  }
+</style>
