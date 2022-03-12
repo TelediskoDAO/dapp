@@ -28,7 +28,7 @@
   let stateFilter: ResolutionState | "all" = "all";
   let possibleFilters: Record<string, number> = { all: 0 };
 
-  onMount(async () => {
+  async function fetchAndSetResolutions() {
     const {
       resolutions: resolutionsData,
     }: {
@@ -39,6 +39,14 @@
     if (empty) {
       ready = true;
     }
+  }
+
+  onMount(async () => {
+    await fetchAndSetResolutions();
+
+    const interval = setInterval(fetchAndSetResolutions, 5000);
+
+    return () => clearInterval(interval);
   });
 
   $: {

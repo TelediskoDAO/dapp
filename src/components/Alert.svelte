@@ -28,9 +28,9 @@
   </div>
   <div class="alert-content">
     {#if title}
-      <div class="alert-title" />
+      <div class="alert-title">{title}</div>
     {/if}
-    <div class="alert-message">{message}</div>
+    <div class="alert-message">{@html message}</div>
   </div>
 </div>
 

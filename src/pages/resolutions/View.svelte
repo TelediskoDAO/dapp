@@ -21,7 +21,7 @@
   let resolutionData: ResolutionEntity;
   let resolutionDataEnhanced: ResolutionEntityEnhanced;
 
-  onMount(async () => {
+  async function fethAndSetResolutionData() {
     const {
       resolution,
     }: {
@@ -30,6 +30,14 @@
       id: params.resolutionId,
     });
     resolutionData = resolution;
+  }
+
+  onMount(async () => {
+    await fethAndSetResolutionData();
+
+    const interval = setInterval(fethAndSetResolutionData, 5000);
+
+    return () => clearInterval(interval);
   });
 
   $: {

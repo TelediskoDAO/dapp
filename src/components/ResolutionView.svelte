@@ -16,6 +16,7 @@
   import Alert from "./Alert.svelte";
   import { format } from "date-fns";
   import Tag from "./Tag.svelte";
+  import { totalHours } from "../state/odoo/timesheet";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint: boolean;
@@ -49,25 +50,53 @@
     {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
       <h3 class="secondary-title">Voting breakdown:</h3>
       <div class="voting-breakdown">
-        <div class="voting-breakdown__item-yes">
+        <div class="voting-breakdown__item">
+          <div class="voting-breakdown__title">Total Yes</div>
           <div class="voting-breakdown__value">
-            {resolution.votingStatus.votersHaveVotedYes.length} <b>YES</b>
+            {resolution.votingStatus.votersHaveVotedYes.length}
           </div>
         </div>
-        <div class="voting-breakdown__item-no">
+        <div class="voting-breakdown__item">
+          <div class="voting-breakdown__title">Total No</div>
           <div class="voting-breakdown__value">
-            {resolution.votingStatus.votersHaveVotedNo.length} <b>NO</b>
+            {resolution.votingStatus.votersHaveVotedNo.length}
+          </div>
+        </div>
+        <div class="voting-breakdown__item">
+          <div class="voting-breakdown__title">Quorum</div>
+          <div class="voting-breakdown__value">
+            {resolution.hasQuorum ? "Yes" : "No"}
           </div>
         </div>
       </div>
-      <Alert
-        message={`${resolution.votingStatus.votersHaveVoted.length} out of ${resolution.voters.length} have voted`}
-        type="info"
-      />
-      <Alert
-        message={resolution.hasQuorum ? "Quorum reached" : "Quorum not reached"}
-        type={resolution.hasQuorum ? "success" : "info"}
-      />
+      <div class="voting-breakdown">
+        <div class="voting-breakdown__item">
+          <div class="voting-breakdown__title">Voters</div>
+          <div class="voting-breakdown__value">
+            {resolution.votingStatus.votersHaveVoted.length}/{resolution.voters
+              .length}
+          </div>
+        </div>
+        <div class="voting-breakdown__item">
+          <div class="voting-breakdown__title">Voted voting power</div>
+          <div class="voting-breakdown__value">
+            {resolution.voters.reduce(
+              (total, voter) =>
+                total + (voter.hasVoted ? voter.votingPower : 0),
+              0
+            )}
+          </div>
+        </div>
+        <div class="voting-breakdown__item">
+          <div class="voting-breakdown__title">Max voting power</div>
+          <div class="voting-breakdown__value">
+            {resolution.voters.reduce(
+              (total, voter) => total + voter.votingPower,
+              0
+            )}
+          </div>
+        </div>
+      </div>
       <DataTable
         table$aria-label="Resolutions voters list"
         style="width: 100%;"
@@ -164,7 +193,7 @@
           message={`Resolution has ended on ${format(
             new Date(resolution.resolutionTypeInfo.votingEnds),
             "dd LLL yyyy"
-          )}. Scroll down for the outcome`}
+          )}`}
           type={resolution.hasQuorum ? "success" : "info"}
         />
       {/if}
@@ -237,24 +266,32 @@
     border-left: 1px solid var(--color-gray-1);
     background-color: #fafafa;
   }
-  .view {
-    display: flex;
-    justify-content: space-between;
+
+  .extra {
+    margin-top: 3rem;
   }
 
-  .info {
-    width: 70%;
-    padding-right: 2em;
+  @media screen and (min-width: 1024px) {
+    .view {
+      display: flex;
+      justify-content: space-between;
+    }
+    .info {
+      width: 70%;
+      padding-right: 2em;
+    }
+    .extra {
+      margin-top: 0;
+      width: 30%;
+    }
+    .extra > div {
+      position: sticky;
+      top: 60px;
+      padding: 2em;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
   }
-  .extra {
-    width: 30%;
-  }
-  .extra > div {
-    position: sticky;
-    top: 60px;
-    padding: 2em;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  }
+
   .extra__heading {
     display: flex;
     justify-content: space-between;
@@ -278,35 +315,25 @@
     cursor: default;
   }
 
-  .voting-breakdown > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    margin: 0 1rem;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
+  .voting-breakdown__item {
+    flex: 1 1 0;
     text-align: center;
-    box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+    padding: 1rem;
   }
 
-  .voting-breakdown__item-yes {
-    background: linear-gradient(
-      129deg,
-      rgba(206, 240, 197, 1) 0%,
-      rgba(165, 205, 151, 1) 100%
-    );
-    color: var(--color-white);
+  .voting-breakdown__title {
+    font-weight: 300;
+    font-size: large;
+    margin-bottom: 0.3rem;
   }
 
-  .voting-breakdown__item-no {
-    background: linear-gradient(
-      129deg,
-      rgba(254, 113, 113, 1) 0%,
-      rgba(184, 75, 75, 1) 100%
-    );
-    color: var(--color-white);
+  .voting-breakdown__value {
+    font-weight: 700;
+    font-size: larger;
+  }
+
+  .voting-breakdown > div:not(:last-child) {
+    border-right: 1px solid var(--color-gray-1);
   }
 
   hr {

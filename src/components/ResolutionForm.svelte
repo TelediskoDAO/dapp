@@ -8,7 +8,6 @@
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
   import FormField from "@smui/form-field";
   import Checkbox from "@smui/checkbox";
-  import Tooltip, { Wrapper } from "@smui/tooltip";
 
   import {
     currentResolution,
@@ -65,6 +64,7 @@
       );
     }
     if (validTypeId && prevSelectedTypeId !== $currentResolution.typeId) {
+      console.log("reset isNegative to false");
       $currentResolution.isNegative = false;
     }
     prevSelectedTypeId = $currentResolution.typeId;
