@@ -47,9 +47,12 @@ export async function handleCreate({
       loading: true,
       awaitingConfirmation: false,
     });
-    notifications.success("Resolution draft created!", {
-      timeout: WAIT_AFTER_CREATE,
-    });
+    notifications.success(
+      "Resolution draft created! If the resolution doesn't appear on the list, no worries. It will appear in some seconds.",
+      {
+        timeout: WAIT_AFTER_CREATE,
+      }
+    );
     await wait(WAIT_AFTER_CREATE);
     push("/resolutions");
   } catch (err) {

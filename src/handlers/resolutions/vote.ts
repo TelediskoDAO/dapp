@@ -40,7 +40,10 @@ export async function handleVote(
       loading: true,
       awaitingConfirmation: false,
     });
-    notifications.success("Resolution voted!", { timeout: WAIT_AFTER_VOTE });
+    notifications.success(
+      "Resolution voted! If you don't see your vote in the resolution, no worries. It's just a matter of seconds and it will get updated",
+      { timeout: WAIT_AFTER_VOTE }
+    );
     await wait(WAIT_AFTER_VOTE);
     push(`/resolutions/`);
   } catch (err) {

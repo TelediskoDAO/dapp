@@ -21,6 +21,7 @@
   import Select, { Option } from "@smui/select";
   import Countdown from "../../components/Countdown.svelte";
   import Tag from "../../components/Tag.svelte";
+  import Alert from "../../components/Alert.svelte";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
@@ -100,7 +101,8 @@
       <rect width="100%" height="67" x="0" y="69" rx="6px" ry="6px" />
       <rect width="100%" height="67" x="0" y="138" rx="6px" ry="6px" />
     </Skeleton>
-  {:else}
+  {/if}
+  {#if ready && !empty}
     <DataTable table$aria-label="Resolutions list" style="width: 100%;">
       <Body>
         {#each resolutions.filter((res) => stateFilter === "all" || res.state === stateFilter) as resolution}
@@ -169,6 +171,8 @@
         {/each}
       </Body>
     </DataTable>
+  {:else}
+    <Alert message="No resolutions created so far" />
   {/if}
   {#if empty && ready && $acl?.canCreate}
     <Button variant="outlined" href="#/resolutions/new">

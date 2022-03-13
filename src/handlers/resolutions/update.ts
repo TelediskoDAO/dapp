@@ -51,9 +51,12 @@ export async function handleUpdate(
       loading: true,
       awaitingConfirmation: false,
     });
-    notifications.success("Resolution draft updated!", {
-      timeout: WAIT_AFTER_UPDATED,
-    });
+    notifications.success(
+      "Resolution draft updated! If you don't see the updated draft on the UI, no worries, it will get updated in some seconds.",
+      {
+        timeout: WAIT_AFTER_UPDATED,
+      }
+    );
     await wait(WAIT_AFTER_UPDATED);
     location.reload();
   } catch (err) {

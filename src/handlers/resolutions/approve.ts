@@ -39,9 +39,12 @@ export async function handleApprove(
       loading: true,
       awaitingConfirmation: false,
     });
-    notifications.success("Resolution approved", {
-      timeout: WAIT_AFTER_APPROVED,
-    });
+    notifications.success(
+      "Resolution approved! If you still see the resolution in pre-draft state, no worries. It will get updated after some seconds",
+      {
+        timeout: WAIT_AFTER_APPROVED,
+      }
+    );
     await wait(WAIT_AFTER_APPROVED);
     push(`/resolutions/${resolutionId}`);
   } catch (err) {
