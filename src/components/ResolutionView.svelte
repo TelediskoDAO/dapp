@@ -16,7 +16,7 @@
   import Alert from "./Alert.svelte";
   import { format } from "date-fns";
   import Tag from "./Tag.svelte";
-  import { totalHours } from "../state/odoo/timesheet";
+  import VotingBreakdown from "./VotingBreakdown.svelte";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint: boolean;
@@ -49,54 +49,20 @@
     </div>
     {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
       <h3 class="secondary-title">Voting breakdown:</h3>
-      <div class="voting-breakdown">
-        <div class="voting-breakdown__item">
-          <div class="voting-breakdown__title">Total Yes</div>
-          <div class="voting-breakdown__value">
-            {resolution.votingStatus.votersHaveVotedYes.length}
-          </div>
-        </div>
-        <div class="voting-breakdown__item">
-          <div class="voting-breakdown__title">Total No</div>
-          <div class="voting-breakdown__value">
-            {resolution.votingStatus.votersHaveVotedNo.length}
-          </div>
-        </div>
-        <div class="voting-breakdown__item">
-          <div class="voting-breakdown__title">Quorum</div>
-          <div class="voting-breakdown__value">
-            {resolution.hasQuorum ? "Yes" : "No"}
-          </div>
-        </div>
-      </div>
-      <div class="voting-breakdown">
-        <div class="voting-breakdown__item">
-          <div class="voting-breakdown__title">Voters</div>
-          <div class="voting-breakdown__value">
-            {resolution.votingStatus.votersHaveVoted.length}/{resolution.voters
-              .length}
-          </div>
-        </div>
-        <div class="voting-breakdown__item">
-          <div class="voting-breakdown__title">Voted voting power</div>
-          <div class="voting-breakdown__value">
-            {resolution.voters.reduce(
-              (total, voter) =>
-                total + (voter.hasVoted ? voter.votingPower : 0),
-              0
-            )}
-          </div>
-        </div>
-        <div class="voting-breakdown__item">
-          <div class="voting-breakdown__title">Max voting power</div>
-          <div class="voting-breakdown__value">
-            {resolution.voters.reduce(
-              (total, voter) => total + voter.votingPower,
-              0
-            )}
-          </div>
-        </div>
-      </div>
+      <VotingBreakdown
+        totalYes={resolution.votingStatus.votersHaveVotedYes.length}
+        totalNo={resolution.votingStatus.votersHaveVotedNo.length}
+        voters={`${resolution.votingStatus.votersHaveVoted.length}/${resolution.voters.length}`}
+        hasQuorum={resolution.hasQuorum}
+        votedVotingPower={resolution.voters.reduce(
+          (total, voter) => total + (voter.hasVoted ? voter.votingPower : 0),
+          0
+        )}
+        maxVotingPower={resolution.voters.reduce(
+          (total, voter) => total + voter.votingPower,
+          0
+        )}
+      />
       <DataTable
         table$aria-label="Resolutions voters list"
         style="width: 100%;"
@@ -306,36 +272,6 @@
   .not-yet-voted {
     color: var(--color-gray-5);
   }
-
-  .voting-breakdown {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    cursor: default;
-  }
-
-  .voting-breakdown__item {
-    flex: 1 1 0;
-    text-align: center;
-    padding: 1rem;
-  }
-
-  .voting-breakdown__title {
-    font-weight: 300;
-    font-size: large;
-    margin-bottom: 0.3rem;
-  }
-
-  .voting-breakdown__value {
-    font-weight: 700;
-    font-size: larger;
-  }
-
-  .voting-breakdown > div:not(:last-child) {
-    border-right: 1px solid var(--color-gray-1);
-  }
-
   hr {
     border: 0;
     height: 0;
