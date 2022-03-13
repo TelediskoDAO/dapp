@@ -144,7 +144,7 @@
               message="Awaiting for the transaction to be put on a block"
             />
           {/if}
-          <div style="text-align: center">
+          <div>
             <CircularProgress
               style="height: 32px; width: 32px;"
               indeterminate
