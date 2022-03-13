@@ -37,16 +37,19 @@ export const notifyNetworkError = () =>
     "It looks there's some congestion in the network. Please try again later refreshing the page."
   );
 
+const MESSAGE_DETECT_START = '"message":';
+const MESSAGE_DETECT_END = ',"data"';
+
 export const notifyBlockchainError = (msg: string) => {
-  if (msg.indexOf('"message":') === -1) {
+  if (msg.indexOf(MESSAGE_DETECT_START) === -1) {
     return notifications.error(msg);
   }
   try {
-    const blockChainError = msg.slice(
-      msg.indexOf('"message":') + '"message":'.length + 1,
-      msg.indexOf(',"data"') - 1
+    const humanReadableError = msg.slice(
+      msg.indexOf(MESSAGE_DETECT_START) + MESSAGE_DETECT_START.length + 1,
+      msg.indexOf(MESSAGE_DETECT_END) - 1
     );
-    return notifications.error(blockChainError);
+    return notifications.error(humanReadableError);
   } catch (_) {}
   return notifications.error(msg);
 };
