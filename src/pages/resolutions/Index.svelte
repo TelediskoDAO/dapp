@@ -171,13 +171,14 @@
         {/each}
       </Body>
     </DataTable>
-  {:else}
-    <Alert message="No resolutions created so far" />
   {/if}
-  {#if empty && ready && $acl?.canCreate}
-    <Button variant="outlined" href="#/resolutions/new">
-      <Label>Create resolution</Label>
-    </Button>
+  {#if ready && empty}
+    <Alert message="No resolutions created so far" />
+    {#if $acl?.canCreate}
+      <Button variant="outlined" href="#/resolutions/new">
+        <Label>Create resolution</Label>
+      </Button>
+    {/if}
   {/if}
 </section>
 
