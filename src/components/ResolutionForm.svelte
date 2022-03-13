@@ -35,7 +35,7 @@
   let disabled = false;
   let resolutionTypes: ResolutionTypeEntity[];
   let selectedType: ResolutionTypeEntity = null;
-  let prevSelectedTypeId;
+  let prevSelectedTypeId: string;
 
   onMount(async () => {
     const {
@@ -64,7 +64,6 @@
       );
     }
     if (validTypeId && prevSelectedTypeId !== $currentResolution.typeId) {
-      console.log("reset isNegative to false");
       $currentResolution.isNegative = false;
     }
     prevSelectedTypeId = $currentResolution.typeId;
