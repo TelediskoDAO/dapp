@@ -4,7 +4,6 @@
   import { title } from "./state/runtime";
   import { slide } from "svelte/transition";
 
-  import { notifier } from "@beyonk/svelte-notifications";
   import TopAppBar from "./components/TopAppBar.svelte";
   import UpdateAvailable from "./components/UpdateAvailable.svelte";
   import Sidebar from "./components/Sidebar.svelte";
@@ -12,7 +11,7 @@
   import RuntimeErrors from "./components/RuntimeErrors.svelte";
 
   import Router, { location, replace, push } from "svelte-spa-router";
-  import { NotificationDisplay } from "@beyonk/svelte-notifications";
+  import "../node_modules/izitoast/dist/css/iziToast.min.css";
 
   // Pages
   import PageIndex from "./pages/Index.svelte";
@@ -27,6 +26,7 @@
   import PageResolutionsEdit from "./pages/resolutions/Edit.svelte";
 
   import NotFound from "./NotFound.svelte";
+  import notifications from "./helpers/notifications";
 
   const log = logger("App");
 
@@ -57,19 +57,15 @@
   $: {
     console.log("error is", $userError);
     if ($userError) {
-      notifier.danger($userError, 7000);
+      notifications.error($userError);
       push("/connect/odoo");
     }
   }
-
-  let notification: NotificationDisplay;
 </script>
 
 <svelte:head>
   <title>{$title}</title>
 </svelte:head>
-
-<NotificationDisplay bind:this={notification} />
 
 {#if $username && !$user && !$userError}
   <div out:slide class="loading">

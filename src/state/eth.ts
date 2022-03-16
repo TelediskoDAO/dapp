@@ -163,3 +163,15 @@ export const resolutionContract: Readable<ResolutionManager> = derived(
     })();
   }
 );
+
+export const signerAddress: Readable<string> = derived(
+  signer,
+  ($signer, set) => {
+    (async () => {
+      if ($signer) {
+        const signerAddress = await $signer.getAddress();
+        set(signerAddress);
+      }
+    })();
+  }
+);

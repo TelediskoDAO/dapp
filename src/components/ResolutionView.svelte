@@ -1,15 +1,26 @@
 <script type="ts">
   import { onMount } from "svelte";
   import SvelteMarkdown from "svelte-markdown";
-  import { location, params } from "svelte-spa-router";
-  import { RESOLUTION_STATES } from "../helpers/resolutions";
+  import { location } from "svelte-spa-router";
+  import {
+    getDateFromUnixTimestamp,
+    RESOLUTION_STATES,
+  } from "../helpers/resolutions";
   import VotingWidget from "./VotingWidget.svelte";
-  import type { ResolutionEntityEnhanced } from "../types";
-  import ResolutionDetails from "./ResolutionDetails.svelte";
+  import type { ResolutionEntityEnhanced, ResolutionVoter } from "../types";
   import { acl } from "../state/resolutions";
+  import Countdown from "./Countdown.svelte";
+  import { signerAddress } from "../state/eth";
+  import DataTable from "@smui/data-table/src/DataTable.svelte";
+  import { Body, Head, Row, Cell } from "@smui/data-table";
+  import Alert from "./Alert.svelte";
+  import { format } from "date-fns";
+  import Tag from "./Tag.svelte";
+  import VotingBreakdown from "./VotingBreakdown.svelte";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint: boolean;
+  let signerVoted: ResolutionVoter | null = null;
 
   onMount(() => {
     isPrint = /\/print$/.test($location);
@@ -18,28 +29,253 @@
       window.close();
     }
   });
+
+  $: {
+    if ($signerAddress) {
+      signerVoted = resolution.votingStatus.votersHaveVoted.find(
+        (voter) => voter.address === $signerAddress.toLowerCase()
+      );
+    }
+  }
 </script>
 
-<div class="resolution-view">
-  <ResolutionDetails {resolution} />
-  <SvelteMarkdown source={resolution.content} />
-
-  {#if resolution.isNegative}
-    <small><em>Negative resolution</em></small>
-  {/if}
-  {#if !isPrint && resolution.state === RESOLUTION_STATES.VOTING && $acl.canVote(resolution.voters)}
-    <div class="voting">
-      <VotingWidget resolutionId={resolution.id} />
+<div class="view">
+  <div class="info">
+    <h1>{resolution.title}</h1>
+    <small>Created: {resolution.createdAt} by {resolution.createBy}</small>
+    <h3 class="secondary-title">Content of the resolution:</h3>
+    <div class="content">
+      <SvelteMarkdown source={resolution.content} />
     </div>
-  {/if}
+    {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
+      <h3 class="secondary-title">Voting breakdown:</h3>
+      <VotingBreakdown
+        totalYes={resolution.votingStatus.votersHaveVotedYes.length}
+        totalNo={resolution.votingStatus.votersHaveVotedNo.length}
+        voters={`${resolution.votingStatus.votersHaveVoted.length}/${resolution.voters.length}`}
+        hasQuorum={resolution.hasQuorum}
+        votedVotingPower={resolution.voters.reduce(
+          (total, voter) => total + (voter.hasVoted ? voter.votingPower : 0),
+          0
+        )}
+        maxVotingPower={resolution.voters.reduce(
+          (total, voter) => total + voter.votingPower,
+          0
+        )}
+      />
+      <DataTable
+        table$aria-label="Resolutions voters list"
+        style="width: 100%;"
+      >
+        <Head>
+          <Row>
+            <Cell>Address / name</Cell>
+            <Cell>Voting outcome</Cell>
+            <Cell numeric>Voting power</Cell>
+          </Row>
+        </Head>
+        <Body>
+          {#each resolution.voters as resolutionVoter}
+            <Row>
+              <Cell width="80%">
+                {resolutionVoter.address}
+                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
+                  <Tag label="you" size="sm" />
+                {/if}
+              </Cell>
+              <Cell>
+                {#if resolutionVoter.hasVoted && resolutionVoter.hasVotedYes}
+                  Yes
+                {/if}
+                {#if resolutionVoter.hasVoted && !resolutionVoter.hasVotedYes}
+                  No
+                {/if}
+                {#if !resolutionVoter.hasVoted}
+                  <span class="not-yet-voted">Not voted</span>
+                {/if}
+              </Cell>
+              <Cell numeric>{resolutionVoter.votingPower}</Cell>
+            </Row>
+          {/each}
+        </Body>
+      </DataTable>
+    {/if}
+    {#if resolution.state === RESOLUTION_STATES.NOTICE}
+      <h3 class="secondary-title">Possible voters:</h3>
+      <DataTable
+        table$aria-label="Resolutions possible voters list"
+        style="width: 100%;"
+      >
+        <Head>
+          <Row>
+            <Cell>Address / name</Cell>
+            <Cell numeric>Voting power</Cell>
+          </Row>
+        </Head>
+        <Body>
+          {#each resolution.voters as resolutionVoter}
+            <Row>
+              <Cell width="80%">
+                {resolutionVoter.address}
+                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
+                  <Tag label="you" size="sm" />
+                {/if}
+              </Cell>
+              <Cell numeric>{resolutionVoter.votingPower}</Cell>
+            </Row>
+          {/each}
+        </Body>
+      </DataTable>
+    {/if}
+  </div>
+  <div class="extra">
+    <div>
+      <div class="extra__heading">
+        <h4 class="secondary-title">
+          {resolution.resolutionType.name}
+        </h4>
+        <Tag label={resolution.state} />
+      </div>
+      {#if resolution.state === RESOLUTION_STATES.VOTING}
+        <hr />
+        {#if $acl.canVote(resolution.voters) && !isPrint}
+          <VotingWidget resolutionId={resolution.id} {signerVoted} />
+        {/if}
+        {#if !$acl.canVote(resolution.voters) && !isPrint}
+          <Alert message="You're not entitled to vote" type="warning" />
+        {/if}
+        <div class="voting-countdown">
+          <Countdown
+            targetDate={resolution.resolutionTypeInfo.votingEnds}
+            prefixLabel="Voting ends"
+            inline={false}
+            disableCountdown={isPrint}
+          />
+        </div>
+      {/if}
+      {#if resolution.state === RESOLUTION_STATES.ENDED}
+        <hr />
+        <Alert
+          message={`Resolution has ended on ${format(
+            new Date(resolution.resolutionTypeInfo.votingEnds),
+            "dd LLL yyyy"
+          )}`}
+          type={resolution.hasQuorum ? "success" : "info"}
+        />
+      {/if}
+      {#if resolution.state === RESOLUTION_STATES.NOTICE}
+        <hr />
+        <div class="centered">
+          <Alert
+            message={`Resolution has been approved on ${format(
+              getDateFromUnixTimestamp(resolution.approveTimestamp),
+              "dd LLL yyyy"
+            )}`}
+            type="success"
+          />
+          <div class="voting-countdown">
+            <Countdown
+              targetDate={resolution.resolutionTypeInfo.noticePeriodEnds}
+              prefixLabel="Voting starts"
+              inline={false}
+            />
+          </div>
+        </div>
+      {/if}
+      {#if resolution.isNegative}
+        <Alert
+          message="This is a negative resolution"
+          type="warning"
+          marginTop
+        />
+      {/if}
+    </div>
+  </div>
 </div>
 
 <style>
-  .resolution-view {
-    padding: 40px;
+  h1 {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 0.5rem;
+  }
+  h1 + small {
+    display: block;
+    margin-bottom: 2rem;
+    color: var(--color-gray-7);
+  }
+  .centered {
+    text-align: center;
   }
 
-  .voting {
-    width: 30%;
+  .voting-countdown {
+    text-align: center;
+  }
+  .voting-countdown :global(.label) {
+    color: var(--color-gray-7);
+    font-weight: 300;
+  }
+
+  .voting-countdown :global(.value) {
+    padding-top: 0.2rem;
+    font-size: 1.2rem;
+    color: var(--color-gray-9);
+    font-weight: 300;
+  }
+
+  .secondary-title {
+    font-weight: 300;
+  }
+
+  .content {
+    padding: 2rem;
+    border-left: 1px solid var(--color-gray-1);
+    background-color: #fafafa;
+  }
+
+  .extra {
+    margin-top: 3rem;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .view {
+      display: flex;
+      justify-content: space-between;
+    }
+    .info {
+      width: 70%;
+      padding-right: 2em;
+    }
+    .extra {
+      margin-top: 0;
+      width: 30%;
+    }
+    .extra > div {
+      position: sticky;
+      top: 60px;
+      padding: 2em;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+  }
+
+  .extra__heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .extra__heading > h4 {
+    margin: 0;
+    padding: 0;
+  }
+
+  .not-yet-voted {
+    color: var(--color-gray-5);
+  }
+  hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   }
 </style>

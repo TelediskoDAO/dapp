@@ -8,6 +8,7 @@ import type {
   ResolutionsAcl,
   ResolutionVoter,
 } from "../types";
+import { mdiEye, mdiBookEditOutline, mdiVoteOutline } from "@mdi/js";
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -23,16 +24,26 @@ export const RESOLUTION_ACTIONS = {
   [RESOLUTION_STATES.PRE_DRAFT]: ($acl: ResolutionsAcl) => ({
     label: $acl.canUpdate ? "Edit or Approve" : "View",
     disabled: false,
+    icon: $acl.canUpdate ? mdiBookEditOutline : mdiEye,
   }),
-  [RESOLUTION_STATES.NOTICE]: () => ({ label: "View", disabled: false }),
+  [RESOLUTION_STATES.NOTICE]: () => ({
+    label: "View",
+    disabled: false,
+    icon: mdiEye,
+  }),
   [RESOLUTION_STATES.VOTING]: (
     $acl: ResolutionsAcl,
     resolutionVoters: ResolutionVoter[]
   ) => ({
     label: $acl.canVote(resolutionVoters) ? "View and vote" : "View",
     disabled: false,
+    icon: $acl.canVote(resolutionVoters) ? mdiVoteOutline : mdiEye,
   }),
-  [RESOLUTION_STATES.ENDED]: () => ({ label: "View", disabled: false }),
+  [RESOLUTION_STATES.ENDED]: () => ({
+    label: "View",
+    disabled: false,
+    icon: mdiEye,
+  }),
 };
 
 export const getDateFromUnixTimestamp = (unixTs: string) =>
@@ -101,6 +112,10 @@ export const getEnhancedResolutionMapper =
     );
     return {
       ...resolution,
+      voters: resolution.voters.map((voter) => ({
+        ...voter,
+        votingPower: voter.votingPower / 1000000000000000000,
+      })),
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
       updatedAt:
@@ -117,6 +132,16 @@ export const getEnhancedResolutionMapper =
           : `#/resolutions/${resolution.id}`,
       action: RESOLUTION_ACTIONS[state]($acl, resolution.voters),
       resolutionTypeInfo,
+      votingStatus: {
+        votersHaveNotVoted: resolution.voters.filter((v) => !v.hasVoted),
+        votersHaveVoted: resolution.voters.filter((v) => v.hasVoted),
+        votersHaveVotedYes: resolution.voters.filter(
+          (v) => v.hasVoted && v.hasVotedYes
+        ),
+        votersHaveVotedNo: resolution.voters.filter(
+          (v) => v.hasVoted && !v.hasVotedYes
+        ),
+      },
     };
   };
 

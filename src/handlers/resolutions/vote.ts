@@ -1,10 +1,13 @@
 import { push } from "svelte-spa-router";
-import { notifier } from "@beyonk/svelte-notifications";
 
 import { wait } from "../../async";
 import { votingState, resetVotingState } from "../../state/resolutions/voting";
 import type { Signer } from "ethers";
 import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+import notifications, {
+  notifyNetworkError,
+  notifyBlockchainError,
+} from "../../helpers/notifications";
 
 const WAIT_AFTER_VOTE = 10000;
 
@@ -30,17 +33,21 @@ export async function handleVote(
       loading: true,
       awaitingConfirmation: true,
     });
+    const timeout = setTimeout(notifyNetworkError, 20000);
     await tx.wait();
+    clearTimeout(timeout);
     votingState.set({
       loading: true,
       awaitingConfirmation: false,
     });
-    notifier.success("Resolution voted!", WAIT_AFTER_VOTE);
+    notifications.success(
+      "Resolution voted! If you don't see your vote in the resolution, no worries. It's just a matter of seconds and it will get updated",
+      { timeout: WAIT_AFTER_VOTE }
+    );
     await wait(WAIT_AFTER_VOTE);
     push(`/resolutions/`);
   } catch (err) {
-    console.error("err: ", err);
-    notifier.danger(err.message, 7000);
+    notifyBlockchainError(err.message);
   }
 
   resetVotingState();

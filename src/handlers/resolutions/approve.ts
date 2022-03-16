@@ -1,10 +1,13 @@
 import { push } from "svelte-spa-router";
-import { notifier } from "@beyonk/svelte-notifications";
 
 import { formState, resetFormState } from "../../state/resolutions/form";
 import { wait } from "../../async";
 import type { Signer } from "ethers";
 import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+import notifications, {
+  notifyNetworkError,
+  notifyBlockchainError,
+} from "../../helpers/notifications";
 
 const WAIT_AFTER_APPROVED = 10000;
 
@@ -26,19 +29,26 @@ export async function handleApprove(
   try {
     const tx = await $resolutionContract.approveResolution(resolutionId);
     formState.set({
-      loading: true,
+      loading: false,
       awaitingConfirmation: true,
     });
+    const timeout = setTimeout(notifyNetworkError, 20000);
     await tx.wait();
+    clearTimeout(timeout);
     formState.set({
       loading: true,
       awaitingConfirmation: false,
     });
-    notifier.success("Resolution approved!", WAIT_AFTER_APPROVED);
+    notifications.success(
+      "Resolution approved! If you still see the resolution in pre-draft state, no worries. It will get updated after some seconds",
+      {
+        timeout: WAIT_AFTER_APPROVED,
+      }
+    );
     await wait(WAIT_AFTER_APPROVED);
     push(`/resolutions/${resolutionId}`);
   } catch (err) {
-    notifier.danger(err.message, 7000);
+    notifyBlockchainError(err.message);
   }
 
   resetFormState();

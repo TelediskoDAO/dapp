@@ -1,4 +1,3 @@
-import { notifier } from "@beyonk/svelte-notifications";
 import { push } from "svelte-spa-router";
 
 import { wait } from "../../async";
@@ -7,6 +6,10 @@ import { formState, resetFormState } from "../../state/resolutions/form";
 import type { ResolutionFormState } from "../../types";
 import type { Signer } from "ethers";
 import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+import notifications, {
+  notifyNetworkError,
+  notifyBlockchainError,
+} from "../../helpers/notifications";
 
 const WAIT_AFTER_UPDATED = 10000;
 
@@ -41,16 +44,23 @@ export async function handleUpdate(
       loading: true,
       awaitingConfirmation: true,
     });
+    const timeout = setTimeout(notifyNetworkError, 20000);
     await tx.wait();
+    clearTimeout(timeout);
     formState.set({
       loading: true,
       awaitingConfirmation: false,
     });
-    notifier.success("Resolution draft updated!", WAIT_AFTER_UPDATED);
+    notifications.success(
+      "Resolution draft updated! If you don't see the updated draft on the UI, no worries, it will get updated in some seconds.",
+      {
+        timeout: WAIT_AFTER_UPDATED,
+      }
+    );
     await wait(WAIT_AFTER_UPDATED);
     location.reload();
   } catch (err) {
-    notifier.danger(err.message, 7000);
+    notifyBlockchainError(err.message);
   }
 
   resetFormState();

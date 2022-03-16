@@ -1,5 +1,5 @@
 import { expect } from "chai";
-
+import { mdiEye } from "@mdi/js";
 import {
   createResolutionEntity,
   createEnhancedResolutionEntity,
@@ -169,6 +169,7 @@ describe("Resolution helpers", () => {
           action: {
             label: "View",
             disabled: false,
+            icon: mdiEye,
           },
         });
 

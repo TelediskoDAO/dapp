@@ -1,4 +1,3 @@
-import { notifier } from "@beyonk/svelte-notifications";
 import { push } from "svelte-spa-router";
 
 import { add } from "../../net/ipfs";
@@ -7,6 +6,10 @@ import { wait } from "../../async";
 import type { ResolutionFormState } from "../../types";
 import type { Signer } from "ethers";
 import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+import notifications, {
+  notifyNetworkError,
+  notifyBlockchainError,
+} from "../../helpers/notifications";
 
 const WAIT_AFTER_CREATE = 7000;
 
@@ -37,16 +40,23 @@ export async function handleCreate({
       loading: true,
       awaitingConfirmation: true,
     });
+    const timeout = setTimeout(notifyNetworkError, 20000);
     await tx.wait();
+    clearTimeout(timeout);
     formState.set({
       loading: true,
       awaitingConfirmation: false,
     });
-    notifier.success("Resolution draft created!", WAIT_AFTER_CREATE);
+    notifications.success(
+      "Resolution draft created! If the resolution doesn't appear on the list, no worries. It will appear in some seconds.",
+      {
+        timeout: WAIT_AFTER_CREATE,
+      }
+    );
     await wait(WAIT_AFTER_CREATE);
     push("/resolutions");
   } catch (err) {
-    notifier.danger(err.message, 7000);
+    notifyBlockchainError(err.message);
   }
 
   resetFormState();

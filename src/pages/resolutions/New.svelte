@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { notifier } from "@beyonk/svelte-notifications";
   import { replace } from "svelte-spa-router";
   import { onMount } from "svelte";
 
@@ -10,6 +9,7 @@
   import { handleCreate } from "../../handlers/resolutions/create";
   import { acl } from "../../state/resolutions";
   import AclCheck from "../../components/AclCheck.svelte";
+  import notifications from "../../helpers/notifications";
 
   title.set("Resolutions");
 
@@ -21,9 +21,8 @@
 
   $: {
     if ($acl.loaded && !$acl.canCreate) {
-      notifier.danger(
-        "It looks you cannot create resolutions. Your role is not Contributor",
-        5000
+      notifications.error(
+        "It looks you cannot create resolutions. Your role is not Contributor"
       );
       replace(`/resolutions`);
     }

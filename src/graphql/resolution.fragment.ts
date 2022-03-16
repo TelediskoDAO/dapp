@@ -17,9 +17,12 @@ export const resolutionFragment = gql`
     createBy
     updateBy
     approveBy
+    hasQuorum
     voters {
-      votingPower
       address
+      votingPower
+      hasVoted
+      hasVotedYes
     }
   }
 

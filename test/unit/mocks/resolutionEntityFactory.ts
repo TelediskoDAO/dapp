@@ -3,6 +3,7 @@ import type {
   ResolutionEntityEnhanced,
   ResolutionTypeEntity,
 } from "../../../src/types";
+import { mdiBookEditOutline } from "@mdi/js";
 
 import resolutionTypes from "./resolutionTypes.json";
 
@@ -24,6 +25,7 @@ const defaultEntity: ResolutionEntity = {
   createBy: "42",
   updateBy: "42",
   approveBy: "42",
+  hasQuorum: false,
 };
 
 const enhancedEntity: ResolutionEntityEnhanced = {
@@ -41,7 +43,11 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   updatedAt: null,
   approvedAt: null,
   href: "#/resolutions/42/edit",
-  action: { label: "Edit or Approve", disabled: false },
+  action: {
+    label: "Edit or Approve",
+    disabled: false,
+    icon: mdiBookEditOutline,
+  },
   resolutionTypeInfo: {
     noticePeriodEnds: null,
     noticePeriodEndsAt: null,
@@ -52,6 +58,13 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   createBy: "42",
   updateBy: "42",
   approveBy: "42",
+  hasQuorum: false,
+  votingStatus: {
+    votersHaveNotVoted: [],
+    votersHaveVoted: [],
+    votersHaveVotedYes: [],
+    votersHaveVotedNo: [],
+  },
 };
 
 export const createResolutionEntity = (

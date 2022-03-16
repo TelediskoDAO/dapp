@@ -2,6 +2,8 @@ export type ResolutionVoter = {
   id: string;
   votingPower: number;
   address: string;
+  hasVoted: boolean;
+  hasVotedYes: boolean;
 };
 
 export type ResolutionsAcl = {
@@ -44,11 +46,13 @@ export type ResolutionEntity = {
   updateBy: string;
   approveBy: string;
   voters: ResolutionVoter[];
+  hasQuorum: boolean;
 };
 
 export type ResolutionAction = {
   label: string;
   disabled: boolean;
+  icon: string;
 };
 
 export type ResolutionTypeInfo = {
@@ -66,6 +70,12 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
   approvedAt: string | null;
   action: ResolutionAction;
   resolutionTypeInfo: ResolutionTypeInfo;
+  votingStatus: {
+    votersHaveNotVoted: ResolutionVoter[];
+    votersHaveVoted: ResolutionVoter[];
+    votersHaveVotedYes: ResolutionVoter[];
+    votersHaveVotedNo: ResolutionVoter[];
+  };
 };
 
 export type ResolutionState = "pre-draft" | "notice" | "voting" | "ended";

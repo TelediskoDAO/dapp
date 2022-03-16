@@ -21,7 +21,7 @@
   let resolutionData: ResolutionEntity;
   let resolutionDataEnhanced: ResolutionEntityEnhanced;
 
-  onMount(async () => {
+  async function fethAndSetResolutionData() {
     const {
       resolution,
     }: {
@@ -30,6 +30,14 @@
       id: params.resolutionId,
     });
     resolutionData = resolution;
+  }
+
+  onMount(async () => {
+    await fethAndSetResolutionData();
+
+    const interval = setInterval(fethAndSetResolutionData, 5000);
+
+    return () => clearInterval(interval);
   });
 
   $: {
@@ -42,9 +50,11 @@
   }
 </script>
 
-{#if !resolutionDataEnhanced}
-  <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-{:else}
-  <CurrentTimestamp />
-  <ResolutionView resolution={resolutionDataEnhanced} />
-{/if}
+<section>
+  {#if !resolutionDataEnhanced}
+    <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+  {:else}
+    <CurrentTimestamp />
+    <ResolutionView resolution={resolutionDataEnhanced} />
+  {/if}
+</section>
