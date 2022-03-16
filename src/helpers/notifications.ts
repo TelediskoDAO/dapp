@@ -1,4 +1,4 @@
-import iziToast, { IziToastSettings } from "iziToast";
+import iziToast, { IziToastSettings } from "izitoast";
 
 const DEFAULT_POSITION = "topRight";
 const DEFAULT_TIMEOUT = 5000;
