@@ -5,7 +5,7 @@
   import { mdiInformationOutline } from "@mdi/js";
 
   import { signerAddress } from "../state/eth";
-  import { usersWithEthereumAddress } from "../state/odoo";
+  import { agent, usersWithEthereumAddress } from "../state/odoo";
   import type { OdooUserTransformed } from "../types";
   import Tag from "./Tag.svelte";
 
@@ -32,7 +32,7 @@
       {userDetails.displayName}
     {:else}
       <span>{ethereumAddress}</span>
-      {#if !hideInfo}
+      {#if !hideInfo && $agent}
         <Wrapper>
           <span class="icon-wrapper">
             <Icon component={Svg} viewBox="0 0 24 24">
@@ -67,7 +67,7 @@
         <div class="resolution-user__name">
           <span>
             {userDetails?.displayName || "Unknown user"}
-            {#if !hideInfo && !userDetails}
+            {#if !hideInfo && !userDetails && $agent}
               <Wrapper>
                 <span class="icon-wrapper">
                   <Icon component={Svg} viewBox="0 0 24 24">

@@ -112,7 +112,7 @@
       </DataTable>
     {/if}
     {#if resolution.state === RESOLUTION_STATES.NOTICE}
-      <h3 class="secondary-title">Possible voters:</h3>
+      <h3 class="secondary-title pagebreak">Possible voters:</h3>
       <DataTable
         table$aria-label="Resolutions possible voters list"
         style="width: 100%;"

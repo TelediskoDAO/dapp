@@ -45,7 +45,7 @@ export const usersList: Readable<OdooUser[]> = derived(
         );
       }
     } else {
-      set(null);
+      set([]);
     }
   }
 );
@@ -70,6 +70,8 @@ export const usersWithEthereumAddress: Readable<UsersWithEthereumAddress> =
       );
 
       set(usersObj);
+    } else {
+      set({});
     }
   });
 
