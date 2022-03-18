@@ -13,6 +13,7 @@
   export let title: string = null;
   export let inline = false;
   export let hasBg = false;
+  export let hideInfo = false;
   export let size: "sm" | "md" | "lg" = "md";
 
   let userDetails: OdooUserTransformed = null;
@@ -30,46 +31,8 @@
     {#if userDetails}
       {userDetails.displayName}
     {:else}
-      <span>{ethereumAddress} </span>
-      <Wrapper>
-        <span class="icon-wrapper">
-          <Icon component={Svg} viewBox="0 0 24 24">
-            <path fill="currentColor" d={mdiInformationOutline} />
-          </Icon>
-        </span>
-        <Tooltip yPos="above"
-          >It looks this address is not mapped with odoo data</Tooltip
-        >
-      </Wrapper>
-    {/if}
-    {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase()}
-      <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
-    {/if}
-  </span>
-{:else}
-  <div class={`wrapper ${hasBg ? "wrapper--has-bg" : ""} wrapper--${size}`}>
-    {#if title}
-      <h4 class="resolution-user-title">{title}</h4>
-    {/if}
-    {#if userDetails}
-      <div class="resolution-user">
-        <img
-          alt={userDetails.displayName}
-          src="data:image/jpeg;base64,{userDetails.image}"
-        />
-        <div>
-          <div class="resolution-user__name">
-            <span>{userDetails.displayName}</span>
-            {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase()}
-              <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
-            {/if}
-          </div>
-          <div class="resolution-user__eth">{userDetails.ethereumAddress}</div>
-        </div>
-      </div>
-    {:else}
-      <span class="inline-flex">
-        <span>{ethereumAddress} </span>
+      <span>{ethereumAddress}</span>
+      {#if !hideInfo}
         <Wrapper>
           <span class="icon-wrapper">
             <Icon component={Svg} viewBox="0 0 24 24">
@@ -80,11 +43,50 @@
             >It looks this address is not mapped with odoo data</Tooltip
           >
         </Wrapper>
-        {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase()}
-          <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
-        {/if}
-      </span>
+      {/if}
     {/if}
+    {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase() && !hideInfo}
+      <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
+    {/if}
+  </span>
+{:else}
+  <div class={`wrapper ${hasBg ? "wrapper--has-bg" : ""} wrapper--${size}`}>
+    {#if title}
+      <h4 class="resolution-user-title">{title}</h4>
+    {/if}
+    <div class="resolution-user">
+      {#if userDetails}
+        <img
+          alt={userDetails.displayName}
+          src="data:image/jpeg;charset=utf-8;base64,{userDetails.image}"
+        />
+      {:else}
+        <div class="unknown-user-placeholder" />
+      {/if}
+      <div>
+        <div class="resolution-user__name">
+          <span>
+            {userDetails?.displayName || "Unknown user"}
+            {#if !hideInfo && !userDetails}
+              <Wrapper>
+                <span class="icon-wrapper">
+                  <Icon component={Svg} viewBox="0 0 24 24">
+                    <path fill="currentColor" d={mdiInformationOutline} />
+                  </Icon>
+                </span>
+                <Tooltip yPos="above"
+                  >It looks this address is not mapped with odoo data</Tooltip
+                >
+              </Wrapper>
+            {/if}
+          </span>
+          {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase()}
+            <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
+          {/if}
+        </div>
+        <div class="resolution-user__eth">{ethereumAddress}</div>
+      </div>
+    </div>
   </div>
 {/if}
 
@@ -93,11 +95,13 @@
     display: inline-flex;
     align-items: center;
   }
+  .inline-flex :global(.tag) {
+    margin-left: 0.3rem;
+  }
   .icon-wrapper {
     display: inline-flex;
     align-items: center;
-    margin: 0 0.2rem;
-    margin-right: 0.5rem;
+    margin-left: 0.2rem;
     color: var(--blue-sapphire);
     cursor: help;
   }
@@ -122,17 +126,25 @@
     display: flex;
     align-items: center;
   }
-  .resolution-user img {
+  .resolution-user img,
+  .unknown-user-placeholder {
     border-radius: 50%;
     width: 48px;
     height: 48px;
     margin-right: 1rem;
   }
+  .unknown-user-placeholder {
+    background-color: var(--color-gray-1);
+  }
+
   .resolution-user__name {
     display: flex;
     align-items: center;
     font-size: large;
     margin-bottom: 0.2rem;
+  }
+  .resolution-user__name > span {
+    display: inline-flex;
   }
   .resolution-user__name > span:first-child {
     margin-right: 0.3rem;
@@ -150,9 +162,16 @@
     font-size: 11px;
     margin-top: -0.4rem;
   }
-  .wrapper--sm .resolution-user img {
+  .wrapper--sm .resolution-user img,
+  .wrapper--sm .unknown-user-placeholder {
     width: 32px;
     height: 32px;
     margin-right: 0.6rem;
+  }
+
+  @media print {
+    img {
+      -webkit-print-color-adjust: exact;
+    }
   }
 </style>

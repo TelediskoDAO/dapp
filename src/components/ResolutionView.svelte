@@ -18,13 +18,13 @@
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
   import ResolutionUser from "./ResolutionUser.svelte";
+  import Button from "@smui/button";
 
   export let resolution: ResolutionEntityEnhanced;
-  let isPrint: boolean;
+  let isPrint = /\/print$/.test($location);
   let signerVoted: ResolutionVoter | null = null;
 
   onMount(() => {
-    isPrint = /\/print$/.test($location);
     if (isPrint) {
       window.print();
       window.close();
@@ -38,6 +38,10 @@
       );
     }
   }
+
+  function handlePrint() {
+    window.open(`/#/resolutions/${resolution.id}/print`);
+  }
 </script>
 
 <div class="view">
@@ -47,13 +51,14 @@
       ethereumAddress={resolution.createBy}
       title={`Created ${resolution.createdAt} by`}
       hasBg
+      hideInfo={isPrint}
     />
     <h3 class="secondary-title">Content of the resolution:</h3>
     <div class="content">
       <SvelteMarkdown source={resolution.content} />
     </div>
     {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
-      <h3 class="secondary-title">Voting breakdown:</h3>
+      <h3 class="secondary-title pagebreak">Voting breakdown:</h3>
       <VotingBreakdown
         totalYes={resolution.votingStatus.votersHaveVotedYes.length}
         totalNo={resolution.votingStatus.votersHaveVotedNo.length}
@@ -86,6 +91,7 @@
                 <ResolutionUser
                   ethereumAddress={resolutionVoter.address}
                   size="sm"
+                  hideInfo={isPrint}
                 />
               </Cell>
               <Cell>
@@ -124,6 +130,7 @@
                 <ResolutionUser
                   ethereumAddress={resolutionVoter.address}
                   size="sm"
+                  hideInfo={isPrint}
                 />
               </Cell>
               <Cell numeric>{resolutionVoter.votingPower}</Cell>
@@ -134,6 +141,11 @@
     {/if}
   </div>
   <div class="extra">
+    {#if !isPrint}
+      <Button variant="outlined" style="width: 100%" on:click={handlePrint}>
+        Print
+      </Button>
+    {/if}
     <div>
       <div class="extra__heading">
         <h4 class="secondary-title">
@@ -204,11 +216,7 @@
     padding: 0;
     padding-bottom: 0.5rem;
   }
-  h1 + small {
-    display: block;
-    margin-bottom: 2rem;
-    color: var(--color-gray-7);
-  }
+
   .centered {
     text-align: center;
   }
@@ -242,6 +250,10 @@
     margin-top: 3rem;
   }
 
+  .extra :global(button) {
+    display: none;
+  }
+
   @media screen and (min-width: 1024px) {
     .view {
       display: flex;
@@ -260,6 +272,11 @@
       top: 60px;
       padding: 2em;
       box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+
+    .extra :global(button) {
+      display: block;
+      margin-bottom: 1rem;
     }
   }
 
@@ -282,5 +299,11 @@
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  @media print {
+    .pagebreak {
+      page-break-before: always;
+    }
   }
 </style>
