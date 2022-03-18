@@ -28,9 +28,9 @@ export const user = derived(agent, async ($agent, set) => {
   }
 });
 
-// @ts-ignore
 export const usersList: Readable<OdooUser[]> = derived(
   agent,
+  // @ts-ignore
   async ($agent, set) => {
     if ($agent) {
       try {
