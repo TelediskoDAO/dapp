@@ -42,7 +42,6 @@ function tuplify(query = {}) {
   for (let key of Object.keys(query)) {
     params.push([key, "=", query[key]]);
   }
-  console.log("params: ", params);
   return params;
 }
 

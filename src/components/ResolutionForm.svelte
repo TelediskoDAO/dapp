@@ -83,7 +83,7 @@
       {#if createBy}
         <ResolutionUser
           ethereumAddress={createBy}
-          title={`Created ${createdOn} by:`}
+          title={`Created ${createdOn} by`}
           hasBg
         />
       {/if}
