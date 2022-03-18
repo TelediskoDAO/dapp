@@ -19,6 +19,7 @@
   import { getResolutionTypesQuery } from "../graphql/get-resolution-types.query";
   import { acl } from "../state/resolutions";
   import Alert from "./Alert.svelte";
+  import ResolutionUser from "./ResolutionUser.svelte";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -26,7 +27,8 @@
 
   const noop = () => {};
 
-  export let editMode = false;
+  export let createBy = "";
+  export let createdOn = "";
   export let disabledUpdate = true;
   export let handleSave = noop;
   export let handleApprove = noop;
@@ -74,10 +76,17 @@
   <LayoutGrid>
     <Cell span={12}>
       <h1>
-        {editMode
+        {createBy
           ? `Editing: ${$currentResolution.title}`
           : `New Resolution: ${$currentResolution.title}`}
       </h1>
+      {#if createBy}
+        <ResolutionUser
+          ethereumAddress={createBy}
+          title={`Created ${createdOn} by:`}
+          hasBg
+        />
+      {/if}
     </Cell>
 
     <Cell span={12}>
@@ -151,7 +160,7 @@
           </div>
         </div>
       {/if}
-      {#if editMode && !$formState.loading && !$formState.awaitingConfirmation}
+      {#if createBy && !$formState.loading && !$formState.awaitingConfirmation}
         {#if !disabledUpdate}
           <Button variant="outlined" {disabled} on:click={handleSave}>
             <Label>Update</Label>
@@ -180,7 +189,7 @@
           {/if}
         {/if}
       {/if}
-      {#if !editMode && !$formState.loading && !$formState.awaitingConfirmation}
+      {#if !createBy && !$formState.loading && !$formState.awaitingConfirmation}
         <Button variant="outlined" {disabled} on:click={handleSave}>
           <Label>Save pre draft</Label>
         </Button>

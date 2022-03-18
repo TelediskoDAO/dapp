@@ -17,6 +17,7 @@
   import { format } from "date-fns";
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
+  import ResolutionUser from "./ResolutionUser.svelte";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint: boolean;
@@ -42,7 +43,11 @@
 <div class="view">
   <div class="info">
     <h1>{resolution.title}</h1>
-    <small>Created: {resolution.createdAt} by {resolution.createBy}</small>
+    <ResolutionUser
+      ethereumAddress={resolution.createBy}
+      title={`Created ${resolution.createdAt} by`}
+      hasBg
+    />
     <h3 class="secondary-title">Content of the resolution:</h3>
     <div class="content">
       <SvelteMarkdown source={resolution.content} />
@@ -69,26 +74,26 @@
       >
         <Head>
           <Row>
-            <Cell>Address / name</Cell>
-            <Cell>Voting outcome</Cell>
+            <Cell>Voter</Cell>
+            <Cell>Outcome</Cell>
             <Cell numeric>Voting power</Cell>
           </Row>
         </Head>
         <Body>
           {#each resolution.voters as resolutionVoter}
             <Row>
-              <Cell width="80%">
-                {resolutionVoter.address}
-                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
-                  <Tag label="you" size="sm" />
-                {/if}
+              <Cell width="82%">
+                <ResolutionUser
+                  ethereumAddress={resolutionVoter.address}
+                  size="sm"
+                />
               </Cell>
               <Cell>
                 {#if resolutionVoter.hasVoted && resolutionVoter.hasVotedYes}
-                  Yes
+                  <Tag label="Yes" size="sm" />
                 {/if}
                 {#if resolutionVoter.hasVoted && !resolutionVoter.hasVotedYes}
-                  No
+                  <Tag label="No" size="sm" />
                 {/if}
                 {#if !resolutionVoter.hasVoted}
                   <span class="not-yet-voted">Not voted</span>
@@ -108,18 +113,18 @@
       >
         <Head>
           <Row>
-            <Cell>Address / name</Cell>
+            <Cell>Possible Voter</Cell>
             <Cell numeric>Voting power</Cell>
           </Row>
         </Head>
         <Body>
           {#each resolution.voters as resolutionVoter}
             <Row>
-              <Cell width="80%">
-                {resolutionVoter.address}
-                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
-                  <Tag label="you" size="sm" />
-                {/if}
+              <Cell width="90%">
+                <ResolutionUser
+                  ethereumAddress={resolutionVoter.address}
+                  size="sm"
+                />
               </Cell>
               <Cell numeric>{resolutionVoter.votingPower}</Cell>
             </Row>

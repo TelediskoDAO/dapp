@@ -22,6 +22,8 @@
   import Countdown from "../../components/Countdown.svelte";
   import Tag from "../../components/Tag.svelte";
   import Alert from "../../components/Alert.svelte";
+  import { usersWithEthereumAddress } from "../../state/odoo";
+  import ResolutionUser from "../../components/ResolutionUser.svelte";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
@@ -112,10 +114,13 @@
                 <h4 class="resolution-title">{resolution.title}</h4>
                 {#if resolution.state === RESOLUTION_STATES.PRE_DRAFT}
                   <small class="resolution-detail-sm"
-                    ><span>Created on</span>
+                    ><span>Created</span>
                     {resolution.createdAt} <b>by</b>
-                    {resolution.createBy}</small
-                  >
+                    <ResolutionUser
+                      ethereumAddress={resolution.createBy}
+                      inline
+                    />
+                  </small>
                 {/if}
                 {#if resolution.state === RESOLUTION_STATES.NOTICE}
                   <small class="resolution-detail-sm"

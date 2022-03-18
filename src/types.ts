@@ -89,3 +89,19 @@ export type ResolutionFormState = {
   typeId: string | null;
   isNegative: boolean | null;
 };
+
+export type OdooUser = {
+  email: string;
+  ethereum_address: string;
+  display_name: string;
+  image: string;
+};
+
+export type OdooUserTransformed = {
+  email: string;
+  ethereumAddress: string;
+  displayName: string;
+  image: string;
+};
+
+export type UsersWithEthereumAddress = Record<string, OdooUserTransformed>;
