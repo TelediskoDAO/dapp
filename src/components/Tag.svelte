@@ -3,7 +3,7 @@
   export let size: "xs" | "sm" | "md" | "lg" = "md";
 </script>
 
-<span class={`tag tag--${label.toLowerCase()} tag--${size}`}>
+<span class="tag tag--{label.toLowerCase()} tag--{size}">
   {label}
 </span>
 
