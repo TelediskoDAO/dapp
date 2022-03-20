@@ -1,17 +1,16 @@
-import { derived, writable } from "svelte/store";
+import { derived, writable, Readable } from "svelte/store";
 import { derivable } from "../../state/utils";
+import type { OdooUser, UsersWithEthereumAddress } from "../../types";
 
 import { agent } from "./agent";
 
 export const uid = derivable(agent, ($agent) => $agent && $agent.uid);
-//export const uid = derivable(agent, ($agent) => 7); //$agent && $agent.uid);
 
 // @ts-ignore
 export const user = derived(agent, async ($agent, set) => {
   if ($agent) {
-    let data;
     try {
-      [data] = await $agent.read("res.users", $agent.uid);
+      const [data] = await $agent.read("res.users", $agent.uid);
 
       set({
         uid: data.id,
@@ -28,5 +27,52 @@ export const user = derived(agent, async ($agent, set) => {
     set(null);
   }
 });
+
+export const usersList: Readable<OdooUser[]> = derived(
+  agent,
+  // @ts-ignore
+  async ($agent, set) => {
+    if ($agent) {
+      try {
+        const data: OdooUser[] = await $agent.search("res.users", [], {
+          fields: ["display_name", "email", "ethereum_address", "image"],
+        });
+
+        set(data);
+      } catch (e) {
+        userError.set(
+          "There is an error logging you in, please update your login details."
+        );
+      }
+    } else {
+      set([]);
+    }
+  }
+);
+
+export const usersWithEthereumAddress: Readable<UsersWithEthereumAddress> =
+  derived(usersList, ($usersList, set) => {
+    if ($usersList) {
+      const usersObj = $usersList.reduce(
+        (obj: UsersWithEthereumAddress, user) =>
+          user.ethereum_address
+            ? {
+                ...obj,
+                [user.ethereum_address.toLowerCase()]: {
+                  displayName: user.display_name,
+                  email: user.email,
+                  image: user.image,
+                  ethereumAddress: user.ethereum_address.toLowerCase(),
+                },
+              }
+            : obj,
+        {}
+      );
+
+      set(usersObj);
+    } else {
+      set({});
+    }
+  });
 
 export const userError = writable<string | undefined>();

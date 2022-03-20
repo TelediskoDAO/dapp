@@ -9,6 +9,7 @@
   import { getEnhancedResolutionMapper } from "../../helpers/resolutions";
   import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
+  import { usersWithEthereumAddress } from "../../state/odoo";
 
   type Params = {
     resolutionId: string;
@@ -51,7 +52,7 @@
 </script>
 
 <section>
-  {#if !resolutionDataEnhanced}
+  {#if !resolutionDataEnhanced || !$usersWithEthereumAddress}
     <CircularProgress style="height: 32px; width: 32px;" indeterminate />
   {:else}
     <CurrentTimestamp />

@@ -17,13 +17,14 @@
   import { format } from "date-fns";
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
+  import ResolutionUser from "./ResolutionUser.svelte";
+  import Button from "@smui/button";
 
   export let resolution: ResolutionEntityEnhanced;
-  let isPrint: boolean;
+  let isPrint = /\/print$/.test($location);
   let signerVoted: ResolutionVoter | null = null;
 
   onMount(() => {
-    isPrint = /\/print$/.test($location);
     if (isPrint) {
       window.print();
       window.close();
@@ -37,18 +38,27 @@
       );
     }
   }
+
+  function handlePrint() {
+    window.open(`/#/resolutions/${resolution.id}/print`);
+  }
 </script>
 
 <div class="view">
   <div class="info">
     <h1>{resolution.title}</h1>
-    <small>Created: {resolution.createdAt} by {resolution.createBy}</small>
+    <ResolutionUser
+      ethereumAddress={resolution.createBy}
+      title={`Created ${resolution.createdAt} by`}
+      hasBg
+      hideInfo={isPrint}
+    />
     <h3 class="secondary-title">Content of the resolution:</h3>
     <div class="content">
       <SvelteMarkdown source={resolution.content} />
     </div>
     {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
-      <h3 class="secondary-title">Voting breakdown:</h3>
+      <h3 class="secondary-title pagebreak">Voting breakdown:</h3>
       <VotingBreakdown
         totalYes={resolution.votingStatus.votersHaveVotedYes.length}
         totalNo={resolution.votingStatus.votersHaveVotedNo.length}
@@ -69,26 +79,27 @@
       >
         <Head>
           <Row>
-            <Cell>Address / name</Cell>
-            <Cell>Voting outcome</Cell>
+            <Cell>Voter</Cell>
+            <Cell>Outcome</Cell>
             <Cell numeric>Voting power</Cell>
           </Row>
         </Head>
         <Body>
           {#each resolution.voters as resolutionVoter}
             <Row>
-              <Cell width="80%">
-                {resolutionVoter.address}
-                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
-                  <Tag label="you" size="sm" />
-                {/if}
+              <Cell width="82%">
+                <ResolutionUser
+                  ethereumAddress={resolutionVoter.address}
+                  size="sm"
+                  hideInfo={isPrint}
+                />
               </Cell>
               <Cell>
                 {#if resolutionVoter.hasVoted && resolutionVoter.hasVotedYes}
-                  Yes
+                  <Tag label="Yes" size="sm" />
                 {/if}
                 {#if resolutionVoter.hasVoted && !resolutionVoter.hasVotedYes}
-                  No
+                  <Tag label="No" size="sm" />
                 {/if}
                 {#if !resolutionVoter.hasVoted}
                   <span class="not-yet-voted">Not voted</span>
@@ -101,25 +112,26 @@
       </DataTable>
     {/if}
     {#if resolution.state === RESOLUTION_STATES.NOTICE}
-      <h3 class="secondary-title">Possible voters:</h3>
+      <h3 class="secondary-title pagebreak">Possible voters:</h3>
       <DataTable
         table$aria-label="Resolutions possible voters list"
         style="width: 100%;"
       >
         <Head>
           <Row>
-            <Cell>Address / name</Cell>
+            <Cell>Possible Voter</Cell>
             <Cell numeric>Voting power</Cell>
           </Row>
         </Head>
         <Body>
           {#each resolution.voters as resolutionVoter}
             <Row>
-              <Cell width="80%">
-                {resolutionVoter.address}
-                {#if resolutionVoter.address === $signerAddress?.toLowerCase()}
-                  <Tag label="you" size="sm" />
-                {/if}
+              <Cell width="90%">
+                <ResolutionUser
+                  ethereumAddress={resolutionVoter.address}
+                  size="sm"
+                  hideInfo={isPrint}
+                />
               </Cell>
               <Cell numeric>{resolutionVoter.votingPower}</Cell>
             </Row>
@@ -129,6 +141,15 @@
     {/if}
   </div>
   <div class="extra">
+    {#if !isPrint}
+      <Button
+        variant="outlined"
+        style="width: 100%; margin-bottom: 1rem"
+        on:click={handlePrint}
+      >
+        Print
+      </Button>
+    {/if}
     <div>
       <div class="extra__heading">
         <h4 class="secondary-title">
@@ -199,11 +220,7 @@
     padding: 0;
     padding-bottom: 0.5rem;
   }
-  h1 + small {
-    display: block;
-    margin-bottom: 2rem;
-    color: var(--color-gray-7);
-  }
+
   .centered {
     text-align: center;
   }
@@ -277,5 +294,11 @@
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  @media print {
+    .pagebreak {
+      page-break-before: always;
+    }
   }
 </style>

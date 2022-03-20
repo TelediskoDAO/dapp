@@ -14,6 +14,7 @@
   import { handleUpdate } from "../../handlers/resolutions/update";
   import { handleApprove } from "../../handlers/resolutions/approve";
   import {
+    getRelativeDateFromUnixTimestamp,
     getResolutionState,
     getResolutionTypeInfo,
     RESOLUTION_STATES,
@@ -132,7 +133,8 @@
 {#if loaded && $acl.loaded}
   <ResolutionForm
     handleSave={handleUpdateResolution}
-    editMode
+    createBy={resolutionData.createBy}
+    createdOn={getRelativeDateFromUnixTimestamp(resolutionData.createTimestamp)}
     {handleExport}
     handleApprove={handlePreApprove}
     {disabledUpdate}

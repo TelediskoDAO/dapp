@@ -51,7 +51,8 @@ export async function session(url, db, username, password) {
   return {
     create: async (name, object) => model(name, "create", [object]),
     read: async (name, ids) => model(name, "read", [ids]),
-    search: async (name, query) => model(name, "search_read", [tuplify(query)]),
+    search: async (name, query, fields) =>
+      model(name, "search_read", [tuplify(query)], fields),
     update: async (name, id, object) => model(name, "write", [[id], object]),
     remove: async (name, ids) => model(name, "unlink", [ids]),
     uid,
