@@ -142,7 +142,11 @@
   </div>
   <div class="extra">
     {#if !isPrint}
-      <Button variant="outlined" style="width: 100%" on:click={handlePrint}>
+      <Button
+        variant="outlined"
+        style="width: 100%; margin-bottom: 1rem"
+        on:click={handlePrint}
+      >
         Print
       </Button>
     {/if}
@@ -250,10 +254,6 @@
     margin-top: 3rem;
   }
 
-  .extra :global(button) {
-    display: none;
-  }
-
   @media screen and (min-width: 1024px) {
     .view {
       display: flex;
@@ -272,11 +272,6 @@
       top: 60px;
       padding: 2em;
       box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    }
-
-    .extra :global(button) {
-      display: block;
-      margin-bottom: 1rem;
     }
   }
 

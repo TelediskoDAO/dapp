@@ -50,7 +50,7 @@
     {/if}
   </span>
 {:else}
-  <div class="wrapper--${size}" class:wrapper--has-bg={hasBg}>
+  <div class="wrapper wrapper--{size}" class:wrapper--has-bg={hasBg}>
     {#if title}
       <h4 class="resolution-user-title">{title}</h4>
     {/if}
