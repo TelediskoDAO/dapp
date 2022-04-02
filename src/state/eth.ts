@@ -9,7 +9,8 @@ import networks from "../../contracts/deployments/networks.json";
 import { ResolutionManager__factory } from "../../contracts/typechain/factories/ResolutionManager__factory";
 import type { ResolutionManager } from "../../contracts/typechain/ResolutionManager";
 
-import { ERC20, ERC20__factory } from "../../contracts/typechain";
+import { ERC20, ERC20__factory, Voting } from "../../contracts/typechain";
+import { Voting__factory } from "../../contracts/typechain/factories/Voting__factory";
 
 declare global {
   interface Window {
@@ -147,6 +148,20 @@ export const balance = derived(
       const address: string = $user.address;
       set(await $tokenContract.balanceOf(address));
     }
+  }
+);
+
+export const votingContract: Readable<Voting> = derived(
+  signer,
+  ($signer, set) => {
+    (async () => {
+      if ($signer) {
+        const chainId = await $signer.getChainId();
+        const address = networks[chainId.toString()]["Voting"];
+        const contract = Voting__factory.connect(address, $signer);
+        set(contract);
+      }
+    })();
   }
 );
 

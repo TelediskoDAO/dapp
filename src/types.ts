@@ -105,3 +105,9 @@ export type OdooUserTransformed = {
 };
 
 export type UsersWithEthereumAddress = Record<string, OdooUserTransformed>;
+
+export type DelegationUser = {
+  id: string;
+  address: string;
+  delegated: string;
+};

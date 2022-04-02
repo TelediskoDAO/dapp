@@ -11,8 +11,7 @@
   import { acl } from "../state/resolutions";
   import Countdown from "./Countdown.svelte";
   import { signerAddress } from "../state/eth";
-  import DataTable from "@smui/data-table/src/DataTable.svelte";
-  import { Body, Head, Row, Cell } from "@smui/data-table";
+  import DataTable, { Body, Head, Row, Cell } from "@smui/data-table";
   import Alert from "./Alert.svelte";
   import { format } from "date-fns";
   import Tag from "./Tag.svelte";
