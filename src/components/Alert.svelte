@@ -9,7 +9,7 @@
 
   export let type: "info" | "warning" | "error" | "success" = "info";
   export let title: string = "";
-  export let message: string;
+  export let message: string = "";
   export let marginTop: boolean = false;
 
   const typeIcon = {
@@ -30,7 +30,10 @@
     {#if title}
       <div class="alert-title">{title}</div>
     {/if}
-    <div class="alert-message">{@html message}</div>
+    <div class="alert-message">
+      {@html message}
+      <slot />
+    </div>
   </div>
 </div>
 
@@ -86,6 +89,7 @@
     height: 18px;
   }
   .alert-content {
+    width: 100%;
     padding: 0 1rem;
     text-align: left;
   }

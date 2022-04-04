@@ -1,14 +1,26 @@
 import { Readable, derived, writable } from "svelte/store";
-import type { DelegationUser } from "../../types";
+import type { DelegationStatus, DelegationUser } from "../../types";
 import { signer } from "../eth";
 import { graphQLClient } from "../../net/graphQl";
 import { getDelegationUsers } from "../../graphql/get-delegation-users.query";
 
+export const formState = writable({
+  loading: false,
+  awaitingConfirmation: false,
+});
+
+export const resetFormState = () => {
+  formState.set({
+    loading: false,
+    awaitingConfirmation: false,
+  });
+};
+
 export const delegationRefreshTimestamp = writable(Date.now());
 
-export const delegationStatus: Readable<any> = derived(
+export const delegationStatus: Readable<DelegationStatus> = derived(
   [signer, delegationRefreshTimestamp],
-  ([$signer, $timestamp], set) => {
+  ([$signer], set) => {
     (async () => {
       if ($signer) {
         const {
@@ -20,31 +32,28 @@ export const delegationStatus: Readable<any> = derived(
         const signerStatus = delegationUsers.find(
           (user) => user.address.toLowerCase() === address
         );
-        const delegatableUsers = delegationUsers.filter(
+        // if this is null it means noone has delegated current user, and therefore they can delegate
+        const signerDelegatedBy = delegationUsers.find(
           (user) =>
-            user.address.toLowerCase() !== address &&
-            user.address === user.delegated
-        );
-        const nonDelegatableUsers = delegationUsers.filter(
-          (user) =>
-            user.address.toLowerCase() !== address &&
-            user.address !== user.delegated
+            user.address.toLocaleLowerCase() !== address &&
+            user.delegated.toLocaleLowerCase() === address
         );
         set({
-          // if noone has delegated me, I can delegate
-          signerCanDelegate: !delegatableUsers.some(
-            (user) => user.delegated.toLowerCase() === address
-          ),
+          signerDelegatedBy,
           signerDelegationStatus: signerStatus,
-          delegatableUsers,
-          nonDelegatableUsers,
+          usersList: delegationUsers
+            .filter((user) => user.address.toLowerCase() !== address)
+            .map((user) => ({
+              ...user,
+              canBeDelegated:
+                user.address === user.delegated && !signerDelegatedBy,
+            })),
         });
       } else {
         set({
-          signerCanDelegate: Boolean(false),
-          signerHasDelegated: Boolean(false),
-          delegatableUsers: [],
-          nonDelegatableUsers: [],
+          signerDelegatedBy: null,
+          signerDelegationStatus: null,
+          usersList: [],
         });
       }
     })();

@@ -23,6 +23,7 @@ export const resolutionFragment = gql`
       votingPower
       hasVoted
       hasVotedYes
+      delegated
     }
   }
 

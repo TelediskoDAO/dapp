@@ -2,6 +2,9 @@
   import { onMount } from "svelte";
   import SvelteMarkdown from "svelte-markdown";
   import { location } from "svelte-spa-router";
+  import Button from "@smui/button";
+  import DataTable, { Body, Head, Row, Cell } from "@smui/data-table";
+  import { format } from "date-fns";
   import {
     getDateFromUnixTimestamp,
     RESOLUTION_STATES,
@@ -11,17 +14,21 @@
   import { acl } from "../state/resolutions";
   import Countdown from "./Countdown.svelte";
   import { signerAddress } from "../state/eth";
-  import DataTable, { Body, Head, Row, Cell } from "@smui/data-table";
   import Alert from "./Alert.svelte";
-  import { format } from "date-fns";
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
   import ResolutionUser from "./ResolutionUser.svelte";
-  import Button from "@smui/button";
+  import { usersWithEthereumAddress } from "../state/odoo";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint = /\/print$/.test($location);
   let signerVoted: ResolutionVoter | null = null;
+
+  function getAddressName(address: string): string {
+    return (
+      $usersWithEthereumAddress[address.toLowerCase()]?.displayName || address
+    );
+  }
 
   onMount(() => {
     if (isPrint) {
@@ -91,7 +98,17 @@
                   ethereumAddress={resolutionVoter.address}
                   size="sm"
                   hideInfo={isPrint}
-                />
+                >
+                  {#if resolutionVoter.delegated !== resolutionVoter.address}
+                    <span>
+                      delegated
+                      <ResolutionUser
+                        ethereumAddress={resolutionVoter.delegated}
+                        inline
+                      />
+                    </span>
+                  {/if}
+                </ResolutionUser>
               </Cell>
               <Cell>
                 {#if resolutionVoter.hasVoted && resolutionVoter.hasVotedYes}
@@ -130,7 +147,17 @@
                   ethereumAddress={resolutionVoter.address}
                   size="sm"
                   hideInfo={isPrint}
-                />
+                >
+                  {#if resolutionVoter.delegated !== resolutionVoter.address}
+                    <span>
+                      delegated
+                      <ResolutionUser
+                        ethereumAddress={resolutionVoter.delegated}
+                        inline
+                      />
+                    </span>
+                  {/if}
+                </ResolutionUser>
               </Cell>
               <Cell numeric>{resolutionVoter.votingPower}</Cell>
             </Row>
@@ -159,7 +186,11 @@
       {#if resolution.state === RESOLUTION_STATES.VOTING}
         <hr />
         {#if $acl.canVote(resolution.voters) && !isPrint}
-          <VotingWidget resolutionId={resolution.id} {signerVoted} />
+          <VotingWidget
+            resolutionId={resolution.id}
+            {signerVoted}
+            resolutionVoters={resolution.voters}
+          />
         {/if}
         {#if !$acl.canVote(resolution.voters) && !isPrint}
           <Alert message="You're not entitled to vote" type="warning" />

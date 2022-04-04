@@ -83,6 +83,7 @@
           {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase()}
             <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
           {/if}
+          <slot />
         </div>
         <div class="resolution-user__eth">{ethereumAddress}</div>
       </div>
@@ -143,6 +144,10 @@
     font-size: large;
     margin-bottom: 0.2rem;
   }
+  .resolution-user__name :global(.tag) {
+    margin-right: 0.3rem;
+  }
+
   .resolution-user__name > span {
     display: inline-flex;
   }
