@@ -29,11 +29,13 @@
     if ($signerAddress) {
       votingOnBehalfOf = resolutionVoters.filter(
         (user) =>
-          user.address !== $signerAddress && user.delegated === $signerAddress
+          user.address.toLowerCase() !== $signerAddress.toLowerCase() &&
+          user.delegated.toLowerCase() === $signerAddress.toLowerCase()
       );
       delegatedTo = resolutionVoters.find(
         (user) =>
-          user.address === $signerAddress && user.delegated !== $signerAddress
+          user.address.toLowerCase() === $signerAddress.toLowerCase() &&
+          user.delegated.toLowerCase() !== $signerAddress.toLowerCase()
       );
     }
     if (signerVoted?.hasVoted && votedYes === null) {
@@ -68,10 +70,12 @@
   {/if}
   {#if delegatedTo}
     <Alert>
-      You've currently delegated voting to <ResolutionUser
+      You're currently delegating your vote to <ResolutionUser
         inline
         ethereumAddress={delegatedTo.delegated}
-      />. You can still vote if you want.
+      />.
+      <br />You can still vote if you want. Doing so will override the
+      delegation.
     </Alert>
   {/if}
   {#if !signerVoted}
