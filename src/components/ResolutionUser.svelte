@@ -15,6 +15,7 @@
   export let hasBg = false;
   export let hideInfo = false;
   export let size: "sm" | "md" | "lg" = "md";
+  export let shortAddressWhileLoading = false;
 
   let userDetails: OdooUserTransformed = null;
 
@@ -31,7 +32,11 @@
     {#if userDetails}
       {userDetails.displayName}
     {:else}
-      <span>{ethereumAddress}</span>
+      <span
+        >{shortAddressWhileLoading
+          ? `${ethereumAddress.slice(0, 8)}...`
+          : ethereumAddress}</span
+      >
       {#if !hideInfo && $agent}
         <Wrapper>
           <span class="icon-wrapper">

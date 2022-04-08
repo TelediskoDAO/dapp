@@ -105,6 +105,7 @@
                       <ResolutionUser
                         ethereumAddress={resolutionVoter.delegated}
                         inline
+                        shortAddressWhileLoading
                       />
                     </span>
                   {/if}
@@ -154,6 +155,7 @@
                       <ResolutionUser
                         ethereumAddress={resolutionVoter.delegated}
                         inline
+                        shortAddressWhileLoading
                       />
                     </span>
                   {/if}

@@ -61,7 +61,11 @@
     <Alert>
       Voting also on behalf of
       {#each votingOnBehalfOf as votingOnBehalfOfUser, index}
-        <ResolutionUser inline ethereumAddress={votingOnBehalfOfUser.address} />
+        <ResolutionUser
+          inline
+          ethereumAddress={votingOnBehalfOfUser.address}
+          shortAddressWhileLoading
+        />
         {#if index < votingOnBehalfOf.length}
           ,
         {/if}
@@ -70,9 +74,10 @@
   {/if}
   {#if delegatedTo}
     <Alert>
-      You're currently delegating your vote to <ResolutionUser
+      You're delegating your vote for this resolution to <ResolutionUser
         inline
         ethereumAddress={delegatedTo.delegated}
+        shortAddressWhileLoading
       />.
       <br />You can still vote if you want. Doing so will override the
       delegation.
