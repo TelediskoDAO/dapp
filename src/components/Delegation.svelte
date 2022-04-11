@@ -47,7 +47,7 @@
     currentUserDelegated =
       $delegationStatus?.signerDelegationStatus.delegated !==
       $delegationStatus?.signerDelegationStatus.address;
-    currentUserDelegatedBy = !!$delegationStatus?.signerDelegatedBy;
+    currentUserDelegatedBy = $delegationStatus?.signerDelegatedBy.length > 0;
   }
 </script>
 
@@ -67,10 +67,16 @@
         />
       {/if}
       {#if currentUserDelegatedBy}
-        You're currently being delegated by <ResolutionUser
-          ethereumAddress={$delegationStatus?.signerDelegatedBy.address}
-          inline
-        />
+        You're currently being delegated by
+        {#each $delegationStatus?.signerDelegatedBy as signerDelegatedByUser, index}
+          <ResolutionUser
+            inline
+            ethereumAddress={signerDelegatedByUser.address}
+            shortAddressWhileLoading
+          />
+          {#if index < $delegationStatus?.signerDelegatedBy.length - 2},&nbsp;{/if}
+          {#if index < $delegationStatus?.signerDelegatedBy.length - 1 && index >= $delegationStatus?.signerDelegatedBy.length - 2}and&nbsp;{/if}
+        {/each}
       {/if}
     </Tooltip>
   {/if}
@@ -107,10 +113,16 @@
       {:else}
         {#if currentUserDelegatedBy}
           <Alert type="warning">
-            You're currently being delegated by <ResolutionUser
-              ethereumAddress={$delegationStatus?.signerDelegatedBy.address}
-              inline
-            />, so you can't delegate
+            You're currently being delegated by
+            {#each $delegationStatus?.signerDelegatedBy as signerDelegatedByUser, index}
+              <ResolutionUser
+                inline
+                ethereumAddress={signerDelegatedByUser.address}
+                shortAddressWhileLoading
+              />
+              {#if index < $delegationStatus?.signerDelegatedBy.length - 2},{/if}
+              {#if index < $delegationStatus?.signerDelegatedBy.length - 1 && index >= $delegationStatus?.signerDelegatedBy.length - 2}and{/if}
+            {/each}, so you can't delegate
           </Alert>
         {/if}
         {#if currentUserDelegated}

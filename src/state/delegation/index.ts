@@ -33,7 +33,7 @@ export const delegationStatus: Readable<DelegationStatus> = derived(
           (user) => user.address.toLowerCase() === address
         );
         // if this is null it means noone has delegated current user, and therefore they can delegate
-        const signerDelegatedBy = delegationUsers.find(
+        const signerDelegatedBy = delegationUsers.filter(
           (user) =>
             user.address.toLocaleLowerCase() !== address &&
             user.delegated.toLocaleLowerCase() === address
@@ -51,7 +51,7 @@ export const delegationStatus: Readable<DelegationStatus> = derived(
         });
       } else {
         set({
-          signerDelegatedBy: null,
+          signerDelegatedBy: [],
           signerDelegationStatus: null,
           usersList: [],
         });

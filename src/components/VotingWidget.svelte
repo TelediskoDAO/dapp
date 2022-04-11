@@ -66,9 +66,8 @@
           ethereumAddress={votingOnBehalfOfUser.address}
           shortAddressWhileLoading
         />
-        {#if index < votingOnBehalfOf.length}
-          ,
-        {/if}
+        {#if index < votingOnBehalfOf.length - 2},{/if}
+        {#if index < votingOnBehalfOf.length - 1 && index >= votingOnBehalfOf.length - 2}and{/if}
       {/each}
     </Alert>
   {/if}

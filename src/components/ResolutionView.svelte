@@ -105,6 +105,7 @@
                       <ResolutionUser
                         ethereumAddress={resolutionVoter.delegated}
                         inline
+                        size="sm"
                         shortAddressWhileLoading
                       />
                     </span>

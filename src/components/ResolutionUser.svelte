@@ -22,7 +22,7 @@
   $: {
     if ($usersWithEthereumAddress) {
       userDetails =
-        $usersWithEthereumAddress[ethereumAddress.toLowerCase()] || null;
+        $usersWithEthereumAddress[ethereumAddress?.toLowerCase()] || null;
     }
   }
 </script>
@@ -50,7 +50,7 @@
         </Wrapper>
       {/if}
     {/if}
-    {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase() && !hideInfo}
+    {#if $signerAddress?.toLowerCase() === ethereumAddress?.toLowerCase() && !hideInfo}
       <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
     {/if}
   </span>

@@ -114,7 +114,7 @@ export type DelegationUser = {
 };
 
 export type DelegationStatus = {
-  signerDelegatedBy: DelegationUser | null;
+  signerDelegatedBy: DelegationUser[];
   signerDelegationStatus: DelegationUser | null;
   usersList: Array<DelegationUser & { canBeDelegated: boolean }>;
 };
