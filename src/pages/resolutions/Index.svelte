@@ -22,8 +22,8 @@
   import Countdown from "../../components/Countdown.svelte";
   import Tag from "../../components/Tag.svelte";
   import Alert from "../../components/Alert.svelte";
-  import { usersWithEthereumAddress } from "../../state/odoo";
   import ResolutionUser from "../../components/ResolutionUser.svelte";
+  import Delegation from "../../components/Delegation.svelte";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
@@ -83,9 +83,12 @@
       <Button variant="outlined" href="#/resolutions/new">
         <Label>Create resolution</Label>
       </Button>
+      <div class="delegation">
+        <Delegation />
+      </div>
     {/if}
     {#if ready && Object.keys(possibleFilters).length > 1}
-      <div>
+      <div class="push-right">
         <Select bind:value={stateFilter} label="Filter by state">
           <Option value={"all"}>all ({resolutions.length})</Option>
           {#each Object.keys(possibleFilters) as resolutionState}
@@ -215,7 +218,11 @@
     padding-bottom: 1rem;
   }
 
-  .header > div {
+  .push-right {
     margin-left: auto;
+  }
+
+  .delegation {
+    margin-left: 1rem;
   }
 </style>

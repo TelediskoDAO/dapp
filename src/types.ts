@@ -4,6 +4,7 @@ export type ResolutionVoter = {
   address: string;
   hasVoted: boolean;
   hasVotedYes: boolean;
+  delegated: string;
 };
 
 export type ResolutionsAcl = {
@@ -105,3 +106,15 @@ export type OdooUserTransformed = {
 };
 
 export type UsersWithEthereumAddress = Record<string, OdooUserTransformed>;
+
+export type DelegationUser = {
+  id: string;
+  address: string;
+  delegated: string;
+};
+
+export type DelegationStatus = {
+  signerDelegatedBy: DelegationUser | null;
+  signerDelegationStatus: DelegationUser | null;
+  usersList: Array<DelegationUser & { canBeDelegated: boolean }>;
+};

@@ -2,16 +2,20 @@
   import Button from "@smui/button";
   import CircularProgress from "@smui/circular-progress/src/CircularProgress.svelte";
   import { handleVote } from "../handlers/resolutions/vote";
-  import { resolutionContract, signer } from "../state/eth";
+  import { resolutionContract, signer, signerAddress } from "../state/eth";
   import { votingState } from "../state/resolutions/voting";
   import type { ResolutionVoter } from "../types";
   import Alert from "./Alert.svelte";
+  import ResolutionUser from "./ResolutionUser.svelte";
 
   export let resolutionId: string;
   export let signerVoted: ResolutionVoter | null;
+  export let resolutionVoters: ResolutionVoter[];
 
   let votedYes: boolean | null = null;
   let originalVote: boolean | null = null;
+  let votingOnBehalfOf: ResolutionVoter[] = [];
+  let delegatedTo: ResolutionVoter | null = null;
 
   function handleVoting() {
     handleVote(resolutionId, votedYes, {
@@ -22,6 +26,18 @@
 
   $: {
     originalVote = signerVoted?.hasVoted ? signerVoted.hasVotedYes : null;
+    if ($signerAddress) {
+      votingOnBehalfOf = resolutionVoters.filter(
+        (user) =>
+          user.address.toLowerCase() !== $signerAddress.toLowerCase() &&
+          user.delegated.toLowerCase() === $signerAddress.toLowerCase()
+      );
+      delegatedTo = resolutionVoters.find(
+        (user) =>
+          user.address.toLowerCase() === $signerAddress.toLowerCase() &&
+          user.delegated.toLowerCase() !== $signerAddress.toLowerCase()
+      );
+    }
     if (signerVoted?.hasVoted && votedYes === null) {
       votedYes = signerVoted.hasVotedYes;
     }
@@ -41,6 +57,32 @@
   />
 {/if}
 <div class="voting-widget">
+  {#if votingOnBehalfOf.length > 0}
+    <Alert>
+      Voting also on behalf of
+      {#each votingOnBehalfOf as votingOnBehalfOfUser, index}
+        <ResolutionUser
+          inline
+          ethereumAddress={votingOnBehalfOfUser.address}
+          shortAddressWhileLoading
+        />
+        {#if index < votingOnBehalfOf.length}
+          ,
+        {/if}
+      {/each}
+    </Alert>
+  {/if}
+  {#if delegatedTo}
+    <Alert>
+      You're delegating your vote for this resolution to <ResolutionUser
+        inline
+        ethereumAddress={delegatedTo.delegated}
+        shortAddressWhileLoading
+      />.
+      <br />You can still vote if you want. Doing so will override the
+      delegation.
+    </Alert>
+  {/if}
   {#if !signerVoted}
     <p>I want to vote</p>
   {/if}

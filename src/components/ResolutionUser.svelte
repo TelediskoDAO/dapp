@@ -15,6 +15,7 @@
   export let hasBg = false;
   export let hideInfo = false;
   export let size: "sm" | "md" | "lg" = "md";
+  export let shortAddressWhileLoading = false;
 
   let userDetails: OdooUserTransformed = null;
 
@@ -31,7 +32,11 @@
     {#if userDetails}
       {userDetails.displayName}
     {:else}
-      <span>{ethereumAddress}</span>
+      <span
+        >{shortAddressWhileLoading
+          ? `${ethereumAddress.slice(0, 8)}...`
+          : ethereumAddress}</span
+      >
       {#if !hideInfo && $agent}
         <Wrapper>
           <span class="icon-wrapper">
@@ -83,6 +88,7 @@
           {#if $signerAddress?.toLowerCase() === ethereumAddress.toLowerCase()}
             <Tag label="you" size={size === "sm" ? "xs" : "sm"} />
           {/if}
+          <slot />
         </div>
         <div class="resolution-user__eth">{ethereumAddress}</div>
       </div>
@@ -143,6 +149,10 @@
     font-size: large;
     margin-bottom: 0.2rem;
   }
+  .resolution-user__name :global(.tag) {
+    margin-right: 0.3rem;
+  }
+
   .resolution-user__name > span {
     display: inline-flex;
   }
