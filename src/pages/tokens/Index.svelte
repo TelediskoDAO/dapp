@@ -1,112 +1,68 @@
-<script>
-  import { tokenContract, balance, hasAgent, signer } from "../../state/eth";
-  import { user } from "../../state/odoo";
+<script lang="ts">
+  import Button, { Label } from "@smui/button";
+  import Dialog, { Actions, Content, Title } from "@smui/dialog";
   import { title } from "../../state/runtime";
-  import {
-    toPrettyCurrency,
-    fromFloatNumber,
-    toFloatNumber,
-    toShortAddress,
-  } from "../../utils";
-  import CONFIG from "../../config";
 
-  title.set("Tokens");
+  let openTransfer = false;
+  let openOffer = false;
 
-  let floatAmount;
-
-  function setAmount(perc) {
-    floatAmount = (toFloatNumber($balance) * perc) / 100;
-  }
-
-  async function handleSellSubmit() {
-    try {
-      await $tokenContract.transfer(
-        CONFIG.oracleAddress,
-        fromFloatNumber(floatAmount)
-      );
-    } catch (e) {
-      if (e.code !== 4001) {
-        throw e;
-      }
-    }
-  }
+  title.set("My tokens");
 </script>
 
-{#if $balance && $user}
-  <div class="disclaimer">
-    <section>
-      <p>
-        <strong>Note:</strong>
-        all transactions are sent to the Rinkeby testnet, and no real value is attached
-        to the token. More work has to be done to a) make TelediskoTaler a real security
-        token with real value; and b) implement all the rules specified in the
-        <em>Wuschwelt</em>
-        document.
-      </p>
-      <p>
-        In the meantime use this space to experiment and learn how to use and
-        manage your tokens.
-      </p>
-    </section>
-  </div>
-  <section>
-    <div class="balance">
-      <h2>Current balance</h2>
-      <p class="value">{toPrettyCurrency($balance)}</p>
-      <p class="address">{toShortAddress($user.address)}</p>
+<section>
+  <div class="wrapper">
+    <div>
+      <h2>Total balance</h2>
+      <span>105,500</span>
     </div>
-  </section>
 
-  <section>
-    <h3>Sell tokens</h3>
+    <div>
+      <h2>Vesting</h2>
+      <span>100,000</span>
+    </div>
+    <div>
+      <h2>Tradable</h2>
+      <span>4,500</span>
+      <Button variant="outlined" on:click={() => (openTransfer = true)}>
+        <Label>Transfer tokens</Label>
+      </Button>
+    </div>
+    <div>
+      <h2>Locked</h2>
+      <span>1,000</span>
+      <Button variant="outlined" on:click={() => (openOffer = true)}>
+        <Label>Offer tokens</Label>
+      </Button>
+    </div>
+  </div>
+</section>
 
-    {#if $hasAgent && $tokenContract}
-      <form on:submit|preventDefault={handleSellSubmit}>
-        <label for="sell-token-amount">Amount</label>
-        <span class="perc"
-          ><button type="button" on:click={() => setAmount(100)}>100%</button>,
-          <button type="button" on:click={() => setAmount(75)}>75%</button>,
-          <button type="button" on:click={() => setAmount(50)}>50%</button>,
-          <button type="button" on:click={() => setAmount(25)}>25%</button
-          ></span
-        >
-        <input
-          id="sell-token-amount"
-          autocomplete="off"
-          bind:value={floatAmount}
-          min="0"
-          max={toFloatNumber($balance)}
-          required
-        />
-        <button>Sell</button>
-      </form>
-    {:else}
-      To sell your tokens connect you need to connect with a wallet enabled
-      browser.
-    {/if}
-  </section>
-{/if}
+<Dialog
+  bind:open={openOffer}
+  aria-labelledby="offer-tokens-title"
+  aria-describedby="offer-tokens-content"
+  surface$style="width: 850px; max-width: calc(100vw - 32px);"
+>
+  <Title id="offer-tokens-title">Offer tokens</Title>
+  <Content id="offer-tokens-content">content</Content>
+  <Actions>
+    <Button>
+      <Label>Close</Label>
+    </Button>
+  </Actions>
+</Dialog>
 
-<style>
-  .balance h2,
-  .balance .address {
-    font-size: var(--size-s);
-    color: gray;
-  }
-
-  .balance .value {
-    font-size: var(--size-m);
-    font-weight: bold;
-    margin: 0;
-  }
-
-  .perc button {
-    color: gray;
-    border: none;
-    text-decoration: underline;
-  }
-
-  .disclaimer {
-    background-color: var(--color-warning-bg);
-  }
-</style>
+<Dialog
+  bind:open={openTransfer}
+  aria-labelledby="transfer-tokens-title"
+  aria-describedby="transfer-tokens-content"
+  surface$style="width: 850px; max-width: calc(100vw - 32px);"
+>
+  <Title id="transfer-tokens-title">Transfer tokens</Title>
+  <Content id="transfer-tokens-content">content</Content>
+  <Actions>
+    <Button>
+      <Label>Close</Label>
+    </Button>
+  </Actions>
+</Dialog>
