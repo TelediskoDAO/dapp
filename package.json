@@ -4,8 +4,8 @@
   "description": "Teledisko DAO",
   "main": "index.js",
   "scripts": {
-    "build": "ORACLE_ADDRESS=0x8D3e7C3e4aBAb77A66b69C0564c7dD7420eC3449 NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --config",
-    "start": "NETWORK=rinkeby ENDPOINT=https://rinkeby.infura.io/v3/f03f549204b84fb49ab1e3f4bdd243c9 rollup --watch --config",
+    "build": "NETWORK=mumbai ENDPOINT=https://polygon-testnet.blastapi.io/d9b39f46-d75f-4157-a868-49a5641cf36e rollup --config",
+    "start": "NETWORK=mumbai ENDPOINT=https://polygon-testnet.blastapi.io/d9b39f46-d75f-4157-a868-49a5641cf36e rollup --watch --config",
     "test": "mocha test/**/*.ts --recursive --timeout 60000 --exit",
     "test-watch": "mocha test/**/*.ts --recursive --timeout 60000 --watch",
     "check": "svelte-check --tsconfig ./tsconfig.json",

@@ -6,7 +6,6 @@ interface IConfig {
   version: string;
   network: string;
   endpoint: string;
-  oracleAddress: string;
   ipfsEndpoint: string;
   graphProtocolGQLEndpoint: string;
   gitRevision: string;
