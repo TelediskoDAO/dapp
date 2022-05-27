@@ -118,3 +118,18 @@ export type DelegationStatus = {
   signerDelegationStatus: DelegationUser | null;
   usersList: Array<DelegationUser & { canBeDelegated: boolean }>;
 };
+
+export type Offer = {
+  id: string;
+  from: string;
+  amount: BigInt;
+  expirationTimestamp: string;
+};
+
+export type DaoUser = {
+  id: string;
+  address: string;
+  totalBalance: BigInt;
+  vestingBalance: BigInt;
+  unlockedTempBalance: BigInt;
+};
