@@ -1,18 +1,21 @@
 <script lang="ts">
   import Button, { Label } from "@smui/button";
+  import CircularProgress from "@smui/circular-progress";
   import Dialog, { Actions, Content, Title } from "@smui/dialog";
   import { onMount } from "svelte";
   import { getTokensPageData } from "../../graphql/get-tokens-page-data";
+  import { computeBalances } from "../../helpers/tokens";
   import { graphQLClient } from "../../net/graphQl";
   import { signerAddress } from "../../state/eth";
   import { title } from "../../state/runtime";
-  import type { DaoUser, Offer } from "../../types";
+  import type { ComputedBalances, DaoUser, Offer } from "../../types";
 
   let openTransfer = false;
   let openOffer = false;
 
   let offers: Offer[] = [];
   let daoUser: DaoUser = null;
+  let computedBalances: ComputedBalances = null;
 
   let noOffers: boolean;
 
@@ -23,6 +26,7 @@
     ({ offers, daoUser } = await graphQLClient.request(getTokensPageData, {
       userId: $signerAddress.toLowerCase(),
     }));
+    computedBalances = computeBalances(daoUser, offers);
     noOffers = offers.length === 0;
   }
 
@@ -47,26 +51,42 @@
   <div class="wrapper">
     <div>
       <h2>Total balance</h2>
-      <span>{daoUser?.totalBalance}</span>
+      {#if computedBalances}
+        <span>{computedBalances.total}</span>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
     </div>
 
     <div>
       <h2>Vesting</h2>
-      <span>{daoUser?.vestingBalance}</span>
+      {#if computedBalances}
+        <span>{computedBalances.vesting}</span>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
     </div>
     <div>
       <h2>Tradable</h2>
-      <span>{daoUser?.unlockedTempBalance}</span>
-      <Button variant="outlined" on:click={() => (openTransfer = true)}>
-        <Label>Transfer tokens</Label>
-      </Button>
+      {#if computedBalances}
+        <span>{computedBalances.unlocked}</span>
+        <Button variant="outlined" on:click={() => (openTransfer = true)}>
+          <Label>Transfer tokens</Label>
+        </Button>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
     </div>
     <div>
       <h2>Locked</h2>
-      <span>{daoUser?.totalBalance - daoUser?.unlockedTempBalance}</span>
-      <Button variant="outlined" on:click={() => (openOffer = true)}>
-        <Label>Offer tokens</Label>
-      </Button>
+      {#if computedBalances}
+        <span>{computedBalances.locked}</span>
+        <Button variant="outlined" on:click={() => (openOffer = true)}>
+          <Label>Offer tokens</Label>
+        </Button>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
     </div>
   </div>
 </section>

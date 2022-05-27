@@ -133,3 +133,10 @@ export type DaoUser = {
   vestingBalance: BigInt;
   unlockedTempBalance: BigInt;
 };
+
+export type ComputedBalances = {
+  total: number;
+  vesting: number;
+  unlocked: number;
+  locked: number;
+};
