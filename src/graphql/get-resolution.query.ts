@@ -1,5 +1,4 @@
 import { gql } from "graphql-request";
-import { resolutionManagerFragment } from "./resolution-manager.fragment";
 import { resolutionFragment } from "./resolution.fragment";
 
 export const getResolutionQuery = gql`

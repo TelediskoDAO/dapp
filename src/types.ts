@@ -24,10 +24,10 @@ export type ResolutionTypeEntity = {
   canBeNegative: boolean;
 };
 
-export type ResolutionManagerEntity = {
+export type DaoManagerEntity = {
   id: string;
   contributorsAddresses: string[];
-  foundersAddresses: string[];
+  managingBoardAddresses: string[];
   shareholdersAddresses: string[];
   investorsAddresses: string[];
   resolutionTypes: ResolutionTypeEntity[];

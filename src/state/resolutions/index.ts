@@ -1,12 +1,12 @@
 import { writable, derived, Readable } from "svelte/store";
 import { signer } from "../eth";
 import type {
-  ResolutionManagerEntity,
+  DaoManagerEntity,
   ResolutionsAcl,
   ResolutionVoter,
 } from "../../types";
 import { graphQLClient } from "../../net/graphQl";
-import { getResolutionManagerQuery } from "../../graphql/get-resolution-manager.query";
+import { getDaoManagerQuery } from "../../graphql/get-dao-manager.query"
 
 export const currentTimestamp = writable(Date.now());
 
@@ -14,14 +14,14 @@ export const acl: Readable<ResolutionsAcl> = derived(signer, ($signer, set) => {
   (async () => {
     if ($signer) {
       const {
-        resolutionManager,
-      }: { resolutionManager: ResolutionManagerEntity } =
-        await graphQLClient.request(getResolutionManagerQuery);
+        daoManager,
+      }: { daoManager: DaoManagerEntity } =
+        await graphQLClient.request(getDaoManagerQuery);
       const address = (await $signer.getAddress()).toLowerCase();
       set({
-        canCreate: resolutionManager.contributorsAddresses.includes(address),
-        canUpdate: resolutionManager.foundersAddresses.includes(address),
-        canApprove: resolutionManager.foundersAddresses.includes(address),
+        canCreate: daoManager.contributorsAddresses.includes(address),
+        canUpdate: daoManager.managingBoardAddresses.includes(address),
+        canApprove: daoManager.managingBoardAddresses.includes(address),
         canVote: (resolutionVoters: ResolutionVoter[]) =>
           resolutionVoters
             .map((voter) => voter.address.toLowerCase())
