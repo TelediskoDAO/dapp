@@ -7,11 +7,14 @@ import CONFIG from "../config";
 
 import networks from "../../contracts/deployments/networks.json";
 
-import { Voting, Voting__factory } from "../../contracts/typechain";
-import { ERC20Mock__factory } from "../../contracts/typechain/factories/contracts/mocks/ERC20Mock__factory";
-import type { ERC20Mock } from "../../contracts/typechain/contracts/mocks/ERC20Mock";
-import type { ResolutionManager } from "../../contracts/typechain/contracts/ResolutionManager/ResolutionManager";
+import {
+  Voting,
+  Voting__factory,
+  TelediskoToken,
+  ResolutionManager,
+} from "../../contracts/typechain";
 import { ResolutionManager__factory } from "../../contracts/typechain/factories/contracts/ResolutionManager/ResolutionManager__factory";
+import { TelediskoToken__factory } from "../../contracts/typechain/factories/contracts/TelediskoToken/TelediskoToken__factory";
 
 declare global {
   interface Window {
@@ -127,14 +130,14 @@ export const address = derived(
   }
 );
 
-export const tokenContract: Readable<ERC20Mock> = derived(
+export const tokenContract: Readable<TelediskoToken> = derived(
   signer,
   // @ts-ignore
   async ($signer, set) => {
     if ($signer) {
       const chainId = await $signer.getChainId();
       const address: string = networks[chainId.toString()]["TelediskoToken"];
-      const contract = ERC20Mock__factory.connect(address, $signer);
+      const contract = TelediskoToken__factory.connect(address, $signer);
       set(contract);
     }
   }

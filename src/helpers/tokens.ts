@@ -14,18 +14,27 @@ export const computeBalances = (
   const total = bigIntToNum(daoUser.totalBalance);
   const vesting = bigIntToNum(daoUser.vestingBalance);
 
-  const unlocked = userOffers.reduce((totalUnlocked, offer) => {
-    const offerAmount = Number(formatEther(BigNumber.from(offer.amount)));
-    return (
-      totalUnlocked +
-      (nowTimestamp > Number(offer.expirationTimestamp) ? offerAmount : 0)
-    );
-  }, 0);
+  const [unlocked, currentlyOffered] = userOffers.reduce(
+    (totals, offer) => {
+      const offerAmount = Number(formatEther(BigNumber.from(offer.amount)));
+      const offerExpirationTimestamp = Number(offer.expirationTimestamp) * 1000;
+      const [totUnlocked, totCurrentlyOffered] = totals;
+      const newUnlocked =
+        totUnlocked +
+        (nowTimestamp > offerExpirationTimestamp ? offerAmount : 0);
+      const newCurrentlyOffered =
+        totCurrentlyOffered +
+        (nowTimestamp <= offerExpirationTimestamp ? offerAmount : 0);
+      return [newUnlocked, newCurrentlyOffered];
+    },
+    [0, 0]
+  );
 
   return {
     total,
     vesting,
     unlocked,
     locked: total - unlocked,
+    currentlyOffered,
   };
 };

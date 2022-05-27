@@ -2,11 +2,13 @@
   import Button, { Label } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
   import Dialog, { Actions, Content, Title } from "@smui/dialog";
+  import { BigNumber } from "ethers";
+  import { formatEther, parseEther } from "ethers/lib/utils";
   import { onMount } from "svelte";
   import { getTokensPageData } from "../../graphql/get-tokens-page-data";
   import { computeBalances } from "../../helpers/tokens";
   import { graphQLClient } from "../../net/graphQl";
-  import { signerAddress } from "../../state/eth";
+  import { signerAddress, tokenContract } from "../../state/eth";
   import { title } from "../../state/runtime";
   import type { ComputedBalances, DaoUser, Offer } from "../../types";
 
@@ -37,6 +39,13 @@
 
     return () => clearInterval(interval);
   });
+
+  async function onTransfer() {
+    // wip (just for testing)
+    const tx = await $tokenContract.createOffer(parseEther("3"));
+    await tx.wait();
+    window.location.reload();
+  }
 
   title.set("My tokens");
 
@@ -80,7 +89,9 @@
     <div>
       <h2>Locked</h2>
       {#if computedBalances}
-        <span>{computedBalances.locked}</span>
+        <span
+          >{computedBalances.locked} ({computedBalances.currentlyOffered} offered)</span
+        >
         <Button variant="outlined" on:click={() => (openOffer = true)}>
           <Label>Offer tokens</Label>
         </Button>
@@ -98,7 +109,12 @@
   surface$style="width: 850px; max-width: calc(100vw - 32px);"
 >
   <Title id="offer-tokens-title">Offer tokens</Title>
-  <Content id="offer-tokens-content">content</Content>
+  <Content id="offer-tokens-content">
+    <input type="number" />
+    <Button on:click={onTransfer}>
+      <Label>Submit</Label>
+    </Button>
+  </Content>
   <Actions>
     <Button>
       <Label>Close</Label>

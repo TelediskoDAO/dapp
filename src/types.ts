@@ -139,4 +139,5 @@ export type ComputedBalances = {
   vesting: number;
   unlocked: number;
   locked: number;
+  currentlyOffered: number;
 };
