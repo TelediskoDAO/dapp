@@ -35,6 +35,7 @@
       }
     ));
     computedBalances = computeBalances(daoUser, offers);
+    console.log("computedBalances: ", computedBalances);
     loadedOffers = true;
     loadedOtherOffers = true;
   }

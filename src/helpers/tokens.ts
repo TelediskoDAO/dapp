@@ -32,7 +32,7 @@ export const computeBalances = (
           (nowTimestamp <= offerExpirationTimestamp ? offerAmount : 0);
         return [newUnlocked, newCurrentlyOffered];
       },
-      [0, 0]
+      [bigIntToNum(daoUser.unlockedTempBalance), 0]
     );
 
   const locked = total - unlocked;
