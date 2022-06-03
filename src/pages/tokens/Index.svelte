@@ -129,5 +129,5 @@
   aria-describedby="transfer-tokens-content"
   surface$style="width: 550px; max-width: calc(100vw - 32px);"
 >
-  <TransferTokens maxToTransfer={50} />
+  <TransferTokens maxToTransfer={computedBalances?.unlocked || 0} />
 </Dialog>
