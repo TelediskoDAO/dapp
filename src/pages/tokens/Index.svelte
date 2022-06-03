@@ -1,10 +1,11 @@
 <script lang="ts">
   import Button, { Label } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
-  import Dialog, { Actions, Content, Title } from "@smui/dialog";
+  import Dialog from "@smui/dialog";
   import { onMount } from "svelte";
   import OffersList from "../../components/Tokens/OffersList.svelte";
   import OfferTokens from "../../components/Tokens/OfferTokens.svelte";
+  import TransferTokens from "../../components/Tokens/TransferTokens.svelte";
   import { getTokensPageData } from "../../graphql/get-tokens-page-data";
   import { computeBalances } from "../../helpers/tokens";
   import { graphQLClient } from "../../net/graphQl";
@@ -105,7 +106,7 @@
       noOffersTitle="You haven't placed any offers"
     />
     <OffersList
-      title="Other users offers"
+      title="Offers from other users"
       offers={otherOffers}
       loaded={loadedOtherOffers}
       noOffersTitle="No offers from other users"
@@ -126,13 +127,7 @@
   bind:open={openTransfer}
   aria-labelledby="transfer-tokens-title"
   aria-describedby="transfer-tokens-content"
-  surface$style="width: 850px; max-width: calc(100vw - 32px);"
+  surface$style="width: 550px; max-width: calc(100vw - 32px);"
 >
-  <Title id="transfer-tokens-title">Transfer tokens</Title>
-  <Content id="transfer-tokens-content">content</Content>
-  <Actions>
-    <Button>
-      <Label>Close</Label>
-    </Button>
-  </Actions>
+  <TransferTokens maxToTransfer={50} />
 </Dialog>

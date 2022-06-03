@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button, { Label } from "@smui/button";
-  import Dialog, { Actions, Content, Title } from "@smui/dialog";
+  import { Actions, Content, Title } from "@smui/dialog";
   import FormField from "@smui/form-field";
   import Slider from "@smui/slider";
   import CircularProgress from "@smui/circular-progress";
@@ -14,11 +14,11 @@
   let offer = 0;
   export let maxToOffer = 0;
 
-  async function onTransfer() {
-    await handleOffer(offer, {
-      $signer,
-      $tokenContract,
-    });
+  async function onOffer() {
+    // await handleOffer(offer, {
+    //   $signer,
+    //   $tokenContract,
+    // });
     offer = 0;
   }
 </script>
@@ -61,23 +61,30 @@
       </div>
     </div>
   {/if}
-</Content>
-<Actions>
+
   {#if maxToOffer > 0}
-    <Button
-      on:click={onTransfer}
-      disabled={offer === 0 ||
-        offer > maxToOffer ||
-        $offerState.loading ||
-        $offerState.awaitingConfirmation}
-    >
-      <Label>Submit offer</Label>
-    </Button>
+    <div class="actions">
+      <Button
+        on:click={onOffer}
+        disabled={offer === 0 ||
+          offer > maxToOffer ||
+          $offerState.loading ||
+          $offerState.awaitingConfirmation}
+      >
+        <Label>Submit offer</Label>
+      </Button>
+    </div>
   {/if}
-</Actions>
+</Content>
 
 <style>
   :global(input:hover) {
     box-shadow: none;
+  }
+
+  .actions {
+    padding-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
   }
 </style>
