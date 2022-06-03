@@ -140,4 +140,5 @@ export type ComputedBalances = {
   unlocked: number;
   locked: number;
   currentlyOffered: number;
+  maxToOffer: number;
 };

@@ -28,6 +28,7 @@
     ({ offers, daoUser } = await graphQLClient.request(getTokensPageData, {
       userId: $signerAddress.toLowerCase(),
     }));
+    console.log("daoUser, offers: ", daoUser, offers);
     computedBalances = computeBalances(daoUser, offers);
     noOffers = offers.length === 0;
   }
@@ -46,6 +47,8 @@
     await tx.wait();
     window.location.reload();
   }
+
+  // todo test computeBalance function
 
   title.set("My tokens");
 

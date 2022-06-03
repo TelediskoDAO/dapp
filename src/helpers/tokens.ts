@@ -14,27 +14,36 @@ export const computeBalances = (
   const total = bigIntToNum(daoUser.totalBalance);
   const vesting = bigIntToNum(daoUser.vestingBalance);
 
-  const [unlocked, currentlyOffered] = userOffers.reduce(
-    (totals, offer) => {
-      const offerAmount = Number(formatEther(BigNumber.from(offer.amount)));
-      const offerExpirationTimestamp = Number(offer.expirationTimestamp) * 1000;
-      const [totUnlocked, totCurrentlyOffered] = totals;
-      const newUnlocked =
-        totUnlocked +
-        (nowTimestamp > offerExpirationTimestamp ? offerAmount : 0);
-      const newCurrentlyOffered =
-        totCurrentlyOffered +
-        (nowTimestamp <= offerExpirationTimestamp ? offerAmount : 0);
-      return [newUnlocked, newCurrentlyOffered];
-    },
-    [0, 0]
-  );
+  const [unlocked, currentlyOffered] = userOffers
+    .filter(
+      (offer) => offer.from.toLowerCase() === daoUser.address.toLowerCase()
+    )
+    .reduce(
+      (totals, offer) => {
+        const offerAmount = Number(formatEther(BigNumber.from(offer.amount)));
+        const offerExpirationTimestamp =
+          Number(offer.expirationTimestamp) * 1000;
+        const [totUnlocked, totCurrentlyOffered] = totals;
+        const newUnlocked =
+          totUnlocked +
+          (nowTimestamp > offerExpirationTimestamp ? offerAmount : 0);
+        const newCurrentlyOffered =
+          totCurrentlyOffered +
+          (nowTimestamp <= offerExpirationTimestamp ? offerAmount : 0);
+        return [newUnlocked, newCurrentlyOffered];
+      },
+      [0, 0]
+    );
+
+  const locked = total - unlocked;
+  const maxToOffer = locked - currentlyOffered;
 
   return {
     total,
     vesting,
     unlocked,
-    locked: total - unlocked,
+    locked,
     currentlyOffered,
+    maxToOffer,
   };
 };
