@@ -83,7 +83,9 @@ describe("Tokens helpers", () => {
       );
 
       const daoUserEntity = createDaoUserEntity({
-        vestingBalance: BigInt("42000000000000000000"),
+        vestingBalance: BigInt("2000000000000000000"),
+        totalBalance: BigInt("40000000000000000000"),
+        unlockedTempBalance: BigInt("-2000000000000000000"),
       });
 
       const offerEntityPast = createOfferEntity({
@@ -112,9 +114,9 @@ describe("Tokens helpers", () => {
       expect(computedBalances).to.deep.equal({
         currentlyOffered: 25,
         locked: 28,
-        total: 42,
-        unlocked: 14,
-        vesting: 42,
+        total: 40,
+        unlocked: 12,
+        vesting: 2,
         maxToOffer: 3,
       });
     });
