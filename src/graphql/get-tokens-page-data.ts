@@ -15,5 +15,11 @@ export const getTokensPageData = gql`
       expirationTimestamp
       amount
     }
+    otherOffers: offers(where: { from_not: $userId }) {
+      id
+      from
+      expirationTimestamp
+      amount
+    }
   }
 `;
