@@ -3,7 +3,7 @@ import { push } from "svelte-spa-router";
 import { wait } from "../../async";
 import { votingState, resetVotingState } from "../../state/resolutions/voting";
 import type { Signer } from "ethers";
-import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+import type { ResolutionManager } from "../../../contracts/typechain";
 import notifications, {
   notifyNetworkError,
   notifyBlockchainError,

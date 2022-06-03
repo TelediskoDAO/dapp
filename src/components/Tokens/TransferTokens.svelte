@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button, { Label } from "@smui/button";
-  import { Actions, Content, Title } from "@smui/dialog";
+  import { Content, Title } from "@smui/dialog";
   import FormField from "@smui/form-field";
   import Slider from "@smui/slider";
   import CircularProgress from "@smui/circular-progress";

@@ -3,11 +3,11 @@ import { push } from "svelte-spa-router";
 import { formState, resetFormState } from "../../state/resolutions/form";
 import { wait } from "../../async";
 import type { Signer } from "ethers";
-import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
 import notifications, {
   notifyNetworkError,
   notifyBlockchainError,
 } from "../../helpers/notifications";
+import type { ResolutionManager } from "../../../contracts/typechain";
 
 const WAIT_AFTER_APPROVED = 10000;
 
