@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button, { Label } from "@smui/button";
-  import { Actions, Content, Title } from "@smui/dialog";
+  import { Content, Title } from "@smui/dialog";
   import FormField from "@smui/form-field";
   import Slider from "@smui/slider";
   import CircularProgress from "@smui/circular-progress";
@@ -15,10 +15,10 @@
   export let maxToOffer = 0;
 
   async function onOffer() {
-    // await handleOffer(offer, {
-    //   $signer,
-    //   $tokenContract,
-    // });
+    await handleOffer(offer, {
+      $signer,
+      $tokenContract,
+    });
     offer = 0;
   }
 </script>
@@ -50,19 +50,6 @@
         max={maxToOffer}
       />
     </FormField>
-  {/if}
-  {#if $offerState.loading || $offerState.awaitingConfirmation}
-    <div class="progress">
-      {#if $offerState.awaitingConfirmation}
-        <Alert message="Awaiting for the transaction to be put on a block" />
-      {/if}
-      <div style="text-align: center">
-        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-      </div>
-    </div>
-  {/if}
-
-  {#if maxToOffer > 0}
     <div class="actions">
       <Button
         on:click={onOffer}
@@ -73,6 +60,16 @@
       >
         <Label>Submit offer</Label>
       </Button>
+    </div>
+  {/if}
+  {#if $offerState.loading || $offerState.awaitingConfirmation}
+    <div class="progress">
+      {#if $offerState.awaitingConfirmation}
+        <Alert message="Awaiting for the transaction to be put on a block" />
+      {/if}
+      <div style="text-align: center">
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      </div>
     </div>
   {/if}
 </Content>

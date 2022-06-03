@@ -30,8 +30,7 @@
     <Alert type="warning">
       <p>You don't have any tokens available to transfer</p>
     </Alert>
-  {/if}
-  {#if maxToTransfer > 0}
+  {:else}
     <Textfield bind:value={toAddress} label="Address" type="text" />
     <FormField align="end" style="display: flex;">
       <Slider
@@ -47,18 +46,6 @@
         max={maxToTransfer}
       />
     </FormField>
-  {/if}
-  {#if $transferState.loading || $transferState.awaitingConfirmation}
-    <div class="progress">
-      {#if $transferState.awaitingConfirmation}
-        <Alert message="Awaiting for the transaction to be put on a block" />
-      {/if}
-      <div style="text-align: center">
-        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-      </div>
-    </div>
-  {/if}
-  {#if maxToTransfer > 0}
     <div class="actions">
       <Button
         on:click={onTransfer}
@@ -70,6 +57,16 @@
       >
         <Label>Submit transfer</Label>
       </Button>
+    </div>
+  {/if}
+  {#if $transferState.loading || $transferState.awaitingConfirmation}
+    <div class="progress">
+      {#if $transferState.awaitingConfirmation}
+        <Alert message="Awaiting for the transaction to be put on a block" />
+      {/if}
+      <div style="text-align: center">
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      </div>
     </div>
   {/if}
 </Content>
