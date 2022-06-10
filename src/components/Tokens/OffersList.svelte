@@ -128,7 +128,14 @@
       </Head>
       <Body>
         {#each filters[currentFilter]?.offers || offers as offer}
-          <Row>
+          <Row
+            class={isBefore(
+              getDateFromUnixTimestamp(offer.expirationTimestamp),
+              new Date()
+            )
+              ? "expired-offer"
+              : ""}
+          >
             {#if displayUserInfo}
               <Cell width="60%">
                 <ResolutionUser
@@ -160,6 +167,10 @@
 <style>
   .offers-list {
     padding: 2rem 0;
+  }
+
+  .offers-list :global(.expired-offer) {
+    opacity: 0.5;
   }
 
   .header {
