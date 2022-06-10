@@ -1,9 +1,9 @@
 import { gql } from "graphql-request";
 
-export const resolutionManagerFragment = gql`
-  fragment resolutionManagerFragment on ResolutionManager {
+export const daoManagerFragment = gql`
+  fragment daoManagerFragment on DaoManager {
     id
-    foundersAddresses
+    managingBoardAddresses
     contributorsAddresses
     investorsAddresses
     shareholdersAddresses

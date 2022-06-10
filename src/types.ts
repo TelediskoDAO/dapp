@@ -24,10 +24,10 @@ export type ResolutionTypeEntity = {
   canBeNegative: boolean;
 };
 
-export type ResolutionManagerEntity = {
+export type DaoManagerEntity = {
   id: string;
   contributorsAddresses: string[];
-  foundersAddresses: string[];
+  managingBoardAddresses: string[];
   shareholdersAddresses: string[];
   investorsAddresses: string[];
   resolutionTypes: ResolutionTypeEntity[];
@@ -117,4 +117,28 @@ export type DelegationStatus = {
   signerDelegatedBy: DelegationUser[];
   signerDelegationStatus: DelegationUser | null;
   usersList: Array<DelegationUser & { canBeDelegated: boolean }>;
+};
+
+export type Offer = {
+  id: string;
+  from: string;
+  amount: BigInt;
+  expirationTimestamp: string;
+};
+
+export type DaoUser = {
+  id: string;
+  address: string;
+  totalBalance: BigInt;
+  vestingBalance: BigInt;
+  unlockedTempBalance: BigInt;
+};
+
+export type ComputedBalances = {
+  total: number;
+  vesting: number;
+  unlocked: number;
+  locked: number;
+  currentlyOffered: number;
+  maxToOffer: number;
 };

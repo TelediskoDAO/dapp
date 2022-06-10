@@ -3,7 +3,6 @@ import { push } from "svelte-spa-router";
 import { formState, resetFormState } from "../../state/delegation";
 import type { Signer } from "ethers";
 import type { Voting } from "../../../contracts/typechain";
-import type { OdooUserTransformed } from "../../types";
 import notifications, {
   notifyNetworkError,
   notifyBlockchainError,

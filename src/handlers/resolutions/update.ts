@@ -5,7 +5,7 @@ import { add } from "../../net/ipfs";
 import { formState, resetFormState } from "../../state/resolutions/form";
 import type { ResolutionFormState } from "../../types";
 import type { Signer } from "ethers";
-import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+import type { ResolutionManager } from "../../../contracts/typechain";
 import notifications, {
   notifyNetworkError,
   notifyBlockchainError,

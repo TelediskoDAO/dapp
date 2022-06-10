@@ -1,112 +1,133 @@
-<script>
-  import { tokenContract, balance, hasAgent, signer } from "../../state/eth";
-  import { user } from "../../state/odoo";
+<script lang="ts">
+  import Button, { Label } from "@smui/button";
+  import CircularProgress from "@smui/circular-progress";
+  import Dialog from "@smui/dialog";
+  import { onMount } from "svelte";
+  import OffersList from "../../components/Tokens/OffersList.svelte";
+  import OfferTokens from "../../components/Tokens/OfferTokens.svelte";
+  import TransferTokens from "../../components/Tokens/TransferTokens.svelte";
+  import { getTokensPageData } from "../../graphql/get-tokens-page-data";
+  import { computeBalances } from "../../helpers/tokens";
+  import { graphQLClient } from "../../net/graphQl";
+  import { signerAddress } from "../../state/eth";
   import { title } from "../../state/runtime";
-  import {
-    toPrettyCurrency,
-    fromFloatNumber,
-    toFloatNumber,
-    toShortAddress,
-  } from "../../utils";
-  import CONFIG from "../../config";
+  import type { ComputedBalances, DaoUser, Offer } from "../../types";
 
-  title.set("Tokens");
+  let openTransfer = false;
+  let openOffer = false;
 
-  let floatAmount;
+  let offers: Offer[] = [];
+  let otherOffers: Offer[] = [];
+  let daoUser: DaoUser = null;
+  let computedBalances: ComputedBalances = null;
 
-  function setAmount(perc) {
-    floatAmount = (toFloatNumber($balance) * perc) / 100;
+  let loadedOffers: boolean;
+  let loadedOtherOffers: boolean;
+
+  async function fetchAndSetData() {
+    if (!$signerAddress) {
+      return;
+    }
+    ({ otherOffers, offers, daoUser } = await graphQLClient.request(
+      getTokensPageData,
+      {
+        userId: $signerAddress.toLowerCase(),
+      }
+    ));
+    computedBalances = computeBalances(daoUser, offers);
+    loadedOffers = true;
+    loadedOtherOffers = true;
   }
 
-  async function handleSellSubmit() {
-    try {
-      await $tokenContract.transfer(
-        CONFIG.oracleAddress,
-        fromFloatNumber(floatAmount)
-      );
-    } catch (e) {
-      if (e.code !== 4001) {
-        throw e;
-      }
+  onMount(async () => {
+    await fetchAndSetData();
+
+    const interval = setInterval(fetchAndSetData, 5000);
+
+    return () => clearInterval(interval);
+  });
+
+  title.set("My tokens");
+
+  $: {
+    if ($signerAddress) {
+      fetchAndSetData();
     }
   }
 </script>
 
-{#if $balance && $user}
-  <div class="disclaimer">
-    <section>
-      <p>
-        <strong>Note:</strong>
-        all transactions are sent to the Rinkeby testnet, and no real value is attached
-        to the token. More work has to be done to a) make TelediskoTaler a real security
-        token with real value; and b) implement all the rules specified in the
-        <em>Wuschwelt</em>
-        document.
-      </p>
-      <p>
-        In the meantime use this space to experiment and learn how to use and
-        manage your tokens.
-      </p>
-    </section>
-  </div>
-  <section>
-    <div class="balance">
-      <h2>Current balance</h2>
-      <p class="value">{toPrettyCurrency($balance)}</p>
-      <p class="address">{toShortAddress($user.address)}</p>
+<section>
+  <div class="wrapper">
+    <div>
+      <h2>Total balance</h2>
+      {#if computedBalances}
+        <span>{computedBalances.total}</span>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
     </div>
-  </section>
 
-  <section>
-    <h3>Sell tokens</h3>
-
-    {#if $hasAgent && $tokenContract}
-      <form on:submit|preventDefault={handleSellSubmit}>
-        <label for="sell-token-amount">Amount</label>
-        <span class="perc"
-          ><button type="button" on:click={() => setAmount(100)}>100%</button>,
-          <button type="button" on:click={() => setAmount(75)}>75%</button>,
-          <button type="button" on:click={() => setAmount(50)}>50%</button>,
-          <button type="button" on:click={() => setAmount(25)}>25%</button
-          ></span
+    <div>
+      <h2>Vesting</h2>
+      {#if computedBalances}
+        <span>{computedBalances.vesting}</span>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
+    </div>
+    <div>
+      <h2>Tradable</h2>
+      {#if computedBalances}
+        <span>{computedBalances.unlocked}</span>
+        <Button variant="outlined" on:click={() => (openTransfer = true)}>
+          <Label>Transfer tokens</Label>
+        </Button>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
+    </div>
+    <div>
+      <h2>Locked</h2>
+      {#if computedBalances}
+        <span
+          >{computedBalances.locked} ({computedBalances.currentlyOffered} offered)</span
         >
-        <input
-          id="sell-token-amount"
-          autocomplete="off"
-          bind:value={floatAmount}
-          min="0"
-          max={toFloatNumber($balance)}
-          required
-        />
-        <button>Sell</button>
-      </form>
-    {:else}
-      To sell your tokens connect you need to connect with a wallet enabled
-      browser.
-    {/if}
-  </section>
-{/if}
+        <Button variant="outlined" on:click={() => (openOffer = true)}>
+          <Label>Offer tokens</Label>
+        </Button>
+      {:else}
+        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      {/if}
+    </div>
+    <OffersList
+      title="Your offers"
+      {offers}
+      loaded={loadedOffers}
+      noOffersTitle="You haven't placed any offers"
+    />
+    <OffersList
+      title="Offers from other users"
+      offers={otherOffers}
+      loaded={loadedOtherOffers}
+      noOffersTitle="No offers from other users"
+    />
+  </div>
+</section>
 
-<style>
-  .balance h2,
-  .balance .address {
-    font-size: var(--size-s);
-    color: gray;
-  }
+<Dialog
+  bind:open={openOffer}
+  aria-labelledby="offer-tokens-title"
+  aria-describedby="offer-tokens-content"
+  surface$style="width: 550px; max-width: calc(100vw - 32px);"
+>
+  <OfferTokens maxToOffer={computedBalances?.maxToOffer || 0} />
+</Dialog>
 
-  .balance .value {
-    font-size: var(--size-m);
-    font-weight: bold;
-    margin: 0;
-  }
-
-  .perc button {
-    color: gray;
-    border: none;
-    text-decoration: underline;
-  }
-
-  .disclaimer {
-    background-color: var(--color-warning-bg);
-  }
-</style>
+<Dialog
+  bind:open={openTransfer}
+  aria-labelledby="transfer-tokens-title"
+  aria-describedby="transfer-tokens-content"
+  surface$style="width: 550px; max-width: calc(100vw - 32px);"
+>
+  <TransferTokens maxToTransfer={computedBalances?.unlocked || 0} />
+</Dialog>

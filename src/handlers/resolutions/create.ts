@@ -5,7 +5,7 @@ import { formState, resetFormState } from "../../state/resolutions/form";
 import { wait } from "../../async";
 import type { ResolutionFormState } from "../../types";
 import type { Signer } from "ethers";
-import type { ResolutionManager } from "../../../contracts/typechain/ResolutionManager";
+import type { ResolutionManager } from "../../../contracts/typechain";
 import notifications, {
   notifyNetworkError,
   notifyBlockchainError,
