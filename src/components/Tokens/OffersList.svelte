@@ -40,9 +40,7 @@
 
       const othersOffers = [...offers.filter(filterOthers)];
       const othersExpiredOffers = [...othersOffers.filter(filterExpired)];
-      console.log("othersExpiredOffers: ", othersExpiredOffers);
       const othersNonExpiredOffers = [...othersOffers.filter(filterNonExpired)];
-      console.log("othersNonExpiredOffers: ", othersNonExpiredOffers);
 
       filters = {
         ...(selfOffers.length > 0 && {
