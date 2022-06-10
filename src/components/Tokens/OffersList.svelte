@@ -21,7 +21,8 @@
     string,
     { label: string; offers: Offer[]; total: number }
   > = {};
-  let currentFilter = "all";
+
+  let currentFilter = "allNonExpired";
 
   const filterSelf = (offer: Offer) =>
     offer.from.toLowerCase() === $signerAddress.toLowerCase();
@@ -34,6 +35,8 @@
 
   $: {
     if (loaded && offers.length > 0) {
+      const allExpired = [...offers.filter(filterExpired)];
+      const allNonExpired = [...offers.filter(filterNonExpired)];
       const selfOffers = [...offers.filter(filterSelf)];
       const selfExpiredOffers = [...selfOffers.filter(filterExpired)];
       const selfNonExpiredOffers = [...selfOffers.filter(filterNonExpired)];
@@ -43,6 +46,20 @@
       const othersNonExpiredOffers = [...othersOffers.filter(filterNonExpired)];
 
       filters = {
+        ...(selfOffers.length > 0 && {
+          allExpired: {
+            label: "All expired offers",
+            offers: allExpired,
+            total: allExpired.length,
+          },
+        }),
+        ...(selfOffers.length > 0 && {
+          allNonExpired: {
+            label: "All non expired offers",
+            offers: allNonExpired,
+            total: allNonExpired.length,
+          },
+        }),
         ...(selfOffers.length > 0 && {
           selfAll: {
             label: "Your offers",
