@@ -13,13 +13,17 @@
 
   let offer = 0;
   export let maxToOffer = 0;
+  export let onOffered: () => void;
 
   async function onOffer() {
-    await handleOffer(offer, {
+    const successful = await handleOffer(offer, {
       $signer,
       $tokenContract,
     });
-    offer = 0;
+    if (successful) {
+      onOffered();
+      offer = 0;
+    }
   }
 </script>
 
@@ -28,8 +32,8 @@
   <Alert type={maxToOffer > 0 ? "info" : "warning"}>
     {#if maxToOffer > 0}
       <p>
-        You can offer max {maxToOffer} tokens (Your locked amount minus your active
-        offers)
+        You can offer max <b>{maxToOffer}</b>TT (Your locked amount minus your
+        active offers tokens)
       </p>
     {:else}
       <p>You don't have any tokens available to offer</p>

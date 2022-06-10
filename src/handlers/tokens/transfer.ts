@@ -24,6 +24,8 @@ export async function handleTransfer(
     return push("/connect/odoo");
   }
 
+  let success = false;
+
   transferState.set({
     loading: true,
     awaitingConfirmation: false,
@@ -48,10 +50,13 @@ export async function handleTransfer(
       "Transfer succeeded! Just a matter of seconds and the UI will get updated",
       { timeout: WAIT_AFTER_OFFER }
     );
-    await wait(WAIT_AFTER_OFFER);
+    success = true;
   } catch (err) {
     notifyBlockchainError(err.message);
+    success = false;
   }
 
   resetTransferState();
+
+  return success;
 }

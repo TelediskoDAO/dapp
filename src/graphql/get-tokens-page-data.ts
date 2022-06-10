@@ -9,13 +9,7 @@ export const getTokensPageData = gql`
       vestingBalance
       unlockedTempBalance
     }
-    offers(where: { from: $userId }) {
-      id
-      from
-      expirationTimestamp
-      amount
-    }
-    otherOffers: offers(where: { from_not: $userId }) {
+    offers(orderBy: createTimestamp) {
       id
       from
       expirationTimestamp
