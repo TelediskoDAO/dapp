@@ -37,6 +37,7 @@
     if (loaded && offers.length > 0) {
       const allExpired = [...offers.filter(filterExpired)];
       const allNonExpired = [...offers.filter(filterNonExpired)];
+
       const selfOffers = [...offers.filter(filterSelf)];
       const selfExpiredOffers = [...selfOffers.filter(filterExpired)];
       const selfNonExpiredOffers = [...selfOffers.filter(filterNonExpired)];
@@ -55,7 +56,7 @@
         }),
         ...(selfOffers.length > 0 && {
           allNonExpired: {
-            label: "All non expired offers",
+            label: "All active offers",
             offers: allNonExpired,
             total: allNonExpired.length,
           },
@@ -76,7 +77,7 @@
         }),
         ...(selfNonExpiredOffers.length > 0 && {
           selfNonExpired: {
-            label: "Your non expired offers",
+            label: "Your active offers",
             offers: selfNonExpiredOffers,
             total: selfNonExpiredOffers.length,
           },
@@ -97,7 +98,7 @@
         }),
         ...(othersNonExpiredOffers.length > 0 && {
           othersNonExpired: {
-            label: "Others non expired offers",
+            label: "Others active offers",
             offers: othersNonExpiredOffers,
             total: othersNonExpiredOffers.length,
           },
