@@ -1,8 +1,11 @@
 <script lang="ts">
   import Button, { Label } from "@smui/button";
+  import CircularProgress from "@smui/circular-progress";
   import Alert from "../Alert.svelte";
 
-  export let total: number;
+  import type { ComputedBalances } from "../../types";
+
+  export let computedBalances: ComputedBalances;
   export let onTransferClicked = () => {};
   export let onOfferClicked = () => {};
 </script>
@@ -10,42 +13,78 @@
 <div class="balances">
   <div class="balance-box balance-box--main">
     <h2 class="balance-box__title">Total Balance</h2>
-    <div class="balance-box__total"><b>42</b> TT</div>
+    {#if computedBalances}
+      <div class="balance-box__total"><b>{computedBalances.total}</b> TT</div>
+    {:else}
+      <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+    {/if}
   </div>
   <div class="balance-box--multiple">
     <div class="balance-box balance-box--secondary">
       <div>
         <h4 class="balance-box__title">Vesting</h4>
-        <div class="balance-box__total"><b>42</b> TT</div>
+        {#if computedBalances}
+          <div class="balance-box__total">
+            <b>{computedBalances.vesting}</b> TT
+          </div>
+        {:else}
+          <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+        {/if}
       </div>
     </div>
     <div class="balance-box balance-box--secondary">
       <div>
         <h4 class="balance-box__title">Tradable</h4>
-        <div class="balance-box__total"><b>42</b> TT</div>
+        {#if computedBalances}
+          <div class="balance-box__total">
+            <b>{computedBalances.unlocked}</b> TT
+          </div>
+        {:else}
+          <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+        {/if}
       </div>
-      <Button variant="outlined" on:click={onTransferClicked} style="flex: 1">
+      <Button
+        variant="outlined"
+        on:click={onTransferClicked}
+        style="flex: 1"
+        disabled={!computedBalances}
+      >
         <Label>Transfer tokens</Label>
       </Button>
     </div>
     <div class="balance-box balance-box--secondary">
       <div>
         <h4 class="balance-box__title">Locked</h4>
-        <div class="balance-box__total"><b>42</b> TT</div>
+        {#if computedBalances}
+          <div class="balance-box__total">
+            <b>{computedBalances.locked}</b> TT
+          </div>
+        {:else}
+          <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+        {/if}
       </div>
-      <Button variant="outlined" on:click={onOfferClicked} style="flex: 1">
+      <Button
+        variant="outlined"
+        on:click={onOfferClicked}
+        style="flex: 1"
+        disabled={!computedBalances}
+      >
         <Label>Offer tokens</Label>
       </Button>
     </div>
   </div>
-  <div style="width: 100%; margin-top: 2rem">
-    <Alert type="info">
-      <p>
-        You can offer max 12 tokens (Your locked amount minus your active
-        offers)
-      </p>
-    </Alert>
-  </div>
+  {#if computedBalances?.currentlyOffered > 0 && computedBalances?.maxToOffer > 0}
+    <div style="width: 100%; margin-top: 2rem">
+      <Alert type="info">
+        <p>
+          <b>Heads up</b>: you're currently offering
+          <b>{computedBalances?.currentlyOffered}</b>TT. You can then offer max
+          <b>{computedBalances?.maxToOffer}</b>TT (Your locked amount minus your
+          active offers tokens)
+        </p>
+      </Alert>
+    </div>
+  {/if}
 </div>
 
 <style>

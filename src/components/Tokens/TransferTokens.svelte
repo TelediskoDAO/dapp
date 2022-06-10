@@ -10,17 +10,23 @@
   import { transferState } from "../../state/tokens/transfer";
   import Textfield from "@smui/textfield";
   import { handleTransfer } from "../../handlers/tokens/transfer";
+  import { isAddress } from "ethers/lib/utils";
 
   let transferAmount = 0;
   let toAddress = "";
   export let maxToTransfer = 0;
+  export let onTransferred: () => void;
 
   async function onTransfer() {
-    await handleTransfer(transferAmount, toAddress, {
+    const successful = await handleTransfer(transferAmount, toAddress, {
       $signer,
       $tokenContract,
     });
-    toAddress = "";
+    if (successful) {
+      toAddress = "";
+      transferAmount = 0;
+      onTransferred();
+    }
   }
 </script>
 
@@ -31,7 +37,12 @@
       <p>You don't have any tokens available to transfer</p>
     </Alert>
   {:else}
-    <Textfield bind:value={toAddress} label="Address" type="text" />
+    <Textfield
+      bind:value={toAddress}
+      label="Address"
+      type="text"
+      style="width: 100%; margin-bottom: 1rem;"
+    />
     <FormField align="end" style="display: flex;">
       <Slider
         style="flex-grow: 1;"
@@ -51,7 +62,7 @@
         on:click={onTransfer}
         disabled={transferAmount === 0 ||
           transferAmount > maxToTransfer ||
-          toAddress.trim() === "" ||
+          !isAddress(toAddress) ||
           $transferState.loading ||
           $transferState.awaitingConfirmation}
       >
