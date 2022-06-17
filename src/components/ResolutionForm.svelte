@@ -57,7 +57,7 @@
     } = await graphQLClient.request(getResolutionTypesQuery);
     resolutionTypes = resolutionsTypesData;
 
-    var quill = new Quill("#editor", {
+    const quill = new Quill("#editor", {
       theme: "snow",
     });
 
@@ -67,14 +67,12 @@
     const sanitizedHtml = sanitize(marked.parse($currentResolution.content), {
       USE_PROFILES: { html: true },
     });
-    console.log("sanitizedHtml: ", sanitizedHtml);
 
     quill.clipboard.dangerouslyPasteHTML(sanitizedHtml);
 
     const textChangeHandler = () => {
       const html = quill.root.innerHTML;
       const markdown = turndownService.turndown(html);
-      console.log("markdown: ", markdown);
 
       $currentResolution.content = markdown;
     };
@@ -89,7 +87,6 @@
   });
 
   $: {
-    console.log($currentResolution);
     const validTypeId = typeof $currentResolution.typeId === "string";
     const checkDisabledFields = [
       $currentResolution.title?.trim(),

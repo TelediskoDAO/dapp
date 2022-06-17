@@ -33,7 +33,6 @@ export async function handleUpdate(
     awaitingConfirmation: false,
   });
   try {
-    console.log("$currentResolution: ", $currentResolution);
     const ipfsId = await add($currentResolution);
     const tx = await $resolutionContract.updateResolution(
       resolutionId,
