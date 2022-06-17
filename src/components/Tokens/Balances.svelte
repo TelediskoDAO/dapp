@@ -105,8 +105,10 @@
 
   .balance-box--main {
     flex-grow: 1;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
     text-align: center;
-    border-right: 1px solid var(--color-gray-1);
+    border-bottom: 1px solid var(--color-gray-1);
   }
 
   .balance-box--main .balance-box__title {
@@ -154,7 +156,20 @@
   }
 
   .balance-box--multiple {
-    padding-left: 4rem;
-    max-width: 70%;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .balance-box--main {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-right: 1px solid var(--color-gray-1);
+      border-bottom: none;
+    }
+
+    .balance-box--multiple {
+      max-width: 70%;
+      padding-left: 4rem;
+    }
   }
 </style>

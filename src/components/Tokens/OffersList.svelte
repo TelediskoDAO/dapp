@@ -34,6 +34,7 @@
     Number(offer.expirationTimestamp) * 1000 > Date.now();
 
   $: {
+    // todo move the following into some function
     if (loaded && offers.length > 0) {
       const allExpired = [...offers.filter(filterExpired)];
       const allNonExpired = [...offers.filter(filterNonExpired)];
