@@ -8,6 +8,12 @@
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
   import FormField from "@smui/form-field";
   import Checkbox from "@smui/checkbox";
+  import Quill from "quill";
+  import QuillMarkdown from "quilljs-markdown";
+  import "quilljs-markdown/dist/quilljs-markdown-common-style.css";
+  import Turndown from "turndown";
+  import { marked } from "marked";
+  import { sanitize } from "dompurify";
 
   import {
     currentResolution,
@@ -20,6 +26,10 @@
   import { acl } from "../state/resolutions";
   import Alert from "./Alert.svelte";
   import ResolutionUser from "./ResolutionUser.svelte";
+
+  marked.setOptions({
+    gfm: true,
+  });
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -47,10 +57,39 @@
     } = await graphQLClient.request(getResolutionTypesQuery);
     resolutionTypes = resolutionsTypesData;
 
-    return resetForm;
+    var quill = new Quill("#editor", {
+      theme: "snow",
+    });
+
+    const quillMarkdown = new QuillMarkdown(quill, {});
+
+    const turndownService = new Turndown();
+    const sanitizedHtml = sanitize(marked.parse($currentResolution.content), {
+      USE_PROFILES: { html: true },
+    });
+    console.log("sanitizedHtml: ", sanitizedHtml);
+
+    quill.clipboard.dangerouslyPasteHTML(sanitizedHtml);
+
+    const textChangeHandler = () => {
+      const html = quill.root.innerHTML;
+      const markdown = turndownService.turndown(html);
+      console.log("markdown: ", markdown);
+
+      $currentResolution.content = markdown;
+    };
+
+    quill.on("text-change", textChangeHandler);
+
+    return () => {
+      resetForm();
+      quillMarkdown.destroy();
+      quill.off("text-change", textChangeHandler);
+    };
   });
 
   $: {
+    console.log($currentResolution);
     const validTypeId = typeof $currentResolution.typeId === "string";
     const checkDisabledFields = [
       $currentResolution.title?.trim(),
@@ -104,15 +143,9 @@
     </Cell>
     <Cell span={12}>
       <InnerGrid>
-        <Cell span={6}>
-          <Textfield
-            style="width: 100%"
-            textarea
-            bind:value={$currentResolution.content}
-            label="Resolution Content"
-          >
-            <HelperText slot="helper">Markdown supported</HelperText>
-          </Textfield>
+        <Cell span={12} class="editor-wrapper">
+          <div id="editor" />
+          <HelperText slot="helper">Markdown supported</HelperText>
         </Cell>
       </InnerGrid>
     </Cell>
@@ -205,5 +238,15 @@
 
   :global(.field input) {
     box-shadow: none;
+  }
+
+  :global(.editor-wrapper) {
+    height: 400px;
+    padding-bottom: 2rem;
+  }
+
+  :global(.ql-editor p),
+  :global(.ql-editor ul) {
+    margin-bottom: 1rem !important;
   }
 </style>

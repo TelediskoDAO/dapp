@@ -18,22 +18,19 @@
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
   import ResolutionUser from "./ResolutionUser.svelte";
-  import { usersWithEthereumAddress } from "../state/odoo";
 
   export let resolution: ResolutionEntityEnhanced;
   let isPrint = /\/print$/.test($location);
   let signerVoted: ResolutionVoter | null = null;
 
-  function getAddressName(address: string): string {
-    return (
-      $usersWithEthereumAddress[address.toLowerCase()]?.displayName || address
-    );
-  }
-
   onMount(() => {
     if (isPrint) {
-      window.print();
-      window.close();
+      const timeout = setTimeout(() => {
+        window.print();
+        window.close();
+      }, 1000);
+
+      return () => clearTimeout(timeout);
     }
   });
 
@@ -332,6 +329,10 @@
   @media print {
     .pagebreak {
       page-break-before: always;
+    }
+
+    :global(.resolution-user__name .tag) {
+      display: none;
     }
   }
 </style>
