@@ -52,7 +52,7 @@
 </script>
 
 <section>
-  {#if !resolutionDataEnhanced || !$usersWithEthereumAddress}
+  {#if !resolutionDataEnhanced || Object.keys($usersWithEthereumAddress).length === 0}
     <CircularProgress style="height: 32px; width: 32px;" indeterminate />
   {:else}
     <CurrentTimestamp />
