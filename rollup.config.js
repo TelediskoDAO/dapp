@@ -68,8 +68,9 @@ export default [
           version: packageJson.version,
           network,
           endpoint,
-          ipfsEndpoint: "https://api.thegraph.com/ipfs/api/v0",
-          graphProtocolGQLEndpoint: "https://api.thegraph.com/subgraphs/name/telediskodao/dao",
+          ipfsEndpoint: "https://graph.dao.teledisko.com/ipfs/api/v0",
+          graphProtocolGQLEndpoint:
+            "https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao",
           gitRevision,
         }),
       }),

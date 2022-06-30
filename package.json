@@ -4,8 +4,8 @@
   "description": "Teledisko DAO",
   "main": "index.js",
   "scripts": {
-    "build": "NETWORK=maticmum ENDPOINT=https://polygon-testnet.blastapi.io/d9b39f46-d75f-4157-a868-49a5641cf36e rollup --config",
-    "start": "NETWORK=maticmum ENDPOINT=https://polygon-testnet.blastapi.io/d9b39f46-d75f-4157-a868-49a5641cf36e rollup --watch --config",
+    "build": "NETWORK=unknown ENDPOINT=https://eth.bd.evmos.dev:8545 rollup --config",
+    "start": "NETWORK=unknown ENDPOINT=https://eth.bd.evmos.dev:8545 rollup --watch --config",
     "test": "mocha test/**/*.ts --recursive --timeout 60000 --exit",
     "test:watch": "mocha test/**/*.ts --recursive --timeout 60000 --watch",
     "check": "svelte-check --tsconfig ./tsconfig.json",
