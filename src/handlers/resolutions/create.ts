@@ -34,7 +34,9 @@ export async function handleCreate({
     const tx = await $resolutionContract.createResolution(
       ipfsId,
       Number($currentResolution.typeId),
-      $currentResolution.isNegative
+      $currentResolution.isNegative,
+      [],
+      []
     );
     formState.set({
       loading: true,
