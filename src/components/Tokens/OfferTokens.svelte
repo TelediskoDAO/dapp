@@ -54,6 +54,11 @@
         max={maxToOffer}
       />
     </FormField>
+    <Alert
+      marginTop
+      title="Heads up"
+      message="Once an offer is submitted, the email notifying the other members should arrive within max 15 mins"
+    />
     <div class="actions">
       <Button
         on:click={onOffer}
