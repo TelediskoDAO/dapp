@@ -1,6 +1,5 @@
 import { push } from "svelte-spa-router";
 
-import { wait } from "../../async";
 import { transferState, resetTransferState } from "../../state/tokens/transfer";
 import type { Signer } from "ethers";
 import type { TelediskoToken } from "../../../contracts/typechain/contracts/TelediskoToken/TelediskoToken";
