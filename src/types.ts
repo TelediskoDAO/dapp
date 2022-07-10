@@ -48,8 +48,9 @@ export type ResolutionEntity = {
   approveBy: string;
   voters: ResolutionVoter[];
   hasQuorum: boolean;
-  executionTimestamp: string;
-  executionData: string;
+  executionTimestamp?: string;
+  executionData?: string[];
+  executionTo?: string[];
 };
 
 export type ResolutionAction = {
