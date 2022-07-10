@@ -29,6 +29,12 @@ const dev = env === "development";
 
 const network = process.env.NETWORK || "local";
 const endpoint = process.env.ENDPOINT || "http://localhost:8545";
+const ipfsEndpoint =
+  process.env.IPFS_ENDPOINT ||
+  "https://graph.dao-staging.teledisko.com/ipfs/api/v0";
+const graphProtocolGQLEndpoint =
+  process.env.GRAPH_PROTOCOL_GQL_ENDPOINT ||
+  "https://graph.dao-staging.teledisko.com/subgraphs/name/TelediskoDAO/dao";
 
 // https://stackoverflow.com/a/35778030/597097
 const gitRevision = require("child_process")
@@ -68,8 +74,8 @@ export default [
           version: packageJson.version,
           network,
           endpoint,
-          ipfsEndpoint: "https://api.thegraph.com/ipfs/api/v0",
-          graphProtocolGQLEndpoint: "https://api.thegraph.com/subgraphs/name/telediskodao/dao",
+          ipfsEndpoint,
+          graphProtocolGQLEndpoint,
           gitRevision,
         }),
       }),

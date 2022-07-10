@@ -46,6 +46,12 @@
     font-size: small;
     border-radius: 4px;
   }
+
+  .alert-title {
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+  }
+
   .alert:last-child {
     margin-bottom: 0;
   }

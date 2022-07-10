@@ -201,6 +201,10 @@
             marginTop
           />
         {:else}
+          <Alert
+            title="Heads up"
+            message="Once a draft resolution is approved, the email notifying the shareholders should arrive within max 15 mins"
+          />
           <Button
             variant="outlined"
             disabled={disabled || !disabledUpdate}
@@ -218,6 +222,12 @@
             </Button>
           {/if}
         {/if}
+      {/if}
+      {#if !createBy}
+        <Alert
+          title="Heads up"
+          message="Once a draft resolution is created, the email notifying the managing board should arrive within max 15 mins"
+        />
       {/if}
       {#if !createBy && !$formState.loading && !$formState.awaitingConfirmation}
         <Button variant="outlined" {disabled} on:click={handleSave}>

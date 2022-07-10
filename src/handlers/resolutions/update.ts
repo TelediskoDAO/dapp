@@ -38,7 +38,9 @@ export async function handleUpdate(
       resolutionId,
       ipfsId,
       Number($currentResolution.typeId),
-      $currentResolution.isNegative
+      $currentResolution.isNegative,
+      [],
+      []
     );
     formState.set({
       loading: true,
