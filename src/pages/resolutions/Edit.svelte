@@ -78,7 +78,8 @@
       (resolutionTypeInfo &&
         getResolutionState(resolutionData, Date.now(), resolutionTypeInfo) !==
           RESOLUTION_STATES.PRE_DRAFT) ||
-      ($acl.loaded && !$acl.canUpdate);
+      ($acl.loaded && !$acl.canUpdate) ||
+      typeof resolutionData?.rejectBy === "string";
 
     if (shouldRedirectToView) {
       replace(`/resolutions/${params.resolutionId}`);
@@ -160,7 +161,7 @@
 
 <AclCheck />
 
-{#if loaded && $acl.loaded}
+{#if loaded && $acl.loaded && typeof resolutionData.rejectBy !== "string"}
   <ResolutionForm
     handleSave={handleUpdateResolution}
     createBy={resolutionData.createBy}

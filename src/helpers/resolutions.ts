@@ -18,6 +18,8 @@ export const RESOLUTION_STATES: ResolutionStates = {
   VOTING: "voting",
   // transition to when voting period ends
   ENDED: "ended",
+  // rejected
+  REJECTED: "rejected",
 };
 
 export const RESOLUTION_ACTIONS = {
@@ -29,6 +31,11 @@ export const RESOLUTION_ACTIONS = {
   [RESOLUTION_STATES.NOTICE]: () => ({
     label: "View",
     disabled: false,
+    icon: mdiEye,
+  }),
+  [RESOLUTION_STATES.REJECTED]: () => ({
+    label: "View",
+    disabled: true,
     icon: mdiEye,
   }),
   [RESOLUTION_STATES.VOTING]: (
@@ -88,6 +95,9 @@ export const getResolutionState = (
   $currentTimestamp: number,
   resolutionTypeInfo: ResolutionTypeInfo
 ): ResolutionState => {
+  if (resolution.rejectTimestamp !== "0") {
+    return RESOLUTION_STATES.REJECTED;
+  }
   if (resolution.approveTimestamp !== "0") {
     const { noticePeriodEnds, votingEnds } = resolutionTypeInfo;
     if (isBefore(new Date($currentTimestamp), noticePeriodEnds)) {
@@ -118,6 +128,10 @@ export const getEnhancedResolutionMapper =
       })),
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
+      rejectedAt:
+        resolution.rejectTimestamp !== "0"
+          ? getRelativeDateFromUnixTimestamp(resolution.rejectTimestamp)
+          : null,
       updatedAt:
         resolution.updateTimestamp !== "0"
           ? getRelativeDateFromUnixTimestamp(resolution.updateTimestamp)
