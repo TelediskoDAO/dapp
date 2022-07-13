@@ -72,7 +72,7 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
   state: ResolutionState;
   href: string;
   createdAt: string;
-  rejectedAt: string;
+  rejectedAt: string | null;
   updatedAt: string | null;
   approvedAt: string | null;
   action: ResolutionAction;

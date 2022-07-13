@@ -117,6 +117,20 @@ describe("Resolution helpers", () => {
 
       expect(resolutionState).to.eq(RESOLUTION_STATES.ENDED);
     });
+
+    it("should correctly return a REJECTED state", () => {
+      const resolutionEntity = createResolutionEntity({
+        rejectTimestamp: FEB_25_2022_UNIX_TS,
+      });
+      const resolutionTypeInfo = getResolutionTypeInfo(resolutionEntity);
+      const resolutionState = getResolutionState(
+        resolutionEntity,
+        MAR_10_2022_TS,
+        resolutionTypeInfo
+      );
+
+      expect(resolutionState).to.eq(RESOLUTION_STATES.REJECTED);
+    });
   });
 
   describe("getEnhancedResolutionMapper", () => {

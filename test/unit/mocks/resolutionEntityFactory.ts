@@ -19,12 +19,14 @@ const defaultEntity: ResolutionEntity = {
   resolutionType: defaultResolutionType("4"),
   yesVotesTotal: "0",
   approveTimestamp: "0",
+  rejectTimestamp: "0",
   createTimestamp: "1645808255",
   updateTimestamp: "0",
   voters: [],
   createBy: "42",
   updateBy: "42",
   approveBy: "42",
+  rejectBy: "42",
   hasQuorum: false,
 };
 
@@ -42,6 +44,9 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   createdAt: "02/25/2022",
   updatedAt: null,
   approvedAt: null,
+  rejectedAt: null,
+  rejectTimestamp: "0",
+  rejectBy: "42",
   href: "#/resolutions/42/edit",
   action: {
     label: "Edit or Approve",
