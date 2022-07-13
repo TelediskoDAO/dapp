@@ -23,7 +23,6 @@
   import { currentResolution, resetForm } from "../../state/resolutions/form";
   import { acl } from "../../state/resolutions";
   import AclCheck from "../../components/AclCheck.svelte";
-  import Alert from "../../components/Alert.svelte";
 
   type Params = {
     resolutionId: string;
@@ -113,6 +112,11 @@
   function handleApproveResolution() {
     open = false;
     handleApprove(params.resolutionId, { $signer, $resolutionContract });
+  }
+
+  function handleRejectResolution() {
+    openReject = false;
+    handleReject(params.resolutionId, { $signer, $resolutionContract });
   }
 </script>
 
