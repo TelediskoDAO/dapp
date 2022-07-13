@@ -147,7 +147,8 @@
 >
   <Title id="dialog-title">Warning!</Title>
   <Content id="dialog-content">
-    This action is destructive and the current resolution will be rejected
+    This action is destructive and the current resolution will be rejected. Are
+    you sure?
   </Content>
   <Actions>
     <Button on:click={() => (open = false)}>
