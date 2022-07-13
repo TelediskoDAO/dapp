@@ -24,10 +24,14 @@
   import Alert from "../../components/Alert.svelte";
   import ResolutionUser from "../../components/ResolutionUser.svelte";
   import Delegation from "../../components/Delegation.svelte";
+  import FormField from "@smui/form-field";
+  import Checkbox from "@smui/checkbox";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
   let empty = false;
+  let shouldShowIncludeRejected = false;
+  let includeRejected = false;
   let stateFilter: ResolutionState | "all" = "all";
   let possibleFilters: Record<string, number> = { all: 0 };
 
@@ -61,10 +65,25 @@
       );
       possibleFilters = resolutions.reduce((filters, resolution) => {
         const filterKey = resolution.state;
-        filters[filterKey] = filters[filterKey] + 1 || 1;
+        if (
+          includeRejected ||
+          (!includeRejected && filterKey !== RESOLUTION_STATES.REJECTED)
+        ) {
+          filters[filterKey] = filters[filterKey] + 1 || 1;
+        }
         return filters;
       }, {});
+      console.log("possibleFilters: ", possibleFilters);
+      shouldShowIncludeRejected = !!resolutions.find(
+        (res) => res.state === RESOLUTION_STATES.REJECTED
+      );
       ready = true;
+    }
+  }
+
+  $: {
+    if (typeof includeRejected === "boolean") {
+      stateFilter = "all";
     }
   }
 
@@ -90,7 +109,7 @@
     {#if ready && Object.keys(possibleFilters).length > 1}
       <div class="push-right">
         <Select bind:value={stateFilter} label="Filter by state">
-          <Option value={"all"}>all ({resolutions.length})</Option>
+          <Option value={"all"}>all</Option>
           {#each Object.keys(possibleFilters) as resolutionState}
             <Option value={resolutionState}>
               {resolutionState} ({possibleFilters[resolutionState]})</Option
@@ -110,7 +129,7 @@
   {#if ready && !empty}
     <DataTable table$aria-label="Resolutions list" style="width: 100%;">
       <Body>
-        {#each resolutions.filter((res) => stateFilter === "all" || res.state === stateFilter) as resolution}
+        {#each resolutions.filter((res) => (stateFilter === "all" || res.state === stateFilter) && (includeRejected || (!includeRejected && res.state !== RESOLUTION_STATES.REJECTED))) as resolution}
           <Row style="cursor: pointer" on:click={goToResolutionDetails}>
             <Cell width="80%">
               <div class="resolution-info">
@@ -153,6 +172,16 @@
                     {resolution.resolutionTypeInfo.votingEndsAt}
                   </small>
                 {/if}
+                {#if resolution.state === RESOLUTION_STATES.REJECTED}
+                  <small class="resolution-detail-sm"
+                    ><span>Rejected</span>
+                    {resolution.rejectedAt} <b>by</b>
+                    <ResolutionUser
+                      ethereumAddress={resolution.rejectBy}
+                      inline
+                    />
+                  </small>
+                {/if}
               </div>
             </Cell>
             <Cell
@@ -179,6 +208,14 @@
         {/each}
       </Body>
     </DataTable>
+    {#if shouldShowIncludeRejected && Object.keys(possibleFilters).length > 0}
+      <div class="include-rejected">
+        <FormField align="end">
+          <Checkbox bind:checked={includeRejected} />
+          <span slot="label">Show rejected resolutions</span>
+        </FormField>
+      </div>
+    {/if}
   {/if}
   {#if ready && empty}
     <Alert message="No resolutions created so far" />
@@ -214,7 +251,6 @@
   .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding-bottom: 1rem;
   }
 
@@ -224,5 +260,9 @@
 
   .delegation {
     margin-left: 1rem;
+  }
+
+  .include-rejected {
+    text-align: right;
   }
 </style>

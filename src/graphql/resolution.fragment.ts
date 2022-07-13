@@ -14,9 +14,11 @@ export const resolutionFragment = gql`
     createTimestamp
     updateTimestamp
     approveTimestamp
+    rejectTimestamp
     createBy
     updateBy
     approveBy
+    rejectBy
     hasQuorum
     voters {
       address

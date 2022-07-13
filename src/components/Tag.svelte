@@ -52,7 +52,8 @@
     color: var(--color-white);
   }
 
-  .tag.tag--no {
+  .tag.tag--no,
+  .tag.tag--rejected {
     background-color: #fe7171;
     border: 1px solid #dd6060;
     color: var(--color-white);

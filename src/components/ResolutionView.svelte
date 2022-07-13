@@ -49,6 +49,16 @@
 
 <div class="view">
   <div class="info">
+    {#if resolution.state === RESOLUTION_STATES.REJECTED}
+      <Alert type="error" message="This resolution has been rejected" />
+      <ResolutionUser
+        ethereumAddress={resolution.rejectBy}
+        title={`Rejected ${resolution.rejectedAt} by`}
+        hasBg
+        hideInfo={isPrint}
+      />
+      <hr class="has-margin" />
+    {/if}
     <h1>{resolution.title}</h1>
     <ResolutionUser
       ethereumAddress={resolution.createBy}
@@ -167,7 +177,7 @@
     {/if}
   </div>
   <div class="extra">
-    {#if !isPrint}
+    {#if !isPrint && RESOLUTION_STATES.REJECTED !== resolution.state}
       <Button
         variant="outlined"
         style="width: 100%; margin-bottom: 1rem"
@@ -324,6 +334,11 @@
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  hr.has-margin {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 
   @media print {

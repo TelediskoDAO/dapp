@@ -13,6 +13,7 @@
   import type { ResolutionEntity } from "../../types";
   import { handleUpdate } from "../../handlers/resolutions/update";
   import { handleApprove } from "../../handlers/resolutions/approve";
+  import { handleReject } from "../../handlers/resolutions/reject";
   import {
     getRelativeDateFromUnixTimestamp,
     getResolutionState,
@@ -22,7 +23,6 @@
   import { currentResolution, resetForm } from "../../state/resolutions/form";
   import { acl } from "../../state/resolutions";
   import AclCheck from "../../components/AclCheck.svelte";
-  import Alert from "../../components/Alert.svelte";
 
   type Params = {
     resolutionId: string;
@@ -35,6 +35,7 @@
   let resolutionData: ResolutionEntity;
   let disabledUpdate = true;
   let open = false;
+  let openReject = false;
   let loaded = false;
 
   onMount(async () => {
@@ -77,7 +78,8 @@
       (resolutionTypeInfo &&
         getResolutionState(resolutionData, Date.now(), resolutionTypeInfo) !==
           RESOLUTION_STATES.PRE_DRAFT) ||
-      ($acl.loaded && !$acl.canUpdate);
+      ($acl.loaded && !$acl.canUpdate) ||
+      typeof resolutionData?.rejectBy === "string";
 
     if (shouldRedirectToView) {
       replace(`/resolutions/${params.resolutionId}`);
@@ -104,9 +106,18 @@
     open = true;
   }
 
+  function handlePreReject() {
+    openReject = true;
+  }
+
   function handleApproveResolution() {
     open = false;
     handleApprove(params.resolutionId, { $signer, $resolutionContract });
+  }
+
+  function handleRejectResolution() {
+    openReject = false;
+    handleReject(params.resolutionId, { $signer, $resolutionContract });
   }
 </script>
 
@@ -129,15 +140,35 @@
   </Actions>
 </Dialog>
 
+<Dialog
+  bind:open={openReject}
+  aria-labelledby="dialog-title"
+  aria-describedby="dialog-content"
+>
+  <Title id="dialog-title">Warning!</Title>
+  <Content id="dialog-content">
+    This action is destructive and the current resolution will be rejected
+  </Content>
+  <Actions>
+    <Button on:click={() => (open = false)}>
+      <Label>No</Label>
+    </Button>
+    <Button on:click={handleRejectResolution}>
+      <Label>Yes, proceed</Label>
+    </Button>
+  </Actions>
+</Dialog>
+
 <AclCheck />
 
-{#if loaded && $acl.loaded}
+{#if loaded && $acl.loaded && typeof resolutionData.rejectBy !== "string"}
   <ResolutionForm
     handleSave={handleUpdateResolution}
     createBy={resolutionData.createBy}
     createdOn={getRelativeDateFromUnixTimestamp(resolutionData.createTimestamp)}
     {handleExport}
     handleApprove={handlePreApprove}
+    handleReject={handlePreReject}
     {disabledUpdate}
   />
 {/if}

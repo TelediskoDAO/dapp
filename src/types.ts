@@ -43,9 +43,11 @@ export type ResolutionEntity = {
   createTimestamp: string;
   updateTimestamp: string;
   approveTimestamp: string;
+  rejectTimestamp: string;
   createBy: string;
   updateBy: string;
   approveBy: string;
+  rejectBy: string;
   voters: ResolutionVoter[];
   hasQuorum: boolean;
   executionTimestamp?: string;
@@ -70,6 +72,7 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
   state: ResolutionState;
   href: string;
   createdAt: string;
+  rejectedAt: string | null;
   updatedAt: string | null;
   approvedAt: string | null;
   action: ResolutionAction;
@@ -82,8 +85,18 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
   };
 };
 
-export type ResolutionState = "pre-draft" | "notice" | "voting" | "ended";
-export type ResolutionStateKeys = "PRE_DRAFT" | "NOTICE" | "VOTING" | "ENDED";
+export type ResolutionState =
+  | "pre-draft"
+  | "notice"
+  | "voting"
+  | "ended"
+  | "rejected";
+export type ResolutionStateKeys =
+  | "PRE_DRAFT"
+  | "NOTICE"
+  | "VOTING"
+  | "ENDED"
+  | "REJECTED";
 
 export type ResolutionStates = Record<ResolutionStateKeys, ResolutionState>;
 
