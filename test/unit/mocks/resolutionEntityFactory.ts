@@ -9,7 +9,7 @@ import resolutionTypes from "./resolutionTypes.json";
 
 const defaultResolutionType: (id: string) => ResolutionTypeEntity = (
   id: string
-) => resolutionTypes.find((res) => res.id === id);
+) => resolutionTypes.find((res) => res.id === id) as ResolutionTypeEntity;
 
 const defaultEntity: ResolutionEntity = {
   id: "42",

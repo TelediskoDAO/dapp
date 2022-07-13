@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import CircularProgress from "@smui/circular-progress";
+  import { location } from "svelte-spa-router";
 
   import ResolutionView from "../../components/ResolutionView.svelte";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
@@ -10,6 +11,7 @@
   import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
   import { usersWithEthereumAddress } from "../../state/odoo";
+  import Alert from "../../components/Alert.svelte";
 
   type Params = {
     resolutionId: string;
@@ -21,6 +23,8 @@
 
   let resolutionData: ResolutionEntity;
   let resolutionDataEnhanced: ResolutionEntityEnhanced;
+  let isPrint = /\/print$/.test($location);
+  let stillLoading = false;
 
   async function fethAndSetResolutionData() {
     const {
@@ -36,9 +40,18 @@
   onMount(async () => {
     await fethAndSetResolutionData();
 
-    const interval = setInterval(fethAndSetResolutionData, 5000);
+    const checkIfStillLoading = () => {
+      stillLoading =
+        Object.keys($usersWithEthereumAddress).length === 0 && isPrint;
+    };
 
-    return () => clearInterval(interval);
+    const interval = setInterval(fethAndSetResolutionData, 5000);
+    const timeout = setTimeout(checkIfStillLoading, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   });
 
   $: {
@@ -52,8 +65,14 @@
 </script>
 
 <section>
-  {#if !resolutionDataEnhanced || Object.keys($usersWithEthereumAddress).length === 0}
+  {#if !resolutionDataEnhanced || (Object.keys($usersWithEthereumAddress).length === 0 && isPrint)}
     <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+    {#if stillLoading}
+      <Alert
+        type="warning"
+        message="You should login to be able to print the resolution"
+      />
+    {/if}
   {:else}
     <CurrentTimestamp />
     <ResolutionView resolution={resolutionDataEnhanced} />
