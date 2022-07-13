@@ -13,6 +13,7 @@
   import type { ResolutionEntity } from "../../types";
   import { handleUpdate } from "../../handlers/resolutions/update";
   import { handleApprove } from "../../handlers/resolutions/approve";
+  import { handleReject } from "../../handlers/resolutions/reject";
   import {
     getRelativeDateFromUnixTimestamp,
     getResolutionState,
@@ -35,6 +36,7 @@
   let resolutionData: ResolutionEntity;
   let disabledUpdate = true;
   let open = false;
+  let openReject = false;
   let loaded = false;
 
   onMount(async () => {
@@ -104,6 +106,10 @@
     open = true;
   }
 
+  function handlePreReject() {
+    openReject = true;
+  }
+
   function handleApproveResolution() {
     open = false;
     handleApprove(params.resolutionId, { $signer, $resolutionContract });
@@ -129,6 +135,25 @@
   </Actions>
 </Dialog>
 
+<Dialog
+  bind:open={openReject}
+  aria-labelledby="dialog-title"
+  aria-describedby="dialog-content"
+>
+  <Title id="dialog-title">Warning!</Title>
+  <Content id="dialog-content">
+    This action is destructive and the current resolution will be rejected
+  </Content>
+  <Actions>
+    <Button on:click={() => (open = false)}>
+      <Label>No</Label>
+    </Button>
+    <Button on:click={handleRejectResolution}>
+      <Label>Yes, proceed</Label>
+    </Button>
+  </Actions>
+</Dialog>
+
 <AclCheck />
 
 {#if loaded && $acl.loaded}
@@ -138,6 +163,7 @@
     createdOn={getRelativeDateFromUnixTimestamp(resolutionData.createTimestamp)}
     {handleExport}
     handleApprove={handlePreApprove}
+    handleReject={handlePreReject}
     {disabledUpdate}
   />
 {/if}

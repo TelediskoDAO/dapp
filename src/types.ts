@@ -43,9 +43,11 @@ export type ResolutionEntity = {
   createTimestamp: string;
   updateTimestamp: string;
   approveTimestamp: string;
+  rejectTimestamp: string;
   createBy: string;
   updateBy: string;
   approveBy: string;
+  rejectBy: string;
   voters: ResolutionVoter[];
   hasQuorum: boolean;
   executionTimestamp?: string;

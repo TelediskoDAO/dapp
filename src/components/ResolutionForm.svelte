@@ -42,6 +42,7 @@
   export let disabledUpdate = true;
   export let handleSave = noop;
   export let handleApprove = noop;
+  export let handleReject = noop;
   export let handleExport = noop;
 
   let disabled = false;
@@ -64,9 +65,12 @@
     const quillMarkdown = new QuillMarkdown(quill, {});
 
     const turndownService = new Turndown();
-    const sanitizedHtml = sanitize(marked.parse($currentResolution.content), {
-      USE_PROFILES: { html: true },
-    });
+    const sanitizedHtml = sanitize(
+      marked.parse($currentResolution.content || ""),
+      {
+        USE_PROFILES: { html: true },
+      }
+    );
 
     quill.clipboard.dangerouslyPasteHTML(sanitizedHtml);
 
@@ -205,22 +209,32 @@
             title="Heads up"
             message="Once a draft resolution is approved, the email notifying the shareholders should arrive within max 15 mins"
           />
-          <Button
-            variant="outlined"
-            disabled={disabled || !disabledUpdate}
-            on:click={handleExport}
-          >
-            <Label>Export to pdf</Label>
-          </Button>
-          {#if $acl.canApprove}
+          <Cell span={12} class="actions-bar">
             <Button
               variant="outlined"
               disabled={disabled || !disabledUpdate}
-              on:click={handleApprove}
+              on:click={handleExport}
             >
-              <Label>Approve</Label>
+              <Label>Export to pdf</Label>
             </Button>
-          {/if}
+            {#if $acl.canApprove}
+              <Button
+                variant="outlined"
+                disabled={disabled || !disabledUpdate}
+                on:click={handleApprove}
+              >
+                <Label>Approve</Label>
+              </Button>
+              <Button
+                variant="outlined"
+                class="recjet-btn"
+                disabled={disabled || !disabledUpdate}
+                on:click={handleReject}
+              >
+                <Label>Reject</Label>
+              </Button>
+            {/if}
+          </Cell>
         {/if}
       {/if}
       {#if !createBy}
@@ -250,6 +264,19 @@
   :global(.editor-wrapper) {
     height: 400px;
     padding-bottom: 2rem;
+  }
+
+  :global(.actions-bar) {
+    position: relative;
+  }
+  :global(.recjet-btn) {
+    position: absolute !important;
+    right: 0;
+  }
+
+  :global(.recjet-btn:not(:disabled)) {
+    background-color: var(--ruby-red) !important;
+    color: white !important;
   }
 
   :global(.ql-editor p),
