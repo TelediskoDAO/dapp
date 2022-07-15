@@ -9,6 +9,7 @@ interface IConfig {
   ipfsEndpoint: string;
   graphProtocolGQLEndpoint: string;
   gitRevision: string;
+  expectedChainId: number;
   env: Env;
 }
 

@@ -72,7 +72,9 @@
       }
     );
 
-    quill.clipboard.dangerouslyPasteHTML(sanitizedHtml);
+    if (sanitizedHtml.trim() !== "") {
+      quill.clipboard.dangerouslyPasteHTML(sanitizedHtml);
+    }
 
     const textChangeHandler = () => {
       const html = quill.root.innerHTML;

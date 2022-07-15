@@ -46,19 +46,11 @@ jobs:
 
       - name: Build for production
         if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          touch .env
-          echo IPFS_ENDPOINT=https://graph.dao.teledisko.com/ipfs/api/v0 >> .env
-          echo GRAPH_PROTOCOL_GQL_ENDPOINT=https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao >> .env
-          NODE_ENV=production pnpm build
+        run: NODE_ENV=production pnpm build-prod
 
       - name: Build for staging
         if: startsWith(github.ref, 'refs/tags/v') != true
-        run: |
-          touch .env
-          echo IPFS_ENDPOINT=https://graph.dao-staging.teledisko.com/ipfs/api/v0 >> .env
-          echo GRAPH_PROTOCOL_GQL_ENDPOINT=https://graph.dao-staging.teledisko.com/subgraphs/name/TelediskoDAO/dao >> .env
-          NODE_ENV=staging pnpm build
+        run: NODE_ENV=staging pnpm build
 
       - name: Add .nojekyll file
         run: touch build/.nojekyll

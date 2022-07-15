@@ -29,6 +29,9 @@ const dev = env === "development";
 
 const network = process.env.NETWORK || "local";
 const endpoint = process.env.ENDPOINT || "http://localhost:8545";
+const expectedChainId = process.env.CHAIN_ID
+  ? Number(process.env.CHAIN_ID)
+  : 9000;
 const ipfsEndpoint =
   process.env.IPFS_ENDPOINT ||
   "https://graph.dao-staging.teledisko.com/ipfs/api/v0";
@@ -74,6 +77,7 @@ export default [
           version: packageJson.version,
           network,
           endpoint,
+          expectedChainId,
           ipfsEndpoint,
           graphProtocolGQLEndpoint,
           gitRevision,

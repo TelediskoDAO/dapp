@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "NETWORK=unknown ENDPOINT=https://eth.bd.evmos.dev:8545 rollup --config",
+    "build-prod": "NETWORK=unknown CHAIN_ID=9001 ENDPOINT=https://eth.bd.evmos.org:8545 GRAPH_PROTOCOL_GQL_ENDPOINT=https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao IPFS_ENDPOINT=https://graph.dao.teledisko.com/ipfs/api/v0 rollup --config",
     "start": "NETWORK=unknown ENDPOINT=https://eth.bd.evmos.dev:8545 rollup --watch --config",
+    "start-prod": "NETWORK=unknown CHAIN_ID=9001 ENDPOINT=https://eth.bd.evmos.org:8545 GRAPH_PROTOCOL_GQL_ENDPOINT=https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao IPFS_ENDPOINT=https://graph.dao.teledisko.com/ipfs/api/v0 rollup --watch --config",
     "test": "mocha test/**/*.ts --recursive --timeout 60000 --exit",
     "test:watch": "mocha test/**/*.ts --recursive --timeout 60000 --watch",
     "check": "svelte-check --tsconfig ./tsconfig.json",

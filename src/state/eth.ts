@@ -74,8 +74,14 @@ export const signer: Readable<Signer> = derived(
   async ([$wallet, $user], set) => {
     if ($wallet && $user) {
       const network = await $wallet.getNetwork();
-      if (network.name !== CONFIG.network) {
-        networkMismatchError.set({ has: network.name, want: CONFIG.network });
+      if (
+        network.name !== CONFIG.network ||
+        network.chainId !== CONFIG.expectedChainId
+      ) {
+        networkMismatchError.set({
+          has: `${network.name} (chain id: ${network.chainId})`,
+          want: `${CONFIG.network} (chain id: ${CONFIG.expectedChainId})`,
+        });
       } else {
         networkMismatchError.set(undefined);
         set(new ethers.providers.Web3Provider(window.ethereum).getSigner());
