@@ -63,14 +63,12 @@
               Tokens</a
             >
           </li>
-          {#if $showWIPFeatures}
-            <li>
-              <a use:active on:click={closeSidebar} href="#/resolutions"
-                ><i>verified</i>
-                Resolutions</a
-              >
-            </li>
-          {/if}
+          <li>
+            <a use:active on:click={closeSidebar} href="#/resolutions"
+              ><i>verified</i>
+              Resolutions</a
+            >
+          </li>
           <li>
             <a use:active on:click={closeSidebar} href="#/connect/odoo"
               ><i>settings</i>

@@ -22,7 +22,7 @@
   }
 </script>
 
-<section>
+<!--section>
   <h2>Advanced features</h2>
   <FormField>
     <Checkbox checked={$showWIPFeatures} on:click={onWIPChange} />
@@ -30,7 +30,7 @@
       Enable features that are <em>Work In Progress</em>.
     </span>
   </FormField>
-</section>
+</section-->
 
 <Dialog
   bind:open
