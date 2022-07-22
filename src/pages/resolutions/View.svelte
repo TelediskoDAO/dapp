@@ -6,12 +6,17 @@
   import ResolutionView from "../../components/ResolutionView.svelte";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
   import { graphQLClient } from "../../net/graphQl";
-  import type { ResolutionEntity, ResolutionEntityEnhanced } from "../../types";
+  import type {
+    DaoManagerEntity,
+    ResolutionEntity,
+    ResolutionEntityEnhanced,
+  } from "../../types";
   import { getEnhancedResolutionMapper } from "../../helpers/resolutions";
   import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
   import { usersWithEthereumAddress } from "../../state/odoo";
   import Alert from "../../components/Alert.svelte";
+  import { getResolutionAndDaoManagerQuery } from "../../graphql/get-resolution-and-dao-manager.query";
 
   type Params = {
     resolutionId: string;
@@ -22,6 +27,7 @@
   };
 
   let resolutionData: ResolutionEntity;
+  let daoManagerData: DaoManagerEntity;
   let resolutionDataEnhanced: ResolutionEntityEnhanced;
   let isPrint = /\/print$/.test($location);
   let stillLoading = false;
@@ -29,12 +35,15 @@
   async function fethAndSetResolutionData() {
     const {
       resolution,
+      daoManager,
     }: {
       resolution: ResolutionEntity;
-    } = await graphQLClient.request(getResolutionQuery, {
+      daoManager: DaoManagerEntity;
+    } = await graphQLClient.request(getResolutionAndDaoManagerQuery, {
       id: params.resolutionId,
     });
     resolutionData = resolution;
+    daoManagerData = daoManager;
   }
 
   onMount(async () => {
@@ -75,6 +84,6 @@
     {/if}
   {:else}
     <CurrentTimestamp />
-    <ResolutionView resolution={resolutionDataEnhanced} />
+    <ResolutionView {daoManagerData} resolution={resolutionDataEnhanced} />
   {/if}
 </section>

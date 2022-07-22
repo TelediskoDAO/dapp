@@ -16,6 +16,7 @@
   export let hideInfo = false;
   export let size: "sm" | "md" | "lg" = "md";
   export let shortAddressWhileLoading = false;
+  export let shortAddress = false;
 
   let userDetails: OdooUserTransformed = null;
 
@@ -90,7 +91,10 @@
           {/if}
           <slot />
         </div>
-        <div class="resolution-user__eth">{ethereumAddress}</div>
+        <div class="resolution-user__eth">
+          {shortAddress ? `${ethereumAddress.slice(0, 8)}...` : ethereumAddress}
+        </div>
+        <slot name="after" />
       </div>
     </div>
   </div>

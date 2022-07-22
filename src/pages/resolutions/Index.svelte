@@ -73,7 +73,6 @@
         }
         return filters;
       }, {});
-      console.log("possibleFilters: ", possibleFilters);
       shouldShowIncludeRejected = !!resolutions.find(
         (res) => res.state === RESOLUTION_STATES.REJECTED
       );

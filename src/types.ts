@@ -13,6 +13,9 @@ export type ResolutionsAcl = {
   canApprove: boolean;
   canVote: (voters: ResolutionVoter[]) => boolean;
   loaded: boolean;
+  isShareholder: boolean;
+  isManagingBoard: boolean;
+  isContributor: boolean;
 };
 
 export type ResolutionTypeEntity = {

@@ -2,7 +2,7 @@
   export let totalYes: number;
   export let totalNo: number;
   export let hasQuorum: boolean;
-  export let voters: string;
+  export let abstained: number;
   export let votedVotingPower: number;
   export let maxVotingPower: number;
 </script>
@@ -10,30 +10,30 @@
 <div class="wrapper">
   <div class="voting-breakdown">
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Total Yes</div>
+      <div class="voting-breakdown__title">Voted Yes</div>
       <div class="voting-breakdown__value">
         {totalYes}
       </div>
     </div>
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Total No</div>
+      <div class="voting-breakdown__title">Voted No</div>
       <div class="voting-breakdown__value">
         {totalNo}
       </div>
     </div>
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Quorum</div>
+      <div class="voting-breakdown__title">Abstained</div>
       <div class="voting-breakdown__value">
-        {hasQuorum ? "Yes" : "No"}
+        {abstained}
       </div>
     </div>
   </div>
   <hr />
   <div class="voting-breakdown">
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Voters</div>
+      <div class="voting-breakdown__title">Quorum</div>
       <div class="voting-breakdown__value">
-        {voters}
+        {hasQuorum ? "Yes" : "No"}
       </div>
     </div>
     <div class="voting-breakdown__item">
@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Max voting power</div>
+      <div class="voting-breakdown__title">Total voting power</div>
       <div class="voting-breakdown__value">
         {maxVotingPower}
       </div>
