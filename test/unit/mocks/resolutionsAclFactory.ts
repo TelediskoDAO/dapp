@@ -8,5 +8,8 @@ export const createResolutionsAcl = (
   canApprove: true,
   canVote: () => true,
   loaded: true,
+  isContributor: true,
+  isShareholder: false,
+  isManagingBoard: true,
   ...overrides,
 });
