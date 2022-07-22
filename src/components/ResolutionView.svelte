@@ -68,44 +68,6 @@
 <div class="view">
   <div class="info">
     <div>
-      {#if resolution.state === RESOLUTION_STATES.VOTING}
-        <Alert message="Resolution is being voted" type="info" />
-      {/if}
-      {#if resolution.state === RESOLUTION_STATES.ENDED}
-        <Alert
-          message={`Resolution has ended on ${format(
-            new Date(resolution.resolutionTypeInfo.votingEnds),
-            "dd LLL yyyy"
-          )}`}
-          type={resolution.hasQuorum ? "success" : "info"}
-        />
-      {/if}
-      {#if resolution.state === RESOLUTION_STATES.NOTICE}
-        <div class="centered">
-          <Alert
-            message={`Resolution has been approved on ${format(
-              getDateFromUnixTimestamp(resolution.approveTimestamp),
-              "dd LLL yyyy"
-            )}`}
-            type="success"
-          />
-          <div class="voting-countdown">
-            <Countdown
-              targetDate={resolution.resolutionTypeInfo.noticePeriodEnds}
-              prefixLabel="Voting starts"
-              inline={false}
-            />
-          </div>
-        </div>
-      {/if}
-      {#if resolution.isNegative}
-        <Alert
-          message="This is a negative resolution"
-          type="warning"
-          marginTop
-        />
-      {/if}
-      <hr />
       <div class="info-business">
         <p>
           <b>Business name:</b> teledisko DAO OÜ
@@ -118,6 +80,18 @@
           Estonia
         </p>
       </div>
+      <hr />
+      {#if resolution.state !== RESOLUTION_STATES.ENDED}
+        <h4>
+          DRAFT RESOLUTION OF THE SHAREHOLDERS<br />
+          (without convening a meeting of shareholders)
+        </h4>
+      {:else}
+        <h4>
+          MINUTES AND RESOLUTION OF THE SHAREHOLDERS<br />
+          (without convening a meeting of shareholders)
+        </h4>
+      {/if}
       <hr />
       {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING, RESOLUTION_STATES.NOTICE].includes(resolution.state)}
         <div class="info-dates">
@@ -218,21 +192,40 @@
 {#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
   <h3 class="secondary-title pagebreak">Voting outcome:</h3>
   <VotingBreakdown
-    totalYes={resolution.votingStatus.votersHaveVotedYes.length}
-    totalNo={resolution.votingStatus.votersHaveVotedNo.length}
-    abstained={resolution.votingStatus.votersHaveNotVoted.length}
-    hasQuorum={resolution.hasQuorum}
-    votedVotingPower={resolution.voters.reduce(
-      (total, voter) => total + (voter.hasVoted ? voter.votingPower : 0),
+    quorum={resolution.resolutionType.quorum}
+    totalVotedYes={resolution.votingStatus.votersHaveVotedYes.reduce(
+      (total, voter) => voter.votingPower / 1000000000000000000 + total,
       0
     )}
+    totalVotedNo={resolution.votingStatus.votersHaveVotedNo.reduce(
+      (total, voter) => voter.votingPower / 1000000000000000000 + total,
+      0
+    )}
+    totalAbstained={resolution.votingStatus.votersHaveNotVoted.reduce(
+      (total, voter) => voter.votingPower / 1000000000000000000 + total,
+      0
+    )}
+    hasQuorum={resolution.hasQuorum}
+    isNegative={resolution.isNegative}
     maxVotingPower={resolution.voters.reduce(
       (total, voter) => total + voter.votingPower,
       0
     )}
   />
+  {#if RESOLUTION_STATES.ENDED === resolution.state && resolution.hasQuorum}
+    <Alert type="info">
+      THE RESOLUTION OF SHAREHOLDERS <b>HAS BEEN</b> ADOPTED on {resolution
+        .resolutionTypeInfo.votingEndsAt}
+    </Alert>
+  {/if}
+  {#if RESOLUTION_STATES.ENDED === resolution.state && !resolution.hasQuorum}
+    <Alert type="warning">
+      THE RESOLUTION OF SHAREHOLDERS <b>HAS NOT BEEN</b> ADOPTED. Voting ended
+      on {resolution.resolutionTypeInfo.votingEndsAt}
+    </Alert>
+  {/if}
   <DataTable
-    table$aria-label="Resolutions voters list"
+    table$aria-label="List of shareholders and their votes"
     style="width: 100%;"
     class="main-data-table"
   >
@@ -297,50 +290,15 @@
     </Body>
   </DataTable>
 {/if}
-{#if resolution.state === RESOLUTION_STATES.NOTICE}
-  <h3 class="secondary-title pagebreak">Possible voters:</h3>
-  <DataTable
-    table$aria-label="Resolutions possible voters list"
-    style="width: 100%;"
-  >
-    <Head>
-      <Row>
-        <Cell>Possible Voter</Cell>
-        <Cell numeric>Voting power</Cell>
-      </Row>
-    </Head>
-    <Body>
-      {#each resolution.voters as resolutionVoter}
-        <Row>
-          <Cell width="90%">
-            <ResolutionUser
-              ethereumAddress={resolutionVoter.address}
-              size="sm"
-              hideInfo={isPrint}
-            >
-              {#if resolutionVoter.delegated !== resolutionVoter.address}
-                <span>
-                  delegated
-                  <ResolutionUser
-                    ethereumAddress={resolutionVoter.delegated}
-                    inline
-                    shortAddressWhileLoading
-                  />
-                </span>
-              {/if}
-              <div class="voter-shareholder-status" slot="after">
-                <Tag
-                  label={getShareholderStatus(resolutionVoter.address)}
-                  size="xs"
-                />
-              </div>
-            </ResolutionUser>
-          </Cell>
-          <Cell numeric>{resolutionVoter.votingPower}</Cell>
-        </Row>
-      {/each}
-    </Body>
-  </DataTable>
+{#if [RESOLUTION_STATES.NOTICE, RESOLUTION_STATES.PRE_DRAFT].includes(resolution.state)}
+  <h3 class="secondary-title">Voting conditions:</h3>
+  {#if resolution.isNegative}
+    <b>{resolution.resolutionType.quorum}% of negative votes</b> are needed to approve
+    the motion
+  {:else}
+    <b>{resolution.resolutionType.quorum}% of votes</b> are needed to approve the
+    motion
+  {/if}
 {/if}
 
 {#if isPrint}
@@ -365,10 +323,6 @@
   .info-business p b {
     display: inline-block;
     width: 150px;
-  }
-
-  .centered {
-    text-align: center;
   }
 
   .voting-countdown {

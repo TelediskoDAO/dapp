@@ -107,7 +107,11 @@
         (resolutionType) => resolutionType.id === $currentResolution.typeId
       );
     }
-    if (validTypeId && prevSelectedTypeId !== $currentResolution.typeId) {
+    if (
+      validTypeId &&
+      typeof prevSelectedTypeId !== "undefined" &&
+      prevSelectedTypeId !== $currentResolution.typeId
+    ) {
       $currentResolution.isNegative = false;
     }
     prevSelectedTypeId = $currentResolution.typeId;

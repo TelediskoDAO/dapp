@@ -1,51 +1,56 @@
 <script lang="ts">
-  export let totalYes: number;
-  export let totalNo: number;
-  export let hasQuorum: boolean;
-  export let abstained: number;
-  export let votedVotingPower: number;
   export let maxVotingPower: number;
+  export let totalVotedYes: number;
+  export let totalVotedNo: number;
+  export let totalAbstained: number;
+  export let quorum: string;
+  export let hasQuorum: boolean;
+  export let isNegative: boolean;
 </script>
 
 <div class="wrapper">
   <div class="voting-breakdown">
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Voted Yes</div>
+      <div class="voting-breakdown__title">Total</div>
       <div class="voting-breakdown__value">
-        {totalYes}
+        {maxVotingPower} / 100%
       </div>
     </div>
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Voted No</div>
+      <div class="voting-breakdown__title">In favour</div>
       <div class="voting-breakdown__value">
-        {totalNo}
+        {totalVotedYes} / {((100 * totalVotedYes) / maxVotingPower).toFixed(2)}%
       </div>
     </div>
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Abstained</div>
+      <div class="voting-breakdown__title">Against</div>
       <div class="voting-breakdown__value">
-        {abstained}
+        {totalVotedNo} / {((100 * totalVotedNo) / maxVotingPower).toFixed(2)}%
       </div>
     </div>
   </div>
   <hr />
   <div class="voting-breakdown">
     <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Quorum</div>
+      <div class="voting-breakdown__title">Abstain</div>
+      <div class="voting-breakdown__value">
+        {totalAbstained} / {((100 * totalAbstained) / maxVotingPower).toFixed(
+          2
+        )}%
+      </div>
+    </div>
+    <div class="voting-breakdown__item">
+      <div class="voting-breakdown__title">
+        {isNegative ? "Negative" : ""} Votes needed to approve
+      </div>
+      <div class="voting-breakdown__value">
+        {Math.round((maxVotingPower * Number(quorum)) / 100)} / {quorum}%
+      </div>
+    </div>
+    <div class="voting-breakdown__item">
+      <div class="voting-breakdown__title">Quorum reached</div>
       <div class="voting-breakdown__value">
         {hasQuorum ? "Yes" : "No"}
-      </div>
-    </div>
-    <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Voted voting power</div>
-      <div class="voting-breakdown__value">
-        {votedVotingPower}
-      </div>
-    </div>
-    <div class="voting-breakdown__item">
-      <div class="voting-breakdown__title">Total voting power</div>
-      <div class="voting-breakdown__value">
-        {maxVotingPower}
       </div>
     </div>
   </div>
