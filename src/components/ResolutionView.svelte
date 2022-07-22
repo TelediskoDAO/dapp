@@ -154,7 +154,7 @@
       <Alert type="error" message="This resolution has been rejected" />
       <ResolutionUser
         ethereumAddress={resolution.rejectBy}
-        title={`Rejected ${resolution.rejectedAt} by`}
+        title={`Rejected on ${resolution.rejectedAt} by`}
         hasBg
         hideInfo={isPrint}
       />
@@ -162,7 +162,7 @@
     {/if}
     <ResolutionUser
       ethereumAddress={resolution.createBy}
-      title={`Created ${resolution.createdAt} by`}
+      title={`Created on ${resolution.createdAt} by`}
       hasBg
       hideInfo={isPrint}
     />
