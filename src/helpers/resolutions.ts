@@ -124,7 +124,7 @@ export const getEnhancedResolutionMapper =
       ...resolution,
       voters: resolution.voters.map((voter) => ({
         ...voter,
-        votingPower: voter.votingPower / 1000000000000000000,
+        votingPower: Math.round(voter.votingPower / 1000000000000000000),
       })),
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),

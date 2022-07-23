@@ -189,20 +189,23 @@
     </div>
   {/if}
 </div>
-{#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
+{#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state) && !isPrint}
   <h3 class="secondary-title pagebreak">Voting outcome:</h3>
   <VotingBreakdown
     quorum={resolution.resolutionType.quorum}
     totalVotedYes={resolution.votingStatus.votersHaveVotedYes.reduce(
-      (total, voter) => voter.votingPower / 1000000000000000000 + total,
+      (total, voter) =>
+        Math.round(voter.votingPower / 1000000000000000000) + total,
       0
     )}
     totalVotedNo={resolution.votingStatus.votersHaveVotedNo.reduce(
-      (total, voter) => voter.votingPower / 1000000000000000000 + total,
+      (total, voter) =>
+        Math.round(voter.votingPower / 1000000000000000000) + total,
       0
     )}
     totalAbstained={resolution.votingStatus.votersHaveNotVoted.reduce(
-      (total, voter) => voter.votingPower / 1000000000000000000 + total,
+      (total, voter) =>
+        Math.round(voter.votingPower / 1000000000000000000) + total,
       0
     )}
     hasQuorum={resolution.hasQuorum}
