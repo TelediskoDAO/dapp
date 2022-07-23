@@ -6,13 +6,15 @@ export const bigIntToNum = (bigIntNum: BigInt) =>
   Number(formatEther(BigNumber.from(bigIntNum)));
 
 export const computeBalances = (
-  daoUser: DaoUser,
+  daoUser: DaoUser | null,
   userOffers: Offer[]
 ): ComputedBalances => {
   const nowTimestamp = Date.now();
 
-  const total = bigIntToNum(daoUser.totalBalance);
-  const vesting = bigIntToNum(daoUser.vestingBalance);
+  const total = daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0;
+  const vesting = daoUser?.vestingBalance
+    ? bigIntToNum(daoUser.vestingBalance)
+    : 0;
 
   const [unlocked, currentlyOffered] = userOffers
     .filter(
