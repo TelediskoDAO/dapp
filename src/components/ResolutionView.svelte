@@ -189,7 +189,7 @@
     </div>
   {/if}
 </div>
-{#if RESOLUTION_STATES.ENDED === resolution.state}
+{#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state)}
   <h3 class="secondary-title pagebreak">Voting outcome:</h3>
   <VotingBreakdown
     quorum={resolution.resolutionType.quorum}
