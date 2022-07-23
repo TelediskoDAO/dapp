@@ -15,6 +15,9 @@ export const computeBalances = (
   const vesting = daoUser?.vestingBalance
     ? bigIntToNum(daoUser.vestingBalance)
     : 0;
+  const unlockedTempBalance = daoUser?.unlockedTempBalance
+    ? bigIntToNum(daoUser.unlockedTempBalance)
+    : 0;
 
   const [unlocked, currentlyOffered] = userOffers
     .filter(
@@ -34,7 +37,7 @@ export const computeBalances = (
           (nowTimestamp <= offerExpirationTimestamp ? offerAmount : 0);
         return [newUnlocked, newCurrentlyOffered];
       },
-      [bigIntToNum(daoUser.unlockedTempBalance), 0]
+      [unlockedTempBalance, 0]
     );
 
   const locked = total - unlocked;
