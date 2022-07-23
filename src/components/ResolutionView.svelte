@@ -290,7 +290,7 @@
     </Body>
   </DataTable>
 {/if}
-{#if [RESOLUTION_STATES.NOTICE, RESOLUTION_STATES.PRE_DRAFT].includes(resolution.state)}
+{#if [RESOLUTION_STATES.NOTICE, RESOLUTION_STATES.PRE_DRAFT, RESOLUTION_STATES.VOTING].includes(resolution.state)}
   <h3 class="secondary-title">Voting conditions:</h3>
   {#if resolution.isNegative}
     <b>{resolution.resolutionType.quorum}% of negative votes</b> are needed to approve
