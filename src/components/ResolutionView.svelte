@@ -156,6 +156,13 @@
         >
           Print
         </Button>
+        {#if RESOLUTION_STATES.ENDED === resolution.state}
+          <Alert
+            type="info"
+            message="Please set the printer to landscape if you want to properly view the voting table"
+            title="Heads up"
+          />
+        {/if}
       {/if}
       <div>
         <div class="extra__heading">
@@ -189,7 +196,7 @@
     </div>
   {/if}
 </div>
-{#if [RESOLUTION_STATES.ENDED, RESOLUTION_STATES.VOTING].includes(resolution.state) && !isPrint}
+{#if resolution.state === RESOLUTION_STATES.ENDED || (resolution.state === RESOLUTION_STATES.VOTING && !isPrint)}
   <h3 class="secondary-title pagebreak">Voting outcome:</h3>
   <VotingBreakdown
     quorum={resolution.resolutionType.quorum}
