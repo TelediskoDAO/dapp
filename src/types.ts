@@ -161,3 +161,9 @@ export type ComputedBalances = {
   currentlyOffered: number;
   maxToOffer: number;
 };
+
+declare global {
+  interface Window {
+    EasyMDE: any;
+  }
+}

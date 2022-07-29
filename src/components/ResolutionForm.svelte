@@ -4,16 +4,10 @@
   import Button, { Label, Group } from "@smui/button";
   import CircularProgress from "@smui/circular-progress";
   import Textfield from "@smui/textfield";
-  import HelperText from "@smui/textfield/helper-text";
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
   import FormField from "@smui/form-field";
   import Checkbox from "@smui/checkbox";
-  import Quill from "quill";
-  import QuillMarkdown from "quilljs-markdown";
-  import "quilljs-markdown/dist/quilljs-markdown-common-style.css";
-  import Turndown from "turndown";
   import { marked } from "marked";
-  import { sanitize } from "dompurify";
 
   import {
     currentResolution,
@@ -58,37 +52,18 @@
     } = await graphQLClient.request(getResolutionTypesQuery);
     resolutionTypes = resolutionsTypesData;
 
-    const quill = new Quill("#editor", {
-      theme: "snow",
+    const easyMDE = new window.EasyMDE({
+      element: document.getElementById("editor"),
     });
 
-    const quillMarkdown = new QuillMarkdown(quill, {});
-
-    const turndownService = new Turndown();
-    const sanitizedHtml = sanitize(
-      marked.parse($currentResolution.content || ""),
-      {
-        USE_PROFILES: { html: true },
-      }
-    );
-
-    if (sanitizedHtml.trim() !== "") {
-      quill.clipboard.dangerouslyPasteHTML(sanitizedHtml);
-    }
-
-    const textChangeHandler = () => {
-      const html = quill.root.innerHTML;
-      const markdown = turndownService.turndown(html);
-
-      $currentResolution.content = markdown;
-    };
-
-    quill.on("text-change", textChangeHandler);
+    easyMDE.value($currentResolution.content || "");
+    easyMDE.codemirror.on("change", () => {
+      $currentResolution.content = easyMDE.value();
+    });
 
     return () => {
+      easyMDE.cleanup();
       resetForm();
-      quillMarkdown.destroy();
-      quill.off("text-change", textChangeHandler);
     };
   });
 
@@ -151,13 +126,12 @@
     <Cell span={12}>
       <InnerGrid>
         <Cell span={12} class="editor-wrapper">
-          <div id="editor" />
-          <HelperText slot="helper">Markdown supported</HelperText>
+          <textarea id="editor" />
         </Cell>
       </InnerGrid>
     </Cell>
     {#if resolutionTypes?.length > 0}
-      <Cell span={12}>
+      <Cell span={12} class="types-wrapper">
         <InnerGrid>
           <Cell span={3}>
             <Select
@@ -268,8 +242,20 @@
   }
 
   :global(.editor-wrapper) {
+    position: relative;
+    z-index: 11;
     height: 400px;
     padding-bottom: 2rem;
+  }
+
+  :global(.editor-wrapper i.separator) {
+    top: 6px;
+    position: relative;
+  }
+
+  :global(.types-wrapper) {
+    position: relative;
+    z-index: 12;
   }
 
   :global(.actions-bar) {
