@@ -22,18 +22,6 @@
   <div class="balance-box--multiple">
     <div class="balance-box balance-box--secondary">
       <div>
-        <h4 class="balance-box__title">Vesting</h4>
-        {#if computedBalances}
-          <div class="balance-box__total">
-            <b>{computedBalances.vesting}</b> TT
-          </div>
-        {:else}
-          <CircularProgress style="height: 32px; width: 32px;" indeterminate />
-        {/if}
-      </div>
-    </div>
-    <div class="balance-box balance-box--secondary">
-      <div>
         <h4 class="balance-box__title">Tradable</h4>
         {#if computedBalances}
           <div class="balance-box__total">
@@ -71,6 +59,18 @@
       >
         <Label>Offer tokens</Label>
       </Button>
+    </div>
+    <div class="balance-box balance-box--secondary">
+      <div>
+        <h4 class="balance-box__title">Vesting</h4>
+        {#if computedBalances}
+          <div class="balance-box__total">
+            <b>{computedBalances.vesting}</b> TT
+          </div>
+        {:else}
+          <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+        {/if}
+      </div>
     </div>
   </div>
   {#if computedBalances?.currentlyOffered > 0 && computedBalances?.maxToOffer > 0}

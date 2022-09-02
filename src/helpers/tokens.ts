@@ -40,7 +40,7 @@ export const computeBalances = (
       [unlockedTempBalance, 0]
     );
 
-  const locked = total - unlocked;
+  const locked = total - unlocked - vesting;
   const maxToOffer = locked - currentlyOffered;
 
   return {
