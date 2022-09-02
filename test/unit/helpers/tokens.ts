@@ -113,11 +113,11 @@ describe("Tokens helpers", () => {
 
       expect(computedBalances).to.deep.equal({
         currentlyOffered: 25,
-        locked: 28,
+        locked: 26,
         total: 40,
         unlocked: 12,
         vesting: 2,
-        maxToOffer: 3,
+        maxToOffer: 1,
       });
     });
 
