@@ -22,6 +22,7 @@ specifiers:
   '@smui/layout-grid': ^6.0.0-beta.13
   '@smui/linear-progress': ^6.0.0-beta.15
   '@smui/paper': ^6.0.0-beta.13
+  '@smui/radio': ^6.1.0
   '@smui/select': ^6.0.0-beta.13
   '@smui/slider': ^6.0.0-beta.16
   '@smui/switch': ^6.0.0-beta.15
@@ -45,7 +46,6 @@ specifiers:
   izitoast: ^1.4.0
   lint-staged: ^12.3.3
   lodash.isequal: ^4.5.0
-  marked: ^4.0.17
   mocha: ^9.2.1
   prettier: ^2.5.1
   prettier-plugin-svelte: ^2.6.0
@@ -79,7 +79,6 @@ dependencies:
   husky: 7.0.4
   lint-staged: 12.3.3
   lodash.isequal: 4.5.0
-  marked: 4.0.17
   qs: 6.10.3
   svelte: 3.46.4
   svelte-markdown: 0.2.2_svelte@3.46.4
@@ -110,6 +109,7 @@ devDependencies:
   '@smui/layout-grid': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/linear-progress': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
   '@smui/paper': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+  '@smui/radio': 6.1.0_svelte@3.46.4+typescript@4.5.5
   '@smui/select': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
   '@smui/slider': 6.0.0-beta.16_svelte@3.46.4+typescript@4.5.5
   '@smui/switch': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
@@ -826,7 +826,6 @@ packages:
       '@material/theme': 13.0.0
       '@material/touch-target': 13.0.0
       tslib: 2.3.1
-    dev: false
 
   /@material/ripple/13.0.0:
     resolution: {integrity: sha512-hx4B40hB2rRfsGwf1jwo2GGlYDq0yUQjcMcMmXfQipPJNpQhy8ylmXKc1DBjmWf7EQ/MgbfCSYwPrYXrbGP31w==}
@@ -1329,6 +1328,16 @@ packages:
       - svelte
       - typescript
 
+  /@smui/common/6.1.0_svelte@3.46.4+typescript@4.5.5:
+    resolution: {integrity: sha512-hetelX4vz37P34K7LbLrkf4eYM2uuXN6r7vhO/W6jF4SjH1G6VCeRQLJsza2oNKdbgEEqVkx99xXmSJQuDOd8Q==}
+    dependencies:
+      '@material/dom': 13.0.0
+      '@tsconfig/svelte': 3.0.0
+      svelte2tsx: 0.5.16_svelte@3.46.4+typescript@4.5.5
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
   /@smui/data-table/6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5:
     resolution: {integrity: sha512-XR4HXeB/w1tnjWBjVA/D4KWuRF9OqTerVenr1eu/CqKp0U+WfcHe4ERSopachDJb9oicR3FLKY3/Lyinb5/w6g==}
     dependencies:
@@ -1586,17 +1595,16 @@ packages:
       - svelte
       - typescript
 
-  /@smui/radio/6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5:
-    resolution: {integrity: sha512-zoUIo3yb+0iA/mcgDD2pG80nxtZcVsPJmZMTWjhsiwakY1Zp6SHFXMDhZaPImKApQ5A9RgX5rkn78kv5aTI1wA==}
+  /@smui/radio/6.1.0_svelte@3.46.4+typescript@4.5.5:
+    resolution: {integrity: sha512-0KCzt07MNvQOH5TaTa2FObtdExn2xpst62BYXQPWSCeqJ2ghZv6M5FvjK9fqnI1uRChhe/TJ2mb5EroADVvE4Q==}
     dependencies:
       '@material/radio': 13.0.0
-      '@smui/common': 6.0.0-beta.15_svelte@3.46.4+typescript@4.5.5
-      '@smui/ripple': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
-      svelte2tsx: 0.4.14_svelte@3.46.4+typescript@4.5.5
+      '@smui/common': 6.1.0_svelte@3.46.4+typescript@4.5.5
+      '@smui/ripple': 6.1.0_svelte@3.46.4+typescript@4.5.5
+      svelte2tsx: 0.5.16_svelte@3.46.4+typescript@4.5.5
     transitivePeerDependencies:
       - svelte
       - typescript
-    dev: false
 
   /@smui/ripple/6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5:
     resolution: {integrity: sha512-/TtXE7s/w1QBpNOLtZWxKODdhXzCTws8ZgFXLDqFEWuVa9XGEEC1zm/dZ82jyjC8YyJJ0kJgzfdenIUbBWHmGA==}
@@ -1627,6 +1635,17 @@ packages:
       '@material/ripple': 13.0.0
       '@smui/common': 6.0.0-beta.16_svelte@3.46.4+typescript@4.5.5
       svelte2tsx: 0.5.10_svelte@3.46.4+typescript@4.5.5
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
+  /@smui/ripple/6.1.0_svelte@3.46.4+typescript@4.5.5:
+    resolution: {integrity: sha512-CCRz/u1QQx8baByCP/+X0nHXWVzb6NCr+f/Y4K8COP0MN1nimpF1NPXIp5vloBie9GxP9QlmkTrTYTMcEiNpQw==}
+    dependencies:
+      '@material/dom': 13.0.0
+      '@material/ripple': 13.0.0
+      '@smui/common': 6.1.0_svelte@3.46.4+typescript@4.5.5
+      svelte2tsx: 0.5.16_svelte@3.46.4+typescript@4.5.5
     transitivePeerDependencies:
       - svelte
       - typescript
@@ -3613,7 +3632,7 @@ packages:
       '@smui/menu-surface': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/notched-outline': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/paper': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
-      '@smui/radio': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
+      '@smui/radio': 6.1.0_svelte@3.46.4+typescript@4.5.5
       '@smui/ripple': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/segmented-button': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
       '@smui/select': 6.0.0-beta.13_svelte@3.46.4+typescript@4.5.5
@@ -3708,6 +3727,17 @@ packages:
 
   /svelte2tsx/0.5.10_svelte@3.46.4+typescript@4.5.5:
     resolution: {integrity: sha512-nokQ0HTTWMcNX6tLrDLiOmJCuqjKZU9nCZ6/mVuCL3nusXdbp+9nv69VG2pCy7uQC66kV4Ls+j0WfvvJuGVnkg==}
+    peerDependencies:
+      svelte: ^3.24
+      typescript: ^4.1.2
+    dependencies:
+      dedent-js: 1.0.1
+      pascal-case: 3.1.2
+      svelte: 3.46.4
+      typescript: 4.5.5
+
+  /svelte2tsx/0.5.16_svelte@3.46.4+typescript@4.5.5:
+    resolution: {integrity: sha512-MwgpeRHfzP8T7NkFNT1JPhe9pCF4Dml2oSdjL2zNqvSprjA2BFgQuCNUg4R5qSz7AxVDJsiL/2hciCtVbXAT3A==}
     peerDependencies:
       svelte: ^3.24
       typescript: ^4.1.2

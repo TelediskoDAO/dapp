@@ -1,13 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Select, { Option } from "@smui/select";
-  import Button, { Label, Group } from "@smui/button";
+  import Button, { Label } from "@smui/button";
+  import Radio from "@smui/radio";
   import CircularProgress from "@smui/circular-progress";
   import Textfield from "@smui/textfield";
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
   import FormField from "@smui/form-field";
   import Checkbox from "@smui/checkbox";
-  import { marked } from "marked";
 
   import {
     currentResolution,
@@ -20,10 +19,7 @@
   import { acl } from "../state/resolutions";
   import Alert from "./Alert.svelte";
   import ResolutionUser from "./ResolutionUser.svelte";
-
-  marked.setOptions({
-    gfm: true,
-  });
+  import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
 
   function init(el: HTMLElement) {
     el.querySelector("input").focus();
@@ -50,10 +46,15 @@
     }: {
       resolutionTypes: ResolutionTypeEntity[];
     } = await graphQLClient.request(getResolutionTypesQuery);
-    resolutionTypes = resolutionsTypesData;
+    resolutionTypes = resolutionsTypesData.filter(
+      (resolutionType) =>
+        !RESOLUTION_TYPES_TEXTS[resolutionType.name] ||
+        !RESOLUTION_TYPES_TEXTS[resolutionType.name].disabled
+    );
 
     const easyMDE = new window.EasyMDE({
       element: document.getElementById("editor"),
+      spellChecker: false,
     });
 
     easyMDE.value($currentResolution.content || "");
@@ -99,7 +100,9 @@
       <h1>
         {createBy
           ? `Editing: ${$currentResolution.title}`
-          : `New Resolution: ${$currentResolution.title}`}
+          : `New Resolution${
+              ($currentResolution.title || "").trim() !== "" ? ":" : ""
+            } ${$currentResolution.title}`}
       </h1>
       {#if createBy}
         <ResolutionUser
@@ -133,27 +136,49 @@
     {#if resolutionTypes?.length > 0}
       <Cell span={12} class="types-wrapper">
         <InnerGrid>
-          <Cell span={3}>
-            <Select
-              class="field"
-              bind:value={$currentResolution.typeId}
-              label="Resolution Type"
-            >
-              {#each resolutionTypes as resolutionType}
-                <Option value={resolutionType.id}>{resolutionType.name}</Option>
-              {/each}
-            </Select>
-            <FormField
-              style={!selectedType?.canBeNegative
-                ? "display: none"
-                : "display: flex"}
-            >
-              <Checkbox
-                bind:checked={$currentResolution.isNegative}
-                disabled={!selectedType?.canBeNegative}
-              />
-              <span slot="label">Negative resolution.</span>
-            </FormField>
+          <Cell span={8}>
+            {#each resolutionTypes as resolutionType}
+              <div
+                class="resolution-type"
+                class:is--selected={$currentResolution.typeId ===
+                  resolutionType.id}
+              >
+                <!-- svelte-ignore a11y-label-has-associated-control -->
+                <label>
+                  <Radio
+                    bind:group={$currentResolution.typeId}
+                    value={resolutionType.id}
+                  />
+                  <div class="resolution-type__labels">
+                    <h3>
+                      {RESOLUTION_TYPES_TEXTS[resolutionType.name]?.title ||
+                        resolutionType.name}
+                    </h3>
+                    <span
+                      >{@html RESOLUTION_TYPES_TEXTS[resolutionType.name]
+                        ?.description ||
+                        "** Testing purposes resolution **"}</span
+                    >
+                  </div>
+                </label>
+                {#if resolutionType.canBeNegative}
+                  <div
+                    class="resolution-type__o-negative"
+                    style={!selectedType?.canBeNegative
+                      ? "display: none"
+                      : "display: flex"}
+                  >
+                    <FormField>
+                      <Checkbox
+                        bind:checked={$currentResolution.isNegative}
+                        disabled={!selectedType?.canBeNegative}
+                      />
+                      <span slot="label">Veto routine resolution.</span>
+                    </FormField>
+                  </div>
+                {/if}
+              </div>
+            {/each}
           </Cell>
         </InnerGrid>
       </Cell>
@@ -233,6 +258,63 @@
 </section>
 
 <style>
+  .resolution-type {
+    border: 1px solid var(--color-gray-1);
+    border-bottom: none;
+    color: var(--color-gray-8);
+  }
+
+  .resolution-type:hover {
+    color: var(--color-gray-9);
+    box-shadow: 0 0 3px 0 inset var(--color-gray-5);
+  }
+
+  .resolution-type label:active {
+    position: relative;
+    top: 1px;
+  }
+
+  .resolution-type.is--selected {
+    background-color: var(--color-gray-1);
+    box-shadow: 0 0 3px 0 inset var(--color-gray-5);
+    color: var(--color-gray-10);
+  }
+
+  .resolution-type:first-child {
+    border-radius: 4px 4px 0 0;
+  }
+
+  .resolution-type:last-child {
+    border-radius: 0 0 4px 4px;
+    border-bottom: 1px solid var(--color-gray-1);
+  }
+
+  .resolution-type label {
+    padding: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .resolution-type label span {
+    display: block;
+  }
+
+  .resolution-type__labels {
+    padding-left: 0.2rem;
+  }
+
+  .resolution-type h3 {
+    margin: 0;
+    padding: 0;
+  }
+
+  .resolution-type__o-negative {
+    padding: 1rem;
+    padding-top: 0;
+  }
+
   :global(.field) {
     width: 100%;
   }
