@@ -89,6 +89,18 @@
   surface$style="width: 850px; max-width: calc(100vw - 32px);"
 >
   <Title id="delegation-title">Delegation</Title>
+  <Alert type="info">
+    Delegating somebody (i.e. giving a power of attorney) means that this person
+    can use your voting power to vote for resolutions in his/her favor (i.e.
+    your tokens are considered as his/her tokens while voting). Delegations are
+    a great tool for you if you want to be a passive DAO member. However, you
+    need to acknowledge, that the delegated person can vote however he/she wants
+    and does not need a consent from you before each voting takes place.
+    Nevertheless, if you ever feel taking an active stance and want to vote
+    personally on a specific proposal, your personal choice will override the
+    delegated one in DAO system. In addition, you can always end the delegation
+    at your own discretion at any time. Using delegations is not mandatory!
+  </Alert>
   <Content id="delegation-content">
     <div class="delegation-content__inner">
       {#if $formState.loading || $formState.awaitingConfirmation}
