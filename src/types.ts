@@ -107,7 +107,6 @@ export type ResolutionFormState = {
   title: string;
   content: string;
   typeId: string | null;
-  isNegative: boolean | null;
 };
 
 export type OdooUser = {

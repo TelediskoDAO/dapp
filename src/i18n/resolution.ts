@@ -36,9 +36,15 @@ export const RESOLUTION_TYPES_TEXTS = {
     disabled: true,
   },
   routine: {
-    title: "Routine",
+    title: "Routine normal",
     description:
-      "Routine/simple (normal) voting is for everyday-life decisions (like opening a bank account, buying a new server or arranging a Christmas Party). Voting takes 5 days (3-days notice period + 2-days voting period).<br /><br />Routine/simple (veto) voting is for stopping (i.e. vetoing) a DAO from accepting a common sense decision (like renewing a third-party service or minting monthly tokens to the Contributors). This is an opportunity to stop the on-going business to fix a mistake or direct DAO to another direction in a specific question. Voting takes 5 days (3-days notice period + 2-days voting period).",
+      "Routine/simple (normal) voting is for everyday-life decisions (like opening a bank account, buying a new server or arranging a Christmas Party). Voting takes 5 days (3-days notice period + 2-days voting period).",
+    disabled: false,
+  },
+  routineVeto: {
+    title: "Routine veto",
+    description:
+      "Routine/simple (veto) voting is for stopping (i.e. vetoing) a DAO from accepting a common sense decision (like renewing a third-party service or minting monthly tokens to the Contributors). This is an opportunity to stop the on-going business to fix a mistake or direct DAO to another direction in a specific question. Voting takes 5 days (3-days notice period + 2-days voting period).",
     disabled: false,
   },
   genesis: {

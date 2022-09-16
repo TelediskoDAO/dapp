@@ -13,8 +13,13 @@
 
   title.set("Resolutions");
 
-  function handleContractPreDraft() {
-    handleCreate({ $signer, $currentResolution, $resolutionContract });
+  function handleContractPreDraft(vetoTypeId: string | null) {
+    handleCreate({
+      $signer,
+      $currentResolution,
+      $resolutionContract,
+      vetoTypeId,
+    });
   }
 
   onMount(resetForm);

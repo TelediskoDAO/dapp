@@ -37,6 +37,7 @@
   let open = false;
   let openReject = false;
   let loaded = false;
+  let isVeto = false;
 
   onMount(async () => {
     const {
@@ -49,11 +50,14 @@
 
     resolutionData = resolution;
 
+    isVeto =
+      resolutionData.resolutionType.name === "routine" &&
+      resolutionData.isNegative;
+
     $currentResolution = {
       title: resolutionData.title,
       content: resolutionData.content,
-      isNegative: resolutionData.isNegative,
-      typeId: resolutionData.resolutionType.id,
+      typeId: isVeto ? "routineVeto" : resolutionData.resolutionType.id,
     };
 
     return resetForm;
@@ -64,8 +68,7 @@
       {
         title: resolutionData?.title,
         content: resolutionData?.content,
-        isNegative: resolutionData?.isNegative,
-        typeId: resolutionData?.resolutionType.id,
+        typeId: isVeto ? "routineVeto" : resolutionData?.resolutionType.id,
       },
       $currentResolution
     );
@@ -90,11 +93,12 @@
     }
   }
 
-  function handleUpdateResolution() {
+  function handleUpdateResolution(vetoTypeId: string | null) {
     handleUpdate(params.resolutionId, {
       $signer,
       $currentResolution,
       $resolutionContract,
+      vetoTypeId,
     });
   }
 

@@ -5,8 +5,6 @@
   import CircularProgress from "@smui/circular-progress";
   import Textfield from "@smui/textfield";
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
-  import FormField from "@smui/form-field";
-  import Checkbox from "@smui/checkbox";
 
   import {
     currentResolution,
@@ -30,15 +28,13 @@
   export let createBy = "";
   export let createdOn = "";
   export let disabledUpdate = true;
-  export let handleSave = noop;
+  export let handleSave = (vetoTypeId: string | null) => {};
   export let handleApprove = noop;
   export let handleReject = noop;
   export let handleExport = noop;
 
   let disabled = false;
   let resolutionTypes: ResolutionTypeEntity[];
-  let selectedType: ResolutionTypeEntity = null;
-  let prevSelectedTypeId: string;
 
   onMount(async () => {
     const {
@@ -46,11 +42,27 @@
     }: {
       resolutionTypes: ResolutionTypeEntity[];
     } = await graphQLClient.request(getResolutionTypesQuery);
-    resolutionTypes = resolutionsTypesData.filter(
-      (resolutionType) =>
-        !RESOLUTION_TYPES_TEXTS[resolutionType.name] ||
-        !RESOLUTION_TYPES_TEXTS[resolutionType.name].disabled
-    );
+    resolutionTypes = [
+      ...resolutionsTypesData
+        .filter(
+          (resolutionType) =>
+            !RESOLUTION_TYPES_TEXTS[resolutionType.name] ||
+            !RESOLUTION_TYPES_TEXTS[resolutionType.name].disabled
+        )
+        .reduce((all, current) => {
+          if (current.name === "routine") {
+            return [
+              ...all,
+              current,
+              {
+                id: "routineVeto",
+                name: "routineVeto",
+              },
+            ];
+          }
+          return [...all, current];
+        }, []),
+    ];
 
     const easyMDE = new window.EasyMDE({
       element: document.getElementById("editor"),
@@ -77,20 +89,14 @@
     ];
     disabled =
       checkDisabledFields.filter(Boolean).length < checkDisabledFields.length;
+  }
 
-    if (Array.isArray(resolutionTypes)) {
-      selectedType = resolutionTypes.find(
-        (resolutionType) => resolutionType.id === $currentResolution.typeId
-      );
-    }
-    if (
-      validTypeId &&
-      typeof prevSelectedTypeId !== "undefined" &&
-      prevSelectedTypeId !== $currentResolution.typeId
-    ) {
-      $currentResolution.isNegative = false;
-    }
-    prevSelectedTypeId = $currentResolution.typeId;
+  function onSave() {
+    const vetoTypeId =
+      $currentResolution.typeId === "routineVeto"
+        ? resolutionTypes?.find((type) => type.name === "routine").id
+        : null;
+    handleSave(vetoTypeId);
   }
 </script>
 
@@ -161,22 +167,6 @@
                     >
                   </div>
                 </label>
-                {#if resolutionType.canBeNegative}
-                  <div
-                    class="resolution-type__o-negative"
-                    style={!selectedType?.canBeNegative
-                      ? "display: none"
-                      : "display: flex"}
-                  >
-                    <FormField>
-                      <Checkbox
-                        bind:checked={$currentResolution.isNegative}
-                        disabled={!selectedType?.canBeNegative}
-                      />
-                      <span slot="label">Veto routine resolution.</span>
-                    </FormField>
-                  </div>
-                {/if}
               </div>
             {/each}
           </Cell>
@@ -201,7 +191,7 @@
       {/if}
       {#if createBy && !$formState.loading && !$formState.awaitingConfirmation}
         {#if !disabledUpdate}
-          <Button variant="outlined" {disabled} on:click={handleSave}>
+          <Button variant="outlined" {disabled} on:click={onSave}>
             <Label>Update</Label>
           </Button>
           <Alert
@@ -249,7 +239,7 @@
         />
       {/if}
       {#if !createBy && !$formState.loading && !$formState.awaitingConfirmation}
-        <Button variant="outlined" {disabled} on:click={handleSave}>
+        <Button variant="outlined" {disabled} on:click={onSave}>
           <Label>Save pre draft</Label>
         </Button>
       {/if}
@@ -308,11 +298,6 @@
   .resolution-type h3 {
     margin: 0;
     padding: 0;
-  }
-
-  .resolution-type__o-negative {
-    padding: 1rem;
-    padding-top: 0;
   }
 
   :global(.field) {

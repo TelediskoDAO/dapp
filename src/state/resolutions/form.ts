@@ -6,7 +6,6 @@ export const defaultFormState: ResolutionFormState = {
   title: "",
   content: "",
   typeId: null,
-  isNegative: false,
 };
 
 export const currentResolution = writable({ ...defaultFormState });

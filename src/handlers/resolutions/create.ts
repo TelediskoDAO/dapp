@@ -17,10 +17,12 @@ export async function handleCreate({
   $signer,
   $currentResolution,
   $resolutionContract,
+  vetoTypeId,
 }: {
   $signer: Signer;
   $resolutionContract: ResolutionManager;
   $currentResolution: ResolutionFormState;
+  vetoTypeId: string | null;
 }) {
   if (!$signer) {
     return push("/connect/odoo");
@@ -31,10 +33,11 @@ export async function handleCreate({
   });
   try {
     const ipfsId = await add($currentResolution);
+    const resolutionId = Number(vetoTypeId || $currentResolution.typeId);
     const tx = await $resolutionContract.createResolution(
       ipfsId,
-      Number($currentResolution.typeId),
-      $currentResolution.isNegative,
+      resolutionId,
+      !!vetoTypeId,
       [],
       []
     );

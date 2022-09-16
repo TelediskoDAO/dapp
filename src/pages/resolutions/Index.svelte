@@ -185,7 +185,10 @@
             </Cell>
             <Cell
               ><span class="resolution-type"
-                ><small>{resolution.resolutionType.name}</small></span
+                ><small
+                  >{resolution.resolutionType.name}
+                  {resolution.isNegative ? " (veto)" : ""}</small
+                ></span
               ></Cell
             >
             <Cell><Tag label={resolution.state} /></Cell>

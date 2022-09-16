@@ -19,10 +19,12 @@ export async function handleUpdate(
     $signer,
     $currentResolution,
     $resolutionContract,
+    vetoTypeId,
   }: {
     $signer: Signer;
     $resolutionContract: ResolutionManager;
     $currentResolution: ResolutionFormState;
+    vetoTypeId: string | null;
   }
 ) {
   if (!$signer) {
@@ -37,8 +39,8 @@ export async function handleUpdate(
     const tx = await $resolutionContract.updateResolution(
       resolutionId,
       ipfsId,
-      Number($currentResolution.typeId),
-      $currentResolution.isNegative,
+      Number(vetoTypeId || $currentResolution.typeId),
+      !!vetoTypeId,
       [],
       []
     );
