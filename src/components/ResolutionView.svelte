@@ -143,7 +143,9 @@
     <h3 class="secondary-title">Topic of the resolution: {resolution.title}</h3>
     <h3 class="secondary-title pagebreak">Content of the resolution:</h3>
     <div class="content">
-      <SvelteMarkdown source={resolution.content} />
+      <SvelteMarkdown
+        source={resolution.content.replace(/(?:\r\n|\r|\n)/g, "<br>")}
+      />
     </div>
   </div>
   {#if !isPrint}

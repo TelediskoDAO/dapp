@@ -46,7 +46,11 @@
     }: {
       resolutionTypes: ResolutionTypeEntity[];
     } = await graphQLClient.request(getResolutionTypesQuery);
-    resolutionTypes = resolutionsTypesData;
+    resolutionTypes = resolutionsTypesData.filter(
+      (resolutionType) =>
+        !RESOLUTION_TYPES_TEXTS[resolutionType.name] ||
+        !RESOLUTION_TYPES_TEXTS[resolutionType.name].disabled
+    );
 
     const easyMDE = new window.EasyMDE({
       element: document.getElementById("editor"),
@@ -96,7 +100,9 @@
       <h1>
         {createBy
           ? `Editing: ${$currentResolution.title}`
-          : `New Resolution: ${$currentResolution.title}`}
+          : `New Resolution${
+              ($currentResolution.title || "").trim() !== "" ? ":" : ""
+            } ${$currentResolution.title}`}
       </h1>
       {#if createBy}
         <ResolutionUser
@@ -149,8 +155,9 @@
                         resolutionType.name}
                     </h3>
                     <span
-                      >{RESOLUTION_TYPES_TEXTS[resolutionType.name]
-                        ?.description || "---"}</span
+                      >{@html RESOLUTION_TYPES_TEXTS[resolutionType.name]
+                        ?.description ||
+                        "** Testing purposes resolution **"}</span
                     >
                   </div>
                 </label>
@@ -166,7 +173,7 @@
                         bind:checked={$currentResolution.isNegative}
                         disabled={!selectedType?.canBeNegative}
                       />
-                      <span slot="label">Negative resolution.</span>
+                      <span slot="label">Veto routine resolution.</span>
                     </FormField>
                   </div>
                 {/if}
