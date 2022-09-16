@@ -169,7 +169,9 @@
       <div>
         <div class="extra__heading">
           <h4 class="secondary-title">
-            {resolution.resolutionType.name}
+            {resolution.resolutionType.name}{resolution.isNegative
+              ? " (veto)"
+              : ""}
           </h4>
           <Tag label={resolution.state} />
         </div>
