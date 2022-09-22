@@ -24,6 +24,7 @@
   import PageResolutionsNew from "./pages/resolutions/New.svelte";
   import PageResolutionsView from "./pages/resolutions/View.svelte";
   import PageResolutionsEdit from "./pages/resolutions/Edit.svelte";
+  import PageShareholders from "./pages/shareholders/Index.svelte";
 
   import NotFound from "./NotFound.svelte";
   import notifications from "./helpers/notifications";
@@ -48,6 +49,7 @@
     "/resolutions/:resolutionId": PageResolutionsView,
     "/resolutions/:resolutionId/edit": PageResolutionsEdit,
     "/resolutions/:resolutionId/print": PageResolutionsView,
+    "/shareholders": PageShareholders,
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };

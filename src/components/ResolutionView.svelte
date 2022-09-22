@@ -51,7 +51,7 @@
     window.open(`/#/resolutions/${resolution.id}/print`);
   }
 
-  function getShareholderStatus(address: string) {
+  export function getShareholderStatus(address: string) {
     return [
       daoManagerData?.managingBoardAddresses.includes(address) &&
         "ManagingBoard",

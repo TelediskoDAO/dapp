@@ -2,7 +2,6 @@
   import active from "svelte-spa-router/active";
   import CurrentTask from "./CurrentTask.svelte";
   import { user, refresh } from "../state/odoo";
-  import { showWIPFeatures } from "../state/settings";
   import CONFIG from "../config";
 
   $: refreshTime = new Date($refresh).toLocaleTimeString();
@@ -67,6 +66,12 @@
             <a use:active on:click={closeSidebar} href="#/resolutions"
               ><i>verified</i>
               Resolutions</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/shareholders"
+              ><i>people</i>
+              Shareholders</a
             >
           </li>
           <li>
