@@ -22,7 +22,7 @@
   import Countdown from "../../components/Countdown.svelte";
   import Tag from "../../components/Tag.svelte";
   import Alert from "../../components/Alert.svelte";
-  import ResolutionUser from "../../components/ResolutionUser.svelte";
+  import DaoUser from "../../components/DaoUser.svelte";
   import Delegation from "../../components/Delegation.svelte";
   import FormField from "@smui/form-field";
   import Checkbox from "@smui/checkbox";
@@ -137,10 +137,7 @@
                   <small class="resolution-detail-sm"
                     ><span>Created</span>
                     {resolution.createdAt} <b>by</b>
-                    <ResolutionUser
-                      ethereumAddress={resolution.createBy}
-                      inline
-                    />
+                    <DaoUser ethereumAddress={resolution.createBy} inline />
                   </small>
                 {/if}
                 {#if resolution.state === RESOLUTION_STATES.NOTICE}
@@ -175,10 +172,7 @@
                   <small class="resolution-detail-sm"
                     ><span>Rejected</span>
                     {resolution.rejectedAt} <b>by</b>
-                    <ResolutionUser
-                      ethereumAddress={resolution.rejectBy}
-                      inline
-                    />
+                    <DaoUser ethereumAddress={resolution.rejectBy} inline />
                   </small>
                 {/if}
               </div>

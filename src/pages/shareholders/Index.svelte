@@ -5,7 +5,7 @@
   import Row from "@smui/data-table/src/Row.svelte";
   import Select, { Option } from "@smui/select";
   import { onMount } from "svelte";
-  import ResolutionUser from "../../components/ResolutionUser.svelte";
+  import DaoUser from "../../components/DaoUser.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
   import Tag from "../../components/Tag.svelte";
   import { getDaoManagerQuery } from "../../graphql/get-dao-manager.query";
@@ -100,7 +100,7 @@
           <Row>
             <Cell>
               <div class="shareholder-info">
-                <ResolutionUser ethereumAddress={shareholder} size="sm" />
+                <DaoUser ethereumAddress={shareholder} size="sm" />
               </div>
             </Cell>
             <Cell>
