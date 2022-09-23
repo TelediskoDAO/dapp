@@ -21,7 +21,7 @@ export const computeBalances = (
 
   const [unlocked, currentlyOffered] = userOffers
     .filter(
-      (offer) => offer.from.toLowerCase() === daoUser.address.toLowerCase()
+      (offer) => offer.from.toLowerCase() === daoUser?.address.toLowerCase()
     )
     .reduce(
       (totals, offer) => {

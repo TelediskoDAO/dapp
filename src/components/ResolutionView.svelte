@@ -21,7 +21,7 @@
   import Alert from "./Alert.svelte";
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
-  import ResolutionUser from "./ResolutionUser.svelte";
+  import DaoUser from "./DaoUser.svelte";
 
   export let resolution: ResolutionEntityEnhanced;
   export let daoManagerData: DaoManagerEntity;
@@ -51,7 +51,7 @@
     window.open(`/#/resolutions/${resolution.id}/print`);
   }
 
-  function getShareholderStatus(address: string) {
+  export function getShareholderStatus(address: string) {
     return [
       daoManagerData?.managingBoardAddresses.includes(address) &&
         "ManagingBoard",
@@ -126,7 +126,7 @@
     </div>
     {#if resolution.state === RESOLUTION_STATES.REJECTED}
       <Alert type="error" message="This resolution has been rejected" />
-      <ResolutionUser
+      <DaoUser
         ethereumAddress={resolution.rejectBy}
         title={`Rejected on ${resolution.rejectedAt} by`}
         hasBg
@@ -134,7 +134,7 @@
       />
       <hr class="has-margin" />
     {/if}
-    <ResolutionUser
+    <DaoUser
       ethereumAddress={resolution.createBy}
       title={`Created on ${resolution.createdAt} by`}
       hasBg
@@ -257,7 +257,7 @@
       {#each resolution.voters as resolutionVoter}
         <Row>
           <Cell>
-            <ResolutionUser
+            <DaoUser
               ethereumAddress={resolutionVoter.address}
               size="sm"
               hideInfo={isPrint}
@@ -268,7 +268,7 @@
                   size="xs"
                 />
               </div>
-            </ResolutionUser>
+            </DaoUser>
           </Cell>
           <Cell numeric>{resolutionVoter.votingPower}</Cell>
           <Cell numeric>{resolutionVoter.votingPower}</Cell>

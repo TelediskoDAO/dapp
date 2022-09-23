@@ -6,7 +6,7 @@
   import { votingState } from "../state/resolutions/voting";
   import type { ResolutionVoter } from "../types";
   import Alert from "./Alert.svelte";
-  import ResolutionUser from "./ResolutionUser.svelte";
+  import DaoUser from "./DaoUser.svelte";
 
   export let resolutionId: string;
   export let signerVoted: ResolutionVoter | null;
@@ -61,7 +61,7 @@
     <Alert>
       Voting also on behalf of
       {#each votingOnBehalfOf as votingOnBehalfOfUser, index}
-        <ResolutionUser
+        <DaoUser
           inline
           ethereumAddress={votingOnBehalfOfUser.address}
           shortAddressWhileLoading
@@ -73,7 +73,7 @@
   {/if}
   {#if delegatedTo}
     <Alert>
-      You're delegating your vote for this resolution to <ResolutionUser
+      You're delegating your vote for this resolution to <DaoUser
         inline
         ethereumAddress={delegatedTo.delegated}
         shortAddressWhileLoading

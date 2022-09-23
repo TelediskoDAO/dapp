@@ -9,7 +9,7 @@
   import { signerAddress } from "../../state/eth";
   import type { Offer } from "../../types";
   import Alert from "../Alert.svelte";
-  import ResolutionUser from "../ResolutionUser.svelte";
+  import DaoUser from "../DaoUser.svelte";
 
   export let offers: Offer[];
   export let title: string;
@@ -155,7 +155,7 @@
           >
             {#if displayUserInfo}
               <Cell width="60%">
-                <ResolutionUser
+                <DaoUser
                   size="sm"
                   ethereumAddress={offer.from}
                   shortAddressWhileLoading

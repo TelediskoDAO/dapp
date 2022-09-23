@@ -16,7 +16,7 @@
   import { getResolutionTypesQuery } from "../graphql/get-resolution-types.query";
   import { acl } from "../state/resolutions";
   import Alert from "./Alert.svelte";
-  import ResolutionUser from "./ResolutionUser.svelte";
+  import DaoUser from "./DaoUser.svelte";
   import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
 
   function init(el: HTMLElement) {
@@ -111,7 +111,7 @@
             } ${$currentResolution.title}`}
       </h1>
       {#if createBy}
-        <ResolutionUser
+        <DaoUser
           ethereumAddress={createBy}
           title={`Created ${createdOn} by`}
           hasBg

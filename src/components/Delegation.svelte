@@ -9,7 +9,7 @@
     delegationStatus,
     formState,
   } from "../state/delegation";
-  import ResolutionUser from "./ResolutionUser.svelte";
+  import DaoUser from "./DaoUser.svelte";
   import { handleDelegate } from "../handlers/voting/delegate";
   import { signer, signerAddress, votingContract } from "../state/eth";
   import Alert from "./Alert.svelte";
@@ -61,7 +61,7 @@
   {#if !open && (currentUserDelegated || currentUserDelegatedBy)}
     <Tooltip yPos="below">
       {#if currentUserDelegated}
-        You're currently delegating <ResolutionUser
+        You're currently delegating <DaoUser
           ethereumAddress={$delegationStatus?.signerDelegationStatus.delegated}
           inline
         />
@@ -69,7 +69,7 @@
       {#if currentUserDelegatedBy}
         You're currently being delegated by
         {#each $delegationStatus?.signerDelegatedBy as signerDelegatedByUser, index}
-          <ResolutionUser
+          <DaoUser
             inline
             ethereumAddress={signerDelegatedByUser.address}
             shortAddressWhileLoading
@@ -127,7 +127,7 @@
           <Alert type="warning">
             You're currently being delegated by
             {#each $delegationStatus?.signerDelegatedBy as signerDelegatedByUser, index}
-              <ResolutionUser
+              <DaoUser
                 inline
                 ethereumAddress={signerDelegatedByUser.address}
                 shortAddressWhileLoading
@@ -141,7 +141,7 @@
           <Alert type="info">
             <div class="alert-with-action">
               <p>
-                You're currently delegating <ResolutionUser
+                You're currently delegating <DaoUser
                   ethereumAddress={$delegationStatus?.signerDelegationStatus
                     .delegated}
                   inline
@@ -161,7 +161,7 @@
             {#each $delegationStatus?.usersList || [] as delegationUser}
               <Row>
                 <Cell width="82%">
-                  <ResolutionUser ethereumAddress={delegationUser.address} />
+                  <DaoUser ethereumAddress={delegationUser.address} />
                 </Cell>
                 <Cell>
                   {#if $delegationStatus?.signerDelegationStatus.delegated === delegationUser.address}
