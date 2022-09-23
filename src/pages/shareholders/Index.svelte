@@ -1,36 +1,60 @@
 <script lang="ts">
+  import Tooltip, { Wrapper } from "@smui/tooltip";
+  import { Icon } from "@smui/common";
+  import { Svg } from "@smui/common/elements";
+  import { mdiInformationOutline } from "@mdi/js";
   import Body from "@smui/data-table/src/Body.svelte";
   import Cell from "@smui/data-table/src/Cell.svelte";
   import DataTable from "@smui/data-table/src/DataTable.svelte";
+  import Head from "@smui/data-table/src/Head.svelte";
   import Row from "@smui/data-table/src/Row.svelte";
   import Select, { Option } from "@smui/select";
   import { onMount } from "svelte";
   import DaoUser from "../../components/DaoUser.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
   import Tag from "../../components/Tag.svelte";
-  import { getDaoManagerQuery } from "../../graphql/get-dao-manager.query";
+  import { getShareholdersInfo } from "../../graphql/get-shareholders-info.query";
+  import { bigIntToNum } from "../../helpers/tokens";
   import { graphQLClient } from "../../net/graphQl";
   import { title } from "../../state/runtime";
-  import type { DaoManagerEntity } from "../../types";
+  import type { DaoManagerEntity, DaoUser as DaoUserType } from "../../types";
 
   title.set("Shareholders");
 
   let daoManager: DaoManagerEntity = null;
-  let shareholders: string[] = [];
+  let daoUsers: DaoUserType[] = [];
+  let daoUsersComputed = {};
+  let daoUsersAddresses: string[] = [];
 
   let currentFilter = "all";
   let possibleFilters = {};
 
   onMount(async () => {
-    ({ daoManager } = await graphQLClient.request(getDaoManagerQuery));
-    shareholders = [
-      ...new Set([
-        ...daoManager.contributorsAddresses,
-        ...daoManager.shareholdersAddresses,
-        ...daoManager.investorsAddresses,
-        ...daoManager.managingBoardAddresses,
-      ]),
-    ];
+    ({ daoManager, daoUsers } = await graphQLClient.request(
+      getShareholdersInfo
+    ));
+
+    const balancesSum = daoUsers.reduce(
+      (sum, daoUser) =>
+        sum + (daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0),
+      0
+    );
+
+    daoUsersComputed = daoUsers.reduce((computed, daoUser) => {
+      const balance = Math.round(
+        daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0
+      );
+      computed[daoUser.address] = {
+        balance,
+        power: ((balance * 100) / balancesSum).toFixed(2),
+      };
+      return computed;
+    }, {});
+
+    daoUsersAddresses = Object.keys(daoUsersComputed).sort(
+      (userA, userB) =>
+        daoUsersComputed[userB].balance - daoUsersComputed[userA].balance
+    );
 
     possibleFilters = {
       ...(daoManager.managingBoardAddresses.length > 0 && {
@@ -87,7 +111,7 @@
       </div>
     {/if}
   </div>
-  {#if shareholders.length === 0}
+  {#if daoUsersAddresses.length === 0}
     <Skeleton height={300} style="margin-top: 72px">
       <rect width="100%" height="67" x="0" y="0" rx="6px" ry="6px" />
       <rect width="100%" height="67" x="0" y="69" rx="6px" ry="6px" />
@@ -95,17 +119,45 @@
     </Skeleton>
   {:else}
     <DataTable table$aria-label="List of DAO shareholders" style="width: 100%;">
+      <Head>
+        <Row>
+          <Cell />
+          <Cell numeric>Tokens</Cell>
+          <Cell numeric>
+            <div class="inline-flex">
+              <span> Voting power </span>
+              <Wrapper>
+                <span class="icon-wrapper">
+                  <Icon component={Svg} viewBox="0 0 24 24">
+                    <path fill="currentColor" d={mdiInformationOutline} />
+                  </Icon>
+                </span>
+                <Tooltip yPos="above"
+                  >Due to rounding, the sum could be slightly different than 100</Tooltip
+                >
+              </Wrapper>
+            </div>
+          </Cell>
+          <Cell numeric>Status</Cell>
+        </Row>
+      </Head>
       <Body>
-        {#each shareholders.filter((shareholderAddress) => currentFilter === "all" || daoManager[currentFilter].includes(shareholderAddress)) as shareholder}
+        {#each daoUsersAddresses.filter((shareholderAddress) => currentFilter === "all" || daoManager[currentFilter].includes(shareholderAddress)) as daoUserAddress}
           <Row>
             <Cell>
               <div class="shareholder-info">
-                <DaoUser ethereumAddress={shareholder} size="sm" />
+                <DaoUser ethereumAddress={daoUserAddress} size="sm" />
               </div>
+            </Cell>
+            <Cell numeric>
+              {daoUsersComputed[daoUserAddress].balance}
+            </Cell>
+            <Cell numeric>
+              {daoUsersComputed[daoUserAddress].power}
             </Cell>
             <Cell>
               <div class="tags-container">
-                {#each getShareholderStatus(shareholder) as status}
+                {#each getShareholderStatus(daoUserAddress) as status}
                   <Tag label={status} size="sm" />
                 {/each}
               </div>
@@ -135,5 +187,20 @@
   }
   .tags-container :global(.tag) {
     margin-right: 0.2rem;
+  }
+  .icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.2rem;
+    color: var(--blue-sapphire);
+    cursor: help;
+  }
+  .icon-wrapper :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .inline-flex {
+    display: inline-flex;
+    align-items: center;
   }
 </style>
