@@ -29,6 +29,15 @@
   let currentFilter = "all";
   let possibleFilters = {};
 
+  function getShareholderStatus(address: string) {
+    return [
+      daoManager?.managingBoardAddresses.includes(address) && "ManagingBoard",
+      daoManager?.shareholdersAddresses.includes(address) && "Shareholder",
+      daoManager?.contributorsAddresses.includes(address) && "Contributor",
+      daoManager?.investorsAddresses.includes(address) && "Investor",
+    ].filter(Boolean);
+  }
+
   onMount(async () => {
     ({ daoManager, daoUsers } = await graphQLClient.request(
       getShareholdersInfo
@@ -36,7 +45,10 @@
 
     const balancesSum = daoUsers.reduce(
       (sum, daoUser) =>
-        sum + (daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0),
+        getShareholderStatus(daoUser.address).length === 0
+          ? sum
+          : sum +
+            (daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0),
       0
     );
 
@@ -51,10 +63,12 @@
       return computed;
     }, {});
 
-    daoUsersAddresses = Object.keys(daoUsersComputed).sort(
-      (userA, userB) =>
-        daoUsersComputed[userB].balance - daoUsersComputed[userA].balance
-    );
+    daoUsersAddresses = Object.keys(daoUsersComputed)
+      .filter((address) => getShareholderStatus(address).length > 0)
+      .sort(
+        (userA, userB) =>
+          daoUsersComputed[userB].balance - daoUsersComputed[userA].balance
+      );
 
     possibleFilters = {
       ...(daoManager.managingBoardAddresses.length > 0 && {
@@ -83,15 +97,6 @@
       }),
     };
   });
-
-  function getShareholderStatus(address: string) {
-    return [
-      daoManager?.managingBoardAddresses.includes(address) && "ManagingBoard",
-      daoManager?.shareholdersAddresses.includes(address) && "Shareholder",
-      daoManager?.contributorsAddresses.includes(address) && "Contributor",
-      daoManager?.investorsAddresses.includes(address) && "Investor",
-    ].filter(Boolean);
-  }
 </script>
 
 <section>
