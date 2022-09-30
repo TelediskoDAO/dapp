@@ -9,7 +9,7 @@ export const getTokensPageData = gql`
       vestingBalance
       unlockedTempBalance
     }
-    offers(orderBy: createTimestamp) {
+    offers(orderBy: createTimestamp, orderDirection: desc) {
       id
       from
       expirationTimestamp
