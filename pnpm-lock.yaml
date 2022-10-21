@@ -27,6 +27,7 @@ specifiers:
   '@smui/tooltip': 7.0.0-beta.0
   '@sveltejs/vite-plugin-svelte': ^1.0.3
   '@tsconfig/svelte': ^3.0.0
+  '@types/lodash.isequal': ^4.5.6
   '@walletconnect/web3-provider': ^1.8.0
   date-fns: ^2.29.3
   ethers: ^5.7.0
@@ -54,6 +55,7 @@ specifiers:
   web3modal: ^1.9.9
 
 dependencies:
+  '@types/lodash.isequal': 4.5.6
   date-fns: 2.29.3
   graphql: 16.6.0
   graphql-request: 5.0.0_graphql@16.6.0
@@ -1615,6 +1617,16 @@ packages:
   /@types/estree/0.0.39:
     resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
     dev: true
+
+  /@types/lodash.isequal/4.5.6:
+    resolution: {integrity: sha512-Ww4UGSe3DmtvLLJm2F16hDwEQSv7U0Rr8SujLUA2wHI2D2dm8kPu6Et+/y303LfjTIwSBKXB/YTUcAKpem/XEg==}
+    dependencies:
+      '@types/lodash': 4.14.186
+    dev: false
+
+  /@types/lodash/4.14.186:
+    resolution: {integrity: sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==}
+    dev: false
 
   /@types/marked/4.0.7:
     resolution: {integrity: sha512-eEAhnz21CwvKVW+YvRvcTuFKNU9CV1qH+opcgVK3pIMI6YZzDm6gc8o2vHjldFk6MGKt5pueSB7IOpvpx5Qekw==}

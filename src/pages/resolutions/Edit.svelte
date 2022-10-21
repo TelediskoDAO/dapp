@@ -6,7 +6,7 @@
   import Button, { Label } from "@smui/button";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
-  import { tokenContract } from "../../stores/contracts";
+  import { resolutionContract } from "../../stores/contracts";
   import { signer } from "../../stores/wallet";
 
   import { graphQLClient } from "../../net/graphQl";

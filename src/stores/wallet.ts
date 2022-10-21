@@ -111,6 +111,7 @@ export const signer: Readable<Signer | null> = derived(
         // available if the user disconnects all accounts.
         try {
           _address = await _signer.getAddress();
+          console.log('_address: ', _address);
         } catch (e) {
           set(null);
           address.set(null);
