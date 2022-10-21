@@ -1,6 +1,6 @@
 import { ethers, Signer, BigNumber } from "ethers";
-import { derived, writable, type Readable } from "svelte/store";
-import { ethereumEndpoint, ethereumChainId } from "./config";
+import { derived, writable, type Readable, readable } from 'svelte/store';
+import { ethereumEndpoint, ethereumChainId, ipfsEndpoint } from "./config";
 import { addEthereumChain } from "./networks";
 import {
   connectWeb3Modal,
@@ -185,4 +185,18 @@ export const etherscanUrl = derived(
   [chainId, network],
   ([$chainId, $network]) =>
     `https://${$chainId === 1 ? "" : $network + "."}etherscan.io`
+);
+
+export const hasAgent = readable(window.ethereum !== undefined);
+
+export const signerAddress: Readable<string> = derived(
+  signer,
+  ($signer, set) => {
+    (async () => {
+      if ($signer) {
+        const signerAddress = await $signer.getAddress();
+        set(signerAddress);
+      }
+    })();
+  }
 );

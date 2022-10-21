@@ -16,9 +16,23 @@
     <meta name="twitter:creator" content="<%- HTML_TWITTER_CREATOR %>" />
 
     <link href="/main.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/svelte-material-ui@7.0.0-beta.0/bare.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+    <style>
+      .mdc-dialog {
+        z-index: 99;
+      }
+      .mdc-tooltip {
+        z-index: 100;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
+    <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

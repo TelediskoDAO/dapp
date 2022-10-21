@@ -12,5 +12,6 @@ export const ethereumChainId: number = parseInt(
   import.meta.env.VITE_ETHEREUM_CHAIN_ID,
   10
 );
-export const ipfsEndpoint: string = import.meta.env.IPFS_ENDPOINT
-export const graphProtocolGqlEndpoint: string = import.meta.env.GRAPH_PROTOCOL_GQL_ENDPOINT
+export const ipfsEndpoint: string = import.meta.env.VITE_IPFS_ENDPOINT;
+export const graphProtocolGqlEndpoint: string = import.meta.env.VITE_GRAPH_PROTOCOL_GQL_ENDPOINT;
+export const appEnv: string = import.meta.env.VITE_APP_ENV;
