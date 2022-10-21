@@ -1,13 +1,12 @@
-# teledisko dapp
+# Dapp template
 
-## How to develop
+This template should help get you started developing a dapp with Svelte and TypeScript in Vite.
 
-Prerequisites:
+## Getting started
 
-- Install [pnpm](https://pnpm.io/).
+Rename `.env-template` to `.env` and add the missing values.
 
 ```
-pnpm install
-./config-contracts.sh
-pnpm start
+pnpm i
+pnpm run dev
 ```
