@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { init } from "./stores/wallet";
+  import { init, networkError } from "./stores/wallet";
 
   import { user, userError, username } from "./state/odoo";
   import { title } from "./state/runtime";
@@ -9,6 +9,7 @@
   import UpdateAvailable from "./components/UpdateAvailable.svelte";
   import Sidebar from "./components/Sidebar.svelte";
   import RuntimeErrors from "./components/RuntimeErrors.svelte";
+  import Alert from "./components/Alert.svelte";
 
   // Pages
   import PageIndex from "./pages/Index.svelte";
@@ -75,13 +76,19 @@
     <div out:slide class="loading">
       <p>loading...</p>
     </div>
-    {:else if /\/print$/.test($location)}
+  {:else if /\/print$/.test($location)}
     <Router {routes} restoreScrollState />
-    {:else}
+  {:else}
     <Sidebar />
 
     <main>
       <TopAppBar />
+      {#if $networkError}
+        <Alert
+          type="warning"
+          message="Please check your wallet, there's a network mismatch"
+        />
+      {/if}
       <Router {routes} restoreScrollState />
       <UpdateAvailable />
     </main>
