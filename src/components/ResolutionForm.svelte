@@ -34,7 +34,7 @@
   export let handleExport = noop;
 
   let disabled = false;
-  let resolutionTypes: ResolutionTypeEntity[];
+  let resolutionTypes: ResolutionTypeEntity[] = [];
 
   onMount(async () => {
     const {
@@ -58,10 +58,10 @@
                 id: "routineVeto",
                 name: "routineVeto",
               },
-            ];
+            ] as ResolutionTypeEntity[];
           }
           return [...all, current];
-        }, []),
+        }, [] as ResolutionTypeEntity[]),
     ];
 
     const easyMDE = new window.EasyMDE({
@@ -96,7 +96,7 @@
   function onSave() {
     const vetoTypeId =
       $currentResolution.typeId === "routineVeto"
-        ? resolutionTypes?.find((type) => type.name === "routine").id
+        ? resolutionTypes.find((type) => type.name === "routine")?.id || null
         : null;
     handleSave(vetoTypeId);
   }
