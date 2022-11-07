@@ -3,6 +3,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import replace from "@rollup/plugin-replace";
 import { createHtmlPlugin } from "vite-plugin-html";
 import { readFileSync } from "fs";
+import { VitePWA } from "vite-plugin-pwa";
 
 type ContractsAddresses = {
   [key: string]: string;
@@ -60,6 +61,7 @@ export default async ({ mode }) => {
           },
         },
       }),
+      VitePWA({ registerType: "autoUpdate", injectRegister: "auto" }),
     ],
   });
 };
