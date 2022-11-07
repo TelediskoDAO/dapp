@@ -5,6 +5,7 @@
   import Button from "@smui/button";
   import DataTable, { Body, Head, Row, Cell } from "@smui/data-table";
   import { format } from "date-fns";
+  import showdown from "showdown";
   import {
     getDateFromUnixTimestamp,
     RESOLUTION_STATES,
@@ -27,6 +28,8 @@
   export let daoManagerData: DaoManagerEntity;
   let isPrint = /\/print$/.test($location);
   let signerVoted: ResolutionVoter | null = null;
+  const converter = new showdown.Converter();
+  converter.setFlavor("github");
 
   onMount(() => {
     if (isPrint) {
@@ -143,9 +146,10 @@
     <h3 class="secondary-title">Topic of the resolution: {resolution.title}</h3>
     <h3 class="secondary-title pagebreak">Content of the resolution:</h3>
     <div class="content">
-      <SvelteMarkdown
+      {@html converter.makeHtml(resolution.content)}
+      <!-- <SvelteMarkdown
         source={resolution.content.replace(/(?:\r\n|\r|\n)/g, "<br>")}
-      />
+      /> -->
     </div>
   </div>
   {#if !isPrint}

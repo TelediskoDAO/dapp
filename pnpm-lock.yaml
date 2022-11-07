@@ -47,6 +47,7 @@ specifiers:
   prettier-plugin-svelte: ^2.8.0
   qs: ^6.11.0
   rollup-plugin-polyfill-node: ^0.10.2
+  showdown: ^2.1.0
   svelte: ^3.49.0
   svelte-check: ^2.9.0
   svelte-markdown: ^0.2.3
@@ -79,6 +80,7 @@ dependencies:
   prettier: 2.7.1
   prettier-plugin-svelte: 2.8.0_lrllcp5xtrkmmdzifit4hd52ze
   qs: 6.11.0
+  showdown: 2.1.0
   svelte-markdown: 0.2.3_svelte@3.52.0
   svelte-spa-router: 3.3.0
   ts-node: 10.9.1_typescript@4.8.4
@@ -6509,6 +6511,13 @@ packages:
   /shebang-regex/3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+    dev: false
+
+  /showdown/2.1.0:
+    resolution: {integrity: sha512-/6NVYu4U819R2pUIk79n67SYgJHWCce0a5xTP979WbNp0FL9MN1I1QK662IDU1b6JzKTvmhgI7T7JYIxBi3kMQ==}
+    hasBin: true
+    dependencies:
+      commander: 9.4.1
     dev: false
 
   /side-channel/1.0.4:
