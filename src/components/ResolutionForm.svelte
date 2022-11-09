@@ -20,7 +20,7 @@
   import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
 
   function init(el: HTMLElement) {
-    el.querySelector("input").focus();
+    el.querySelector("input")?.focus();
   }
 
   const noop = () => {};
@@ -34,7 +34,7 @@
   export let handleExport = noop;
 
   let disabled = false;
-  let resolutionTypes: ResolutionTypeEntity[];
+  let resolutionTypes: ResolutionTypeEntity[] = [];
 
   onMount(async () => {
     const {
@@ -58,15 +58,17 @@
                 id: "routineVeto",
                 name: "routineVeto",
               },
-            ];
+            ] as ResolutionTypeEntity[];
           }
           return [...all, current];
-        }, []),
+        }, [] as ResolutionTypeEntity[]),
     ];
 
     const easyMDE = new window.EasyMDE({
       element: document.getElementById("editor"),
       spellChecker: false,
+      minHeight: "350px",
+      maxHeight: "350px",
     });
 
     easyMDE.value($currentResolution.content || "");
@@ -94,7 +96,7 @@
   function onSave() {
     const vetoTypeId =
       $currentResolution.typeId === "routineVeto"
-        ? resolutionTypes?.find((type) => type.name === "routine").id
+        ? resolutionTypes.find((type) => type.name === "routine")?.id || null
         : null;
     handleSave(vetoTypeId);
   }
@@ -322,7 +324,8 @@
 
   :global(.types-wrapper) {
     position: relative;
-    z-index: 12;
+    z-index: 1;
+    margin-top: 4rem;
   }
 
   :global(.actions-bar) {

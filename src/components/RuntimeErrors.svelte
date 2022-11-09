@@ -9,8 +9,10 @@
     {/each}
     <p>
       What to do now? Would be nice if you can
-      <a href="https://gitlab.com/teledisko/dao/-/issues/new" target="_blank"
-        >create an issue</a
+      <a
+        href="https://gitlab.com/teledisko/dao/-/issues/new"
+        target="_blank"
+        rel="noreferrer">create an issue</a
       >
       describing what happened. To keep using this app
       <button on:click={() => window.location.reload()}>reload the page</button

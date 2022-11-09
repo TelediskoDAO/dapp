@@ -36,7 +36,7 @@
     "@smui/switch": "7.0.0-beta.0",
     "@smui/textfield": "7.0.0-beta.0",
     "@smui/tooltip": "7.0.0-beta.0",
-    "@sveltejs/vite-plugin-svelte": "^1.0.3",
+    "@sveltejs/vite-plugin-svelte": "^1.1.0",
     "@tsconfig/svelte": "^3.0.0",
     "@walletconnect/web3-provider": "^1.8.0",
     "ethers": "^5.7.0",
@@ -50,6 +50,7 @@
     "util": "^0.12.4",
     "vite": "^3.0.9",
     "vite-plugin-html": "^3.2.0",
+    "vite-plugin-pwa": "^0.13.2",
     "web3modal": "^1.9.9"
   },
   "dependencies": {

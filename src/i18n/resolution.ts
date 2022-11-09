@@ -1,4 +1,4 @@
-export const RESOLUTION_TYPES_TEXTS = {
+export const RESOLUTION_TYPES_TEXTS: Record<string, any> = {
   amendment: {
     title: "Amendment",
     description:

@@ -1,5 +1,5 @@
 import { ethers, Signer, BigNumber } from "ethers";
-import { derived, writable, type Readable, readable } from 'svelte/store';
+import { derived, writable, type Readable, readable } from "svelte/store";
 import { ethereumEndpoint, ethereumChainId, ipfsEndpoint } from "./config";
 import { addEthereumChain } from "./networks";
 import {
@@ -9,9 +9,12 @@ import {
 } from "./web3Modal";
 
 export async function init() {
-  localStorage.removeItem("walletconnect");
-  await initWeb3Modal();
-  await connectReadOnly();
+  const w3Modal = await initWeb3Modal();
+  if (w3Modal.cachedProvider) {
+    await connect();
+  } else {
+    await connectReadOnly();
+  }
 }
 
 export async function connect() {
@@ -47,12 +50,14 @@ export async function connect() {
                 ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
             });
           }
+          return provider.set(null);
         }
       } else {
         networkError.set({
           got: name,
           want: ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
         });
+        return provider.set(null);
       }
     } else {
       networkError.set(null);
@@ -84,8 +89,6 @@ export async function connectReadOnly() {
 }
 
 export async function disconnect() {
-  // FIXME: would be much better if this was handled by web3modal
-  localStorage.removeItem("walletconnect");
   await disconnectWeb3Modal();
   await connectReadOnly();
   provider.set(null);
@@ -111,7 +114,6 @@ export const signer: Readable<Signer | null> = derived(
         // available if the user disconnects all accounts.
         try {
           _address = await _signer.getAddress();
-          console.log('_address: ', _address);
         } catch (e) {
           set(null);
           address.set(null);
