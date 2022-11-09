@@ -1,4 +1,6 @@
 .env
+build/
+src/contracts
 
 # Logs
 logs
