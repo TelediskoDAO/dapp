@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "true",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check-updates": "pnpx npm-check-updates",
     "prepare": "husky install",
