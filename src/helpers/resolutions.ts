@@ -100,10 +100,10 @@ export const getResolutionState = (
   }
   if (resolution.approveTimestamp !== "0") {
     const { noticePeriodEnds, votingEnds } = resolutionTypeInfo;
-    if (isBefore(new Date($currentTimestamp), noticePeriodEnds)) {
+    if (isBefore(new Date($currentTimestamp), noticePeriodEnds as Date)) {
       return RESOLUTION_STATES.NOTICE;
     }
-    if (isBefore(new Date($currentTimestamp), votingEnds)) {
+    if (isBefore(new Date($currentTimestamp), votingEnds as Date)) {
       return RESOLUTION_STATES.VOTING;
     }
     return RESOLUTION_STATES.ENDED;
@@ -115,7 +115,7 @@ export const getResolutionVoters = (resolution: ResolutionEntity) => {
   return resolution.voters.map((voter) => {
     const delegatingVoter = resolution.voters.find(
       ({ address }) => voter.delegated === address
-    );
+    ) as ResolutionVoter;
     const voterBeingDelegated = resolution.voters.filter(
       ({ delegated, address }) =>
         delegated === voter.address && address !== voter.address
