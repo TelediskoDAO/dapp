@@ -6,8 +6,7 @@
   import { format } from "date-fns";
   import showdown from "showdown";
   import Tooltip, { Wrapper } from "@smui/tooltip";
-  import { Icon } from "@smui/common";
-  import { Svg } from "@smui/common/elements";
+  import { Icon, Svg } from "@smui/common";
   import { mdiInformationOutline } from "@mdi/js";
 
   import {
@@ -299,7 +298,7 @@
                     </span>
                     {#if resolutionVoter.delegating}
                       <Tooltip yPos="above">
-                        Delegating <DaoUser
+                        Delegated to <DaoUser
                           ethereumAddress={resolutionVoter.delegating.address}
                           inline
                           shortAddressWhileLoading

@@ -41,6 +41,7 @@
     "@smui/tooltip": "7.0.0-beta.0",
     "@sveltejs/vite-plugin-svelte": "^1.1.0",
     "@tsconfig/svelte": "^3.0.0",
+    "@types/showdown": "^2.0.0",
     "@walletconnect/web3-provider": "^1.8.0",
     "ethers": "^5.7.0",
     "izitoast": "^1.4.0",
