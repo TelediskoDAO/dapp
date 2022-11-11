@@ -325,6 +325,9 @@
   :global(.types-wrapper) {
     position: relative;
     z-index: 1;
+  }
+
+  :global(.types-wrapper > div) {
     margin-top: 4rem;
   }
 
