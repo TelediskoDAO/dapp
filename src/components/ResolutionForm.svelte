@@ -67,6 +67,8 @@
     const easyMDE = new window.EasyMDE({
       element: document.getElementById("editor"),
       spellChecker: false,
+      minHeight: "350px",
+      maxHeight: "350px",
     });
 
     easyMDE.value($currentResolution.content || "");
@@ -322,7 +324,11 @@
 
   :global(.types-wrapper) {
     position: relative;
-    z-index: 12;
+    z-index: 1;
+  }
+
+  :global(.types-wrapper > div) {
+    margin-top: 4rem;
   }
 
   :global(.actions-bar) {

@@ -1,6 +1,5 @@
 <script type="ts">
   import { onMount } from "svelte";
-  import SvelteMarkdown from "svelte-markdown";
   import { location } from "svelte-spa-router";
   import Button from "@smui/button";
   import DataTable, { Body, Head, Row, Cell } from "@smui/data-table";
@@ -147,9 +146,6 @@
     <h3 class="secondary-title pagebreak">Content of the resolution:</h3>
     <div class="content">
       {@html converter.makeHtml(resolution.content)}
-      <!-- <SvelteMarkdown
-        source={resolution.content.replace(/(?:\r\n|\r|\n)/g, "<br>")}
-      /> -->
     </div>
   </div>
   {#if !isPrint}
@@ -366,6 +362,7 @@
     padding: 2rem;
     border-left: 1px solid var(--color-gray-1);
     background-color: #fafafa;
+    word-break: break-word;
   }
 
   .extra {
