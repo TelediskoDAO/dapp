@@ -13,6 +13,7 @@
   export let inline = false;
   export let hasBg = false;
   export let hideInfo = false;
+  export let isBold = false;
   export let size: "sm" | "md" | "lg" = "md";
   export let shortAddressWhileLoading = false;
   export let shortAddress = false;
@@ -27,7 +28,7 @@
 </script>
 
 {#if inline}
-  <span class="inline-flex">
+  <span class="inline-flex" class:inline-bold={isBold}>
     {#if userDetails}
       {userDetails.displayName}
     {:else}
@@ -102,6 +103,10 @@
   .inline-flex {
     display: inline-flex;
     align-items: center;
+  }
+
+  .inline-bold {
+    font-weight: bold;
   }
   .inline-flex :global(.tag) {
     margin-left: 0.3rem;

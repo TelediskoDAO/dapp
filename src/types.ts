@@ -5,6 +5,9 @@ export type ResolutionVoter = {
   hasVoted: boolean;
   hasVotedYes: boolean;
   delegated: string;
+  usedPoa: boolean;
+  beingDelegatedBy: ResolutionVoter[];
+  delegating: ResolutionVoter | null;
 };
 
 export type ResolutionsAcl = {
