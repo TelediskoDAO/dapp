@@ -5,6 +5,11 @@
   import DataTable, { Body, Head, Row, Cell } from "@smui/data-table";
   import { format } from "date-fns";
   import showdown from "showdown";
+  import Tooltip, { Wrapper } from "@smui/tooltip";
+  import { Icon } from "@smui/common";
+  import { Svg } from "@smui/common/elements";
+  import { mdiInformationOutline } from "@mdi/js";
+
   import {
     getDateFromUnixTimestamp,
     RESOLUTION_STATES,
@@ -282,8 +287,44 @@
             ).toFixed(2)}</Cell
           >
           <Cell>
-            {#if resolutionVoter.delegated !== resolutionVoter.address}
-              Yes
+            {#if resolutionVoter.usedPoa}
+              <div class="poa-wrapper">
+                <strong>Yes</strong>
+                {#if !isPrint}
+                  <Wrapper>
+                    <span class="icon-wrapper">
+                      <Icon component={Svg} viewBox="0 0 24 24">
+                        <path fill="currentColor" d={mdiInformationOutline} />
+                      </Icon>
+                    </span>
+                    {#if resolutionVoter.delegating}
+                      <Tooltip yPos="above">
+                        Delegating <DaoUser
+                          ethereumAddress={resolutionVoter.delegating.address}
+                          inline
+                          shortAddressWhileLoading
+                          isBold
+                        />
+                      </Tooltip>
+                    {/if}
+                    {#if resolutionVoter.beingDelegatedBy.length > 0}
+                      <Tooltip yPos="above">
+                        {#each resolutionVoter.beingDelegatedBy as delegatedByUser, index}
+                          Being delegated by
+                          <DaoUser
+                            inline
+                            ethereumAddress={delegatedByUser.address}
+                            shortAddressWhileLoading
+                            isBold
+                          />
+                          {#if index < resolutionVoter.beingDelegatedBy.length - 2},{/if}
+                          {#if index < resolutionVoter.beingDelegatedBy.length - 1 && index >= resolutionVoter.beingDelegatedBy.length - 2}and{/if}
+                        {/each}
+                      </Tooltip>
+                    {/if}
+                  </Wrapper>
+                {/if}
+              </div>
             {:else}
               No
             {/if}
@@ -435,6 +476,22 @@
     font-size: 14px;
     margin-bottom: 0.3px;
     line-height: 12px;
+  }
+  .icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.2rem;
+    color: var(--blue-sapphire);
+    cursor: help;
+  }
+  .icon-wrapper :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  .poa-wrapper {
+    display: flex;
+    align-items: center;
   }
 
   @media print {

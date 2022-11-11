@@ -111,6 +111,29 @@ export const getResolutionState = (
   return RESOLUTION_STATES.PRE_DRAFT;
 };
 
+export const getResolutionVoters = (resolution: ResolutionEntity) => {
+  return resolution.voters.map((voter) => {
+    const delegatingVoter = resolution.voters.find(
+      ({ address }) => voter.delegated === address
+    );
+    const voterBeingDelegated = resolution.voters.filter(
+      ({ delegated, address }) =>
+        delegated === voter.address && address !== voter.address
+    );
+    return {
+      ...voter,
+      votingPower: Math.round(voter.votingPower / 1000000000000000000),
+      hasVoted: delegatingVoter.hasVoted,
+      hasVotedYes: delegatingVoter.hasVotedYes,
+      usedPoa:
+        voter.delegated !== voter.address || voterBeingDelegated.length > 0,
+      beingDelegatedBy: voterBeingDelegated,
+      delegating:
+        delegatingVoter.address !== voter.address ? delegatingVoter : null,
+    };
+  });
+};
+
 export const getEnhancedResolutionMapper =
   ($currentTimestamp: number, $acl: ResolutionsAcl) =>
   (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
@@ -120,12 +143,10 @@ export const getEnhancedResolutionMapper =
       $currentTimestamp,
       resolutionTypeInfo
     );
+    const resolutionVoters = getResolutionVoters(resolution);
     return {
       ...resolution,
-      voters: resolution.voters.map((voter) => ({
-        ...voter,
-        votingPower: Math.round(voter.votingPower / 1000000000000000000),
-      })),
+      voters: resolutionVoters,
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
       rejectedAt:
@@ -144,15 +165,15 @@ export const getEnhancedResolutionMapper =
         state === RESOLUTION_STATES.PRE_DRAFT && $acl?.canUpdate
           ? `#/resolutions/${resolution.id}/edit`
           : `#/resolutions/${resolution.id}`,
-      action: RESOLUTION_ACTIONS[state]($acl, resolution.voters),
+      action: RESOLUTION_ACTIONS[state]($acl, resolutionVoters),
       resolutionTypeInfo,
       votingStatus: {
-        votersHaveNotVoted: resolution.voters.filter((v) => !v.hasVoted),
-        votersHaveVoted: resolution.voters.filter((v) => v.hasVoted),
-        votersHaveVotedYes: resolution.voters.filter(
+        votersHaveNotVoted: resolutionVoters.filter((v) => !v.hasVoted),
+        votersHaveVoted: resolutionVoters.filter((v) => v.hasVoted),
+        votersHaveVotedYes: resolutionVoters.filter(
           (v) => v.hasVoted && v.hasVotedYes
         ),
-        votersHaveVotedNo: resolution.voters.filter(
+        votersHaveVotedNo: resolutionVoters.filter(
           (v) => v.hasVoted && !v.hasVotedYes
         ),
       },
