@@ -210,24 +210,21 @@
   <VotingBreakdown
     quorum={resolution.resolutionType.quorum}
     totalVotedYes={resolution.votingStatus.votersHaveVotedYes.reduce(
-      (total, voter) =>
-        Math.round(voter.votingPower / 1000000000000000000) + total,
+      (total, voter) => voter.votingPowerInt + total,
       0
     )}
     totalVotedNo={resolution.votingStatus.votersHaveVotedNo.reduce(
-      (total, voter) =>
-        Math.round(voter.votingPower / 1000000000000000000) + total,
+      (total, voter) => voter.votingPowerInt + total,
       0
     )}
     totalAbstained={resolution.votingStatus.votersHaveNotVoted.reduce(
-      (total, voter) =>
-        Math.round(voter.votingPower / 1000000000000000000) + total,
+      (total, voter) => voter.votingPowerInt + total,
       0
     )}
     hasQuorum={resolution.hasQuorum}
     isNegative={resolution.isNegative}
     maxVotingPower={resolution.voters.reduce(
-      (total, voter) => total + voter.votingPower,
+      (total, voter) => total + voter.votingPowerInt,
       0
     )}
   />
@@ -275,13 +272,13 @@
               </div>
             </DaoUser>
           </Cell>
-          <Cell numeric>{resolutionVoter.votingPower}</Cell>
-          <Cell numeric>{resolutionVoter.votingPower}</Cell>
+          <Cell numeric>{resolutionVoter.votingPowerInt.toLocaleString()}</Cell>
+          <Cell numeric>{resolutionVoter.votingPowerInt.toLocaleString()}</Cell>
           <Cell numeric
             >{(
-              (100 * resolutionVoter.votingPower) /
+              (100 * resolutionVoter.votingPowerInt) /
               resolution.voters.reduce(
-                (total, voter) => total + voter.votingPower,
+                (total, voter) => total + voter.votingPowerInt,
                 0
               )
             ).toFixed(2)}</Cell

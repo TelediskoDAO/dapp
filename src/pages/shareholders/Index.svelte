@@ -155,7 +155,7 @@
               </div>
             </Cell>
             <Cell numeric>
-              {daoUsersComputed[daoUserAddress].balance}
+              {daoUsersComputed[daoUserAddress].balance.toLocaleString()}
             </Cell>
             <Cell numeric>
               {daoUsersComputed[daoUserAddress].power}
