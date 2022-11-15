@@ -9,6 +9,7 @@ import type {
   ResolutionVoter,
 } from "../types";
 import { mdiEye, mdiBookEditOutline, mdiVoteOutline } from "@mdi/js";
+import { BigNumber } from "ethers";
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -111,6 +112,10 @@ export const getResolutionState = (
   return RESOLUTION_STATES.PRE_DRAFT;
 };
 
+export const e18ToInt = (n: string) => {
+  return BigNumber.from(n).div(BigNumber.from(10).pow(18)).toNumber();
+};
+
 export const getResolutionVoters = (resolution: ResolutionEntity) => {
   return resolution.voters.map((voter) => {
     const delegatingVoter = resolution.voters.find(
@@ -122,7 +127,7 @@ export const getResolutionVoters = (resolution: ResolutionEntity) => {
     );
     return {
       ...voter,
-      votingPower: Math.round(voter.votingPower / 1000000000000000000),
+      votingPowerInt: e18ToInt(voter.votingPower),
       hasVoted: delegatingVoter.hasVoted,
       hasVotedYes: delegatingVoter.hasVotedYes,
       usedPoa:
