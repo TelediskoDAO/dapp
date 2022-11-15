@@ -13,19 +13,25 @@
     <div class="voting-breakdown__item">
       <div class="voting-breakdown__title">Total</div>
       <div class="voting-breakdown__value">
-        {maxVotingPower} / 100%
+        {maxVotingPower.toLocaleString()} / 100%
       </div>
     </div>
     <div class="voting-breakdown__item">
       <div class="voting-breakdown__title">In favour</div>
       <div class="voting-breakdown__value">
-        {totalVotedYes} / {((100 * totalVotedYes) / maxVotingPower).toFixed(2)}%
+        {totalVotedYes.toLocaleString()} / {(
+          (100 * totalVotedYes) /
+          maxVotingPower
+        ).toFixed(2)}%
       </div>
     </div>
     <div class="voting-breakdown__item">
       <div class="voting-breakdown__title">Against</div>
       <div class="voting-breakdown__value">
-        {totalVotedNo} / {((100 * totalVotedNo) / maxVotingPower).toFixed(2)}%
+        {totalVotedNo.toLocaleString()} / {(
+          (100 * totalVotedNo) /
+          maxVotingPower
+        ).toFixed(2)}%
       </div>
     </div>
   </div>
@@ -34,9 +40,10 @@
     <div class="voting-breakdown__item">
       <div class="voting-breakdown__title">Abstain</div>
       <div class="voting-breakdown__value">
-        {totalAbstained} / {((100 * totalAbstained) / maxVotingPower).toFixed(
-          2
-        )}%
+        {totalAbstained.toLocaleString()} / {(
+          (100 * totalAbstained) /
+          maxVotingPower
+        ).toFixed(2)}%
       </div>
     </div>
     <div class="voting-breakdown__item">
@@ -44,7 +51,8 @@
         {isNegative ? "Negative" : ""} Votes needed to approve
       </div>
       <div class="voting-breakdown__value">
-        {Math.round((maxVotingPower * Number(quorum)) / 100)} / {quorum}%
+        {Math.round((maxVotingPower * Number(quorum)) / 100).toLocaleString()} /
+        {quorum}%
       </div>
     </div>
     <div class="voting-breakdown__item">

@@ -1,6 +1,7 @@
 export type ResolutionVoter = {
   id: string;
-  votingPower: number;
+  votingPower: string;
+  votingPowerInt: number;
   address: string;
   hasVoted: boolean;
   hasVotedYes: boolean;
