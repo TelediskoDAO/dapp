@@ -75,17 +75,17 @@ jobs:
         run: NODE_ENV=staging pnpm build
 
       - name: Add .nojekyll file
-        run: touch build/.nojekyll
+        run: touch dist/.nojekyll
 
       - name: Add staging CNAME
         if: startsWith(github.ref, 'refs/tags/v') != true
         run: |
-          echo "dao-staging.teledisko.com" > build/CNAME
+          echo "dao-staging.teledisko.com" > dist/CNAME
 
       - name: Add production CNAME
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          echo "dao.teledisko.com" > build/CNAME
+          echo "dao.teledisko.com" > dist/CNAME
 
       - name: Deploy to staging
         if: startsWith(github.ref, 'refs/tags/v') != true
@@ -93,7 +93,7 @@ jobs:
         with:
           repository-name: TelediskoDAO/dao-staging.teledisko.com
           branch: main
-          folder: build
+          folder: dist
           ssh-key: ${{ secrets.STAGING_DEPLOY_KEY }}
 
       - name: Deploy to production
@@ -102,5 +102,5 @@ jobs:
         with:
           repository-name: TelediskoDAO/dao.teledisko.com
           branch: main
-          folder: build
+          folder: dist
           ssh-key: ${{ secrets.PRODUCTION_DEPLOY_KEY }}
