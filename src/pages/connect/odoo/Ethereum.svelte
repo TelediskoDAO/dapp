@@ -16,12 +16,8 @@
   <h2>Connect Ethereum Wallet</h2>
   {#if $signer}
     <p>Your wallet is connected.</p>
-  {:else if $hasAgent}
-    <button on:click={handleConnect}>Connect</button>
   {:else}
-    <p>
-      No wallet found. Please connect to the DAO using a wallet-enabled browser.
-    </p>
+    <button on:click={handleConnect}>Connect</button>
   {/if}
   {#if loginError}Login error: {loginError}{/if}
 </section>

@@ -11,7 +11,12 @@
   import { getTokensPageData } from "../../graphql/get-tokens-page-data";
   import { computeBalances } from "../../helpers/tokens";
   import { graphQLClient } from "../../net/graphQl";
-  import { connect, hasAgent, signer, signerAddress } from "../../stores/wallet";
+  import {
+    connect,
+    hasAgent,
+    signer,
+    signerAddress,
+  } from "../../stores/wallet";
   import { title } from "../../state/runtime";
   import type { ComputedBalances, DaoUser, Offer } from "../../types";
 
@@ -102,17 +107,11 @@
       onTransferred={() => (openTransfer = false)}
     />
   </Dialog>
-{:else if $hasAgent}
+{:else}
   <div class="centered">
     <Button variant="outlined" color="primary" on:click={handleConnect}
       >Connect wallet</Button
     >
-  </div>
-{:else}
-  <div class="centered">
-    <p>
-      No wallet found. Please connect to the DAO using a wallet-enabled browser.
-    </p>
   </div>
 {/if}
 {#if loginError}
