@@ -16,9 +16,9 @@ type Networks = {
 
 const nodeEnv = process.env.NODE_ENV?.toLowerCase() || "development";
 
-const buildPwaOptions = (swDev: string, extraOptions: any = {}) =>
+const buildPwaOptions = () =>
   ({
-    mode: "production",
+    mode: process.env.NODE_ENV ? "production" : "development",
     base: "/",
     manifest: {
       short_name: "teleDAO",
@@ -56,11 +56,10 @@ const buildPwaOptions = (swDev: string, extraOptions: any = {}) =>
       ],
     },
     devOptions: {
-      enabled: swDev === "true",
-      type: "classic",
+      enabled: !process.env.NODE_ENV,
+      type: "module",
       navigateFallback: "index.html",
     },
-    ...extraOptions,
   } as any);
 
 function getAddresses(chainId: string, dirs: string[]) {
@@ -102,7 +101,7 @@ export default async ({ mode }) => {
     smartContractPath.split(";")
   );
 
-  const pwaOptions = buildPwaOptions(env?.VITE_SW_DEV_ENABLED);
+  const pwaOptions = buildPwaOptions();
 
   return defineConfig({
     base: "./",

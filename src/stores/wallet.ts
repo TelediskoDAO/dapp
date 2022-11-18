@@ -2,11 +2,7 @@ import { ethers, Signer, BigNumber } from "ethers";
 import { derived, writable, type Readable, readable } from "svelte/store";
 import { ethereumEndpoint, ethereumChainId, ipfsEndpoint } from "./config";
 import { addEthereumChain } from "./networks";
-import {
-  connectWeb3Modal,
-  disconnectWeb3Modal,
-  initWeb3Modal,
-} from "./web3Modal";
+import { connectWeb3Modal, disconnectWeb3Modal } from "./web3Modal";
 
 export async function init() {
   await connectReadOnly();
