@@ -1,25 +1,20 @@
 <script lang="ts">
+  import Button, { Label } from "@smui/button";
   import { useRegisterSW } from "virtual:pwa-register/svelte";
+  import Alert from "./Alert.svelte";
 
-  const CHECK_EVERY_MS = 60000;
+  const CHECK_EVERY_MS = 10000;
 
-  // replaced dynamically
   const buildDate = "__BUILD_DATE__";
-  const reloadSW = true;
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
       console.log(`Service Worker at: ${swUrl}`);
-      // @ts-ignore:next-line
-      if (reloadSW === "true") {
-        r &&
-          setInterval(() => {
-            console.log("Checking for sw update");
-            r.update();
-          }, CHECK_EVERY_MS);
-      } else {
-        console.log(`SW Registered: ${r}`);
-      }
+      r &&
+        setInterval(() => {
+          console.log("Checking for sw update");
+          r.update();
+        }, CHECK_EVERY_MS);
     },
     onRegisterError(error) {
       console.log("SW registration error", error);
@@ -33,11 +28,16 @@
 
 {#if $needRefresh}
   <div class="pwa-toast" role="alert">
-    <div class="message">
-      <span> New content available, click on reload button to update. </span>
-    </div>
-    <button on:click={() => updateServiceWorker(true)}> Reload </button>
-    <button on:click={close}> Close </button>
+    <Alert
+      message="New content available, click on Reload to update"
+      type="info"
+    />
+    <Button variant="outlined" on:click={() => updateServiceWorker(true)}>
+      <Label>Reload</Label>
+    </Button>
+    <Button variant="outlined" on:click={close}>
+      <Label>Close</Label>
+    </Button>
   </div>
 {/if}
 
@@ -59,15 +59,5 @@
     text-align: left;
     box-shadow: 3px 4px 5px 0 #8885;
     background-color: white;
-  }
-  .pwa-toast .message {
-    margin-bottom: 8px;
-  }
-  .pwa-toast button {
-    border: 1px solid #8885;
-    outline: none;
-    margin-right: 5px;
-    border-radius: 2px;
-    padding: 3px 10px;
   }
 </style>

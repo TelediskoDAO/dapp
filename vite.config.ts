@@ -4,6 +4,7 @@ import replace from "@rollup/plugin-replace";
 import { createHtmlPlugin } from "vite-plugin-html";
 import { readFileSync } from "fs";
 import { VitePWA } from "vite-plugin-pwa";
+import * as packageJson from "./package.json";
 
 type ContractsAddresses = {
   [key: string]: string;
@@ -13,9 +14,11 @@ type Networks = {
   [key: string]: ContractsAddresses;
 };
 
+const nodeEnv = process.env.NODE_ENV?.toLowerCase() || "development";
+
 const buildPwaOptions = (swDev: string, extraOptions: any = {}) =>
   ({
-    mode: "development",
+    mode: "production",
     base: "/",
     manifest: {
       short_name: "teleDAO",
@@ -54,7 +57,7 @@ const buildPwaOptions = (swDev: string, extraOptions: any = {}) =>
     },
     devOptions: {
       enabled: swDev === "true",
-      type: "module",
+      type: "classic",
       navigateFallback: "index.html",
     },
     ...extraOptions,
@@ -72,6 +75,12 @@ function getAddresses(chainId: string, dirs: string[]) {
   }
   return networks[chainId];
 }
+
+// https://stackoverflow.com/a/35778030/597097
+const gitRevision = require("child_process")
+  .execSync("git rev-parse HEAD")
+  .toString()
+  .trim();
 
 // https://vitejs.dev/config/
 export default async ({ mode }) => {
@@ -93,24 +102,19 @@ export default async ({ mode }) => {
     smartContractPath.split(";")
   );
 
-  const pwaOptions = buildPwaOptions(
-    env?.VITE_SW_DEV_ENABLED,
-    env?.VITE_SW_ENABLED === "true"
-      ? {
-          srcDir: "src",
-          filename: "prompt-sw.ts",
-          strategies: "injectManifest",
-        }
-      : {}
-  );
+  const pwaOptions = buildPwaOptions(env?.VITE_SW_DEV_ENABLED);
 
   return defineConfig({
     base: "./",
     plugins: [
       svelte(),
+      VitePWA(pwaOptions),
       replace({
         __VITE_CONTRACTS_ADDRESSES__: JSON.stringify(contractsAddresses),
         __BUILD_DATE__: new Date().toISOString(),
+        __GIT_REVISION__: gitRevision,
+        __VERSION__: packageJson.version,
+        __ENV__: nodeEnv,
       }),
       createHtmlPlugin({
         inject: {
@@ -119,7 +123,6 @@ export default async ({ mode }) => {
           },
         },
       }),
-      VitePWA(pwaOptions),
     ],
   });
 };
