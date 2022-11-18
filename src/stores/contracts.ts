@@ -8,11 +8,10 @@ import {
   type TelediskoToken,
   type ResolutionManager,
 } from "../../contracts/typechain";
-import { ResolutionManager__factory } from "../../contracts/typechain/factories/contracts/ResolutionManager/ResolutionManager__factory";
-import { TelediskoToken__factory } from "../../contracts/typechain/factories/contracts/TelediskoToken/TelediskoToken__factory";
+import { ResolutionManager__factory } from "../../contracts/typechain";
+import { TelediskoToken__factory } from "../../contracts/typechain";
 import { user } from "../state/odoo";
 import { signer } from "./wallet";
-
 
 export const tokenContract: Readable<TelediskoToken> = derived(
   signer,

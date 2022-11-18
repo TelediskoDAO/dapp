@@ -10,7 +10,7 @@
     <p>
       What to do now? Would be nice if you can
       <a
-        href="https://gitlab.com/teledisko/dao/-/issues/new"
+        href="https://github.com/TelediskoDAO/dapp/issues/new"
         target="_blank"
         rel="noreferrer">create an issue</a
       >

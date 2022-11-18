@@ -1,6 +1,6 @@
-# Dapp template
+# Welcome to the teledisko DAO dapp
 
-This template should help get you started developing a dapp with Svelte and TypeScript in Vite.
+This is the code for the teledisko DAO dapp running on https://dao.teledisko.com/.
 
 ## Getting started
 

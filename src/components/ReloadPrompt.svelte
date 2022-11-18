@@ -29,11 +29,11 @@
 {#if $needRefresh}
   <div class="pwa-toast" role="alert">
     <Alert
-      message="New content available, click on Reload to update"
+      message="A new version of the dapp is available. Would you like to update it now?"
       type="info"
     />
     <Button variant="outlined" on:click={() => updateServiceWorker(true)}>
-      <Label>Reload</Label>
+      <Label>Update</Label>
     </Button>
     <Button variant="outlined" on:click={close}>
       <Label>Close</Label>
