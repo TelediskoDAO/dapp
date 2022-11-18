@@ -30,6 +30,7 @@
   import "../node_modules/izitoast/dist/css/iziToast.min.css";
 
   import PageResolutions from "./pages/resolutions/Index.svelte";
+  import ReloadPrompt from "./components/ReloadPrompt.svelte";
 
   const initializing = init();
 
@@ -98,6 +99,8 @@
 {:catch}
   <p>There was an error loading the page.</p>
 {/await}
+
+<ReloadPrompt />
 
 <style>
   .loading {
