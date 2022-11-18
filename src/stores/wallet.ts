@@ -9,12 +9,7 @@ import {
 } from "./web3Modal";
 
 export async function init() {
-  const w3Modal = await initWeb3Modal();
-  if (w3Modal.cachedProvider) {
-    await connect();
-  } else {
-    await connectReadOnly();
-  }
+  await connectReadOnly();
 }
 
 export async function connect() {
