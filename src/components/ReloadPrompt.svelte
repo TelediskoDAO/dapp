@@ -24,6 +24,11 @@
   function close() {
     needRefresh.set(false);
   }
+
+  async function onUpdate() {
+    await updateServiceWorker(true);
+    window.location.reload();
+  }
 </script>
 
 {#if $needRefresh}
@@ -32,7 +37,7 @@
       message="A new version of the dapp is available. Would you like to update it now?"
       type="info"
     />
-    <Button variant="outlined" on:click={() => updateServiceWorker(true)}>
+    <Button variant="outlined" on:click={onUpdate}>
       <Label>Update</Label>
     </Button>
     <Button variant="outlined" on:click={close}>
