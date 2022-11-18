@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { Icon } from "@smui/common";
-  import { Svg } from "@smui/common/elements";
+  import { Icon, Svg } from "@smui/common";
   import {
     mdiAlertOutline,
     mdiInformationOutline,

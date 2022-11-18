@@ -1,4 +1,4 @@
-import { derived, writable, Readable } from "svelte/store";
+import { derived, writable, type Readable } from "svelte/store";
 import { derivable } from "../../state/utils";
 import type { OdooUser, UsersWithEthereumAddress } from "../../types";
 

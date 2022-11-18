@@ -1,10 +1,9 @@
-import { clock } from "src/state/clock";
 import { derived } from "svelte/store";
-import { derivable } from "src/state/utils";
-import { group, map } from "src/f";
 import { agent, refresh } from "../agent";
 import { uid } from "../user";
 import { parseTask, parseDuration, parseProject } from "./parsers";
+import { derivable, group, map } from "../../utils";
+import { clock } from "../../clock";
 
 // Load data from Odoo
 export const upstream = derivable(

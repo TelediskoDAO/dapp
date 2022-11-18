@@ -2,7 +2,8 @@
   import Button from "@smui/button";
   import CircularProgress from "@smui/circular-progress/src/CircularProgress.svelte";
   import { handleVote } from "../handlers/resolutions/vote";
-  import { resolutionContract, signer, signerAddress } from "../state/eth";
+  import { signer, signerAddress } from "../stores/wallet";
+  import { resolutionContract } from "../stores/contracts";
   import { votingState } from "../state/resolutions/voting";
   import type { ResolutionVoter } from "../types";
   import Alert from "./Alert.svelte";

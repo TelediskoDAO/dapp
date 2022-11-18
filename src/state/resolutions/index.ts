@@ -1,5 +1,4 @@
-import { writable, derived, Readable } from "svelte/store";
-import { signer } from "../eth";
+import { writable, derived, type Readable } from "svelte/store";
 import type {
   DaoManagerEntity,
   ResolutionsAcl,
@@ -7,6 +6,7 @@ import type {
 } from "../../types";
 import { graphQLClient } from "../../net/graphQl";
 import { getDaoManagerQuery } from "../../graphql/get-dao-manager.query";
+import { signer } from "../../stores/wallet";
 
 export const currentTimestamp = writable(Date.now());
 

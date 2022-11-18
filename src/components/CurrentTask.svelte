@@ -1,12 +1,9 @@
 <script>
   import {
-    tasks,
     currentTask,
-    currentDuration,
-    currentHours,
     currentHoursTotal,
-  } from "src/state/odoo";
-  import { toPrettyDuration } from "src/utils";
+  } from "../state/odoo";
+  import { toPrettyDuration } from "../utils";
 </script>
 
 {#if $currentTask}

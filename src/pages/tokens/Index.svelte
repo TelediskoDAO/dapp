@@ -11,7 +11,7 @@
   import { getTokensPageData } from "../../graphql/get-tokens-page-data";
   import { computeBalances } from "../../helpers/tokens";
   import { graphQLClient } from "../../net/graphQl";
-  import { connect, hasAgent, signer, signerAddress } from "../../state/eth";
+  import { connect, hasAgent, signer, signerAddress } from "../../stores/wallet";
   import { title } from "../../state/runtime";
   import type { ComputedBalances, DaoUser, Offer } from "../../types";
 

@@ -1,5 +1,5 @@
 <script>
-  import { updateAvailable } from "src/state/runtime";
+  import { updateAvailable } from "../state/runtime";
 </script>
 
 {#if $updateAvailable}

@@ -1,6 +1,5 @@
 <script>
-  import { user } from "src/state/odoo";
-  import { platform } from "src/state/runtime";
+  import { platform } from "../state/runtime";
 </script>
 
 <section>

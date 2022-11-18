@@ -1,5 +1,5 @@
 <script>
-  import { toPrettyDuration, toPrettyCurrency } from "src/utils";
+  import { toPrettyDuration, toPrettyCurrency } from "../../utils";
   export let linesByProject;
 </script>
 

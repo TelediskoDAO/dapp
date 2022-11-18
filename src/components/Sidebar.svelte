@@ -2,14 +2,13 @@
   import active from "svelte-spa-router/active";
   import CurrentTask from "./CurrentTask.svelte";
   import { user, refresh } from "../state/odoo";
-  import CONFIG from "../config";
 
   $: refreshTime = new Date($refresh).toLocaleTimeString();
 
-  const buildDate = new Date(CONFIG.date)
-    .toISOString()
-    .substring(0, 19)
-    .replace("T", " ");
+  const buildDate = "__BUILD_DATE__";
+  const appEnv = "__ENV__";
+  const version = "__VERSION__";
+  const gitRevision = "__GIT_REVISION__";
 
   function closeSidebar() {
     const sidebarToggle = document.getElementById(
@@ -105,21 +104,21 @@
     </section>
 
     <section class="build-info">
-      {#if CONFIG.env === "production"}
-        <small>Version: {CONFIG.version}</small>
+      {#if appEnv === "production"}
+        <small>Version: {version}</small>
       {:else}
-        <small>Version: {CONFIG.env}</small>
+        <small>Version: {appEnv}</small>
       {/if}
-      {#if CONFIG.env === "staging"}
+      {#if appEnv === "staging"}
         <small
           >Commit: <a
-            href="https://github.com/TelediskoDAO/dapp/commit/{CONFIG.gitRevision}"
+            href="https://github.com/TelediskoDAO/dapp/commit/{gitRevision}"
           >
-            {CONFIG.gitRevision.substring(0, 8)}
+            {gitRevision.substring(0, 8)}
           </a></small
         >
       {/if}
-      <small>Build date: {buildDate}</small>
+      <small>Build date: {buildDate.substring(0, 19).replace("T", " ")}</small>
     </section>
   </nav>
   <label class="overlay" for="sidebar--toggle" />

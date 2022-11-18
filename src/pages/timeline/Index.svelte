@@ -1,7 +1,7 @@
 <script>
   import Activity from "./Activity.svelte";
-  import { activityPerDay } from "src/state/odoo/project";
-  import { title } from "src/state/runtime";
+  import { activityPerDay } from "../../state/odoo/project";
+  import { title } from "../../state/runtime";
   title.set("Timeline");
 </script>
 

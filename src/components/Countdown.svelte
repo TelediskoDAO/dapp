@@ -8,11 +8,11 @@
   export let prefixLabel: string;
   export let inline = true;
   export let disableCountdown = false;
-  let toDisplay = null;
+  let toDisplay: null | string = null;
   let afterPrefix = "";
 
   onMount(() => {
-    let timeout = null;
+    let timeout: null | any = null;
 
     const setToDisplay = () => {
       const now = Date.now();

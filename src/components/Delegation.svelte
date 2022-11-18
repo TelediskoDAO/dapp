@@ -11,7 +11,8 @@
   } from "../state/delegation";
   import DaoUser from "./DaoUser.svelte";
   import { handleDelegate } from "../handlers/voting/delegate";
-  import { signer, signerAddress, votingContract } from "../state/eth";
+  import { signer, signerAddress } from "../stores/wallet";
+  import { votingContract } from "../stores/contracts";
   import Alert from "./Alert.svelte";
   import { usersWithEthereumAddress } from "../state/odoo";
   import Tooltip, { Wrapper } from "@smui/tooltip";

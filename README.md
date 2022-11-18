@@ -1,13 +1,12 @@
-# teledisko dapp
+# Welcome to the teledisko DAO dapp
 
-## How to develop
+This is the code for the teledisko DAO dapp running on https://dao.teledisko.com/.
 
-Prerequisites:
+## Getting started
 
-- Install [pnpm](https://pnpm.io/).
+Rename `.env-template` to `.env` and add the missing values.
 
 ```
-pnpm install
-./config-contracts.sh
-pnpm start
+pnpm i
+pnpm run dev
 ```

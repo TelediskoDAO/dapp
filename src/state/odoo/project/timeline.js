@@ -1,7 +1,7 @@
 import { derived } from "svelte/store";
 import { agent } from "../agent";
 import { uid } from "../user";
-import { group, map } from "src/f";
+import { group, map } from "../../utils"
 import { parseTask, parseDuration } from "./parsers";
 
 function midnight(d) {

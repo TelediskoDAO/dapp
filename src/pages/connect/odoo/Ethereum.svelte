@@ -1,5 +1,5 @@
 <script>
-  import { connect, signer, hasAgent } from "src/state/eth";
+  import { connect, signer, hasAgent } from "../../../stores/wallet";
 
   let loginError;
 

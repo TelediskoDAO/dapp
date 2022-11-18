@@ -2,7 +2,7 @@
   import { connectToOdoo, user, username, password } from "../../../state/odoo";
   import { push } from "svelte-spa-router";
 
-  let loginError;
+  let loginError = false;
 
   async function handleConnect(e) {
     const form = new FormData(e.target);
@@ -57,7 +57,7 @@
       Your credentials are stored in your browser and are
       <strong>only</strong>
       used to load and save data in the
-      <a href="https://odoo.teledisko.com/" target="_blank"
+      <a href="https://odoo.teledisko.com/" target="_blank" rel="noreferrer"
         >odoo.teledisko.com</a
       >
       server. There is

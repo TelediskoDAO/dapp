@@ -1,6 +1,6 @@
 <script>
   import Report from "./Report.svelte";
-  import { toPrettyDuration, toPrettyCurrency } from "src/utils";
+  import { toPrettyDuration, toPrettyCurrency } from "../../utils";
   import {
     linesByProject,
     totalHours,
@@ -8,8 +8,8 @@
     prospectByProject,
     prospectTotalHours,
     prospectTotalValue,
-  } from "src/state/odoo/timesheet";
-  import { title } from "src/state/runtime";
+  } from "../../state/odoo/timesheet";
+  import { title } from "../../state/runtime";
   title.set("Reports");
 </script>
 

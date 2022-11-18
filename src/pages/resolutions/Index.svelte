@@ -2,9 +2,12 @@
   import Button, { Label } from "@smui/button";
   import DataTable, { Body, Cell, Row } from "@smui/data-table";
   import IconButton, { Icon } from "@smui/icon-button";
-  import { Svg } from "@smui/common/elements";
+  import { Svg } from "@smui/common";
   import Tooltip, { Wrapper } from "@smui/tooltip";
   import { onMount } from "svelte";
+  import FormField from "@smui/form-field";
+  import Checkbox from "@smui/checkbox";
+  import Select, { Option } from "@smui/select";
 
   import { title } from "../../state/runtime";
   import { graphQLClient } from "../../net/graphQl";
@@ -18,14 +21,11 @@
   import { acl, currentTimestamp } from "../../state/resolutions";
   import CurrentTimestamp from "../../components/CurrentTimestamp.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
-  import Select, { Option } from "@smui/select";
   import Countdown from "../../components/Countdown.svelte";
   import Tag from "../../components/Tag.svelte";
   import Alert from "../../components/Alert.svelte";
   import DaoUser from "../../components/DaoUser.svelte";
   import Delegation from "../../components/Delegation.svelte";
-  import FormField from "@smui/form-field";
-  import Checkbox from "@smui/checkbox";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;

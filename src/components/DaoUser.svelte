@@ -1,16 +1,15 @@
 <script lang="ts">
   import Tooltip, { Wrapper } from "@smui/tooltip";
-  import { Icon } from "@smui/common";
-  import { Svg } from "@smui/common/elements";
+  import { Icon, Svg } from "@smui/common";
   import { mdiInformationOutline } from "@mdi/js";
 
-  import { signerAddress } from "../state/eth";
   import { agent, usersWithEthereumAddress } from "../state/odoo";
+  import { signerAddress } from "../stores/wallet";
   import type { OdooUserTransformed } from "../types";
   import Tag from "./Tag.svelte";
 
   export let ethereumAddress: string;
-  export let title: string = null;
+  export let title: string | null = null;
   export let inline = false;
   export let hasBg = false;
   export let hideInfo = false;
@@ -19,8 +18,7 @@
   export let shortAddressWhileLoading = false;
   export let shortAddress = false;
 
-  let userDetails: OdooUserTransformed = null;
-
+  let userDetails: OdooUserTransformed | null = null;
   $: {
     if ($usersWithEthereumAddress) {
       userDetails =

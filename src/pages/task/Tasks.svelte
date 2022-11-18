@@ -2,9 +2,9 @@
   import { parse } from "qs";
   import { afterUpdate } from "svelte";
   import { replace, querystring } from "svelte-spa-router";
-  import { tasks, currentTask } from "src/state/odoo";
+  import { tasks, currentTask } from "../../state/odoo";
   import Task from "./Task.svelte";
-  import Foldable from "src/components/Foldable.svelte";
+  import Foldable from "../../components/Foldable.svelte";
 
   export let list;
   export let openDetails = false;

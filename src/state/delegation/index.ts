@@ -1,8 +1,8 @@
-import { Readable, derived, writable } from "svelte/store";
+import { type Readable, derived, writable } from "svelte/store";
 import type { DelegationStatus, DelegationUser } from "../../types";
-import { signer } from "../eth";
 import { graphQLClient } from "../../net/graphQl";
 import { getDelegationUsers } from "../../graphql/get-delegation-users.query";
+import { signer } from "../../stores/wallet";
 
 export const formState = writable({
   loading: false,

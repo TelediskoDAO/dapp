@@ -1,7 +1,7 @@
 import { GraphQLClient } from "graphql-request";
-import CONFIG from "../config";
+import { graphProtocolGqlEndpoint } from "../stores/config";
 
 export const graphQLClient = new GraphQLClient(
-  CONFIG.graphProtocolGQLEndpoint,
+  graphProtocolGqlEndpoint,
   { headers: {} }
 );

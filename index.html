@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%- HTML_TITLE %></title>
+
+    <meta property="og:url" content="<%- HTML_BASE_URL %>" />
+    <meta property="og:title" content="<%- HTML_TITLE %>" />
+    <meta property="og:description" content="<%- HTML_DESCRIPTION %>" />
+    <meta property="og:image" content="<%- HTML_IMAGE %>" />
+    <meta property="og:image:alt" content="<%- HTML_IMAGE_ALT %>" />
+
+    <link href="/main.css" rel="stylesheet" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/svelte-material-ui@7.0.0-beta.0/bare.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/easymde/dist/easymde.min.css"
+    />
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+    <style>
+      .mdc-dialog {
+        z-index: 99;
+      }
+      .mdc-tooltip {
+        z-index: 100;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

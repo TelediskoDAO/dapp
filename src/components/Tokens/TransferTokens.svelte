@@ -6,7 +6,8 @@
   import CircularProgress from "@smui/circular-progress";
 
   import Alert from "../Alert.svelte";
-  import { signer, tokenContract } from "../../state/eth";
+  import { tokenContract } from "../../stores/contracts";
+  import { signer } from "../../stores/wallet";
   import { transferState } from "../../state/tokens/transfer";
   import Textfield from "@smui/textfield";
   import { handleTransfer } from "../../handlers/tokens/transfer";

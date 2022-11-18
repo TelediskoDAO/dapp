@@ -1,4 +1,4 @@
-import CONFIG from "../config";
+import { ipfsEndpoint } from "../stores/config";
 
 declare global {
   interface Window {
@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-const ipfsClient = window.IpfsHttpClient.create(CONFIG.ipfsEndpoint)
+const ipfsClient = window.IpfsHttpClient.create(ipfsEndpoint)
 
 export async function add(data: any) {
   try {

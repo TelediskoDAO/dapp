@@ -7,7 +7,8 @@
 
   import Alert from "../Alert.svelte";
   import { handleOffer } from "../../handlers/tokens/offer";
-  import { signer, tokenContract } from "../../state/eth";
+  import { tokenContract } from "../../stores/contracts";
+  import { signer } from "../../stores/wallet";
   import { offerState } from "../../state/tokens/offer";
   import Textfield from "@smui/textfield";
 

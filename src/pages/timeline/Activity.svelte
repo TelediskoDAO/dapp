@@ -1,6 +1,5 @@
 <script>
-  import { slide } from "svelte/transition";
-  import { toPrettyDuration } from "src/utils";
+  import { toPrettyDuration } from "../../utils";
 
   export let item;
   let showDetails = false;

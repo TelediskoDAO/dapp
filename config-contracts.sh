@@ -8,7 +8,7 @@ git submodule update --init ${CONTRACTS_DIR}
 DAPP_DIR=$(pwd)
 cd ${CONTRACTS_DIR}
 pnpm i
-pnpx hardhat compile
+npx hardhat compile
 
 echo "Copy types"
 cp -r typechain/* ../src/contracts

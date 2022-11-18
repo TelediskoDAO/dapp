@@ -6,8 +6,7 @@
   import { format } from "date-fns";
   import showdown from "showdown";
   import Tooltip, { Wrapper } from "@smui/tooltip";
-  import { Icon } from "@smui/common";
-  import { Svg } from "@smui/common/elements";
+  import { Icon, Svg } from "@smui/common";
   import { mdiInformationOutline } from "@mdi/js";
 
   import {
@@ -22,7 +21,7 @@
   } from "../types";
   import { acl } from "../state/resolutions";
   import Countdown from "./Countdown.svelte";
-  import { signerAddress } from "../state/eth";
+  import { signerAddress } from "../stores/wallet";
   import Alert from "./Alert.svelte";
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
@@ -296,7 +295,7 @@
                     </span>
                     {#if resolutionVoter.delegating}
                       <Tooltip yPos="above">
-                        Delegating <DaoUser
+                        Delegated to <DaoUser
                           ethereumAddress={resolutionVoter.delegating.address}
                           inline
                           shortAddressWhileLoading

@@ -2,7 +2,7 @@ import { push } from "svelte-spa-router";
 
 import { offerState, resetOfferState } from "../../state/tokens/offer";
 import type { Signer } from "ethers";
-import type { TelediskoToken } from "../../../contracts/typechain/contracts/TelediskoToken/TelediskoToken";
+import type { TelediskoToken } from "../../../contracts/typechain";
 import { parseEther } from "ethers/lib/utils";
 import notifications, {
   notifyNetworkError,

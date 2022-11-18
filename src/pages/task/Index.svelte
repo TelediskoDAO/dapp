@@ -1,8 +1,8 @@
 <script>
-  import { tasksToFix, projectList } from "src/state/odoo";
+  import { tasksToFix, projectList } from "../../state/odoo";
   import Task from "./Task.svelte";
   import Tasks from "./Tasks.svelte";
-  import { title } from "src/state/runtime";
+  import { title } from "../../state/runtime";
   title.set("Time Tracking");
 </script>
 

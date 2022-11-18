@@ -1,7 +1,6 @@
 <script lang="ts">
   import Tooltip, { Wrapper } from "@smui/tooltip";
-  import { Icon } from "@smui/common";
-  import { Svg } from "@smui/common/elements";
+  import { Icon, Svg } from "@smui/common";
   import { mdiInformationOutline } from "@mdi/js";
   import Body from "@smui/data-table/src/Body.svelte";
   import Cell from "@smui/data-table/src/Cell.svelte";

@@ -4,7 +4,8 @@
 
   import { title } from "../../state/runtime";
   import ResolutionForm from "../../components/ResolutionForm.svelte";
-  import { resolutionContract, signer } from "../../state/eth";
+  import { resolutionContract } from "../../stores/contracts";
+  import { signer } from "../../stores/wallet";
   import { currentResolution, resetForm } from "../../state/resolutions/form";
   import { handleCreate } from "../../handlers/resolutions/create";
   import { acl } from "../../state/resolutions";

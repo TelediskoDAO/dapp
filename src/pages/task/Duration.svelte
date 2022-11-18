@@ -8,14 +8,14 @@
     currentTask,
     currentDuration,
     stopDuration,
-  } from "src/state/odoo";
-  import { clock } from "src/state/clock";
+  } from "../../state/odoo";
+  import { clock } from "../../state/clock";
   import {
     toPrettyDuration,
     toPrettyRange,
     splitDate,
     joinDate,
-  } from "src/utils";
+  } from "../../utils";
 
   export let editable = true;
   export let handleDone = null;

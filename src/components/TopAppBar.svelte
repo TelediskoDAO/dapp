@@ -1,5 +1,5 @@
 <script>
-  import { title } from "src/state/runtime";
+  import { title } from "../state/runtime";
 </script>
 
 <header>

@@ -1,7 +1,7 @@
 import { derived } from "svelte/store";
-import { persistable, derivable } from "src/state/utils";
-import { clock } from "src/state/clock";
-import { session } from "src/net/odoo";
+import { persistable, derivable } from "../utils";
+import { clock } from "../clock";
+import { session } from "../../net/odoo";
 
 const URL = "https://odoo.teledisko.com/jsonrpc";
 const DB = "teledisko";

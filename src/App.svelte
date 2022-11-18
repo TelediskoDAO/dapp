@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { logger } from "./state/runtime";
+  import { init, networkError } from "./stores/wallet";
+
   import { user, userError, username } from "./state/odoo";
   import { title } from "./state/runtime";
   import { slide } from "svelte/transition";
@@ -7,11 +8,8 @@
   import TopAppBar from "./components/TopAppBar.svelte";
   import UpdateAvailable from "./components/UpdateAvailable.svelte";
   import Sidebar from "./components/Sidebar.svelte";
-  import MismatchError from "./components/MismatchError.svelte";
   import RuntimeErrors from "./components/RuntimeErrors.svelte";
-
-  import Router, { location, replace, push } from "svelte-spa-router";
-  import "../node_modules/izitoast/dist/css/iziToast.min.css";
+  import Alert from "./components/Alert.svelte";
 
   // Pages
   import PageIndex from "./pages/Index.svelte";
@@ -20,22 +18,21 @@
   import PageTimeline from "./pages/timeline/Index.svelte";
   import PageReport from "./pages/report/Index.svelte";
   import PageTokens from "./pages/tokens/Index.svelte";
-  import PageResolutions from "./pages/resolutions/Index.svelte";
   import PageResolutionsNew from "./pages/resolutions/New.svelte";
   import PageResolutionsView from "./pages/resolutions/View.svelte";
   import PageResolutionsEdit from "./pages/resolutions/Edit.svelte";
   import PageShareholders from "./pages/shareholders/Index.svelte";
+  import NotFound from "./pages/NotFound.svelte";
 
-  import NotFound from "./NotFound.svelte";
   import notifications from "./helpers/notifications";
 
-  const log = logger("App");
+  import Router, { location, replace, push } from "svelte-spa-router";
+  import "../node_modules/izitoast/dist/css/iziToast.min.css";
 
-  $: {
-    if ($user && $location === "/") {
-      replace("/tasks");
-    }
-  }
+  import PageResolutions from "./pages/resolutions/Index.svelte";
+  import ReloadPrompt from "./components/ReloadPrompt.svelte";
+
+  const initializing = init();
 
   const routes = {
     "/": PageIndex,
@@ -54,7 +51,11 @@
     "*": NotFound,
   };
 
-  log("Boot");
+  $: {
+    if ($user && $location === "/") {
+      replace("/tasks");
+    }
+  }
 
   $: {
     console.log("error is", $userError);
@@ -69,24 +70,37 @@
   <title>{$title}</title>
 </svelte:head>
 
-{#if $username && !$user && !$userError}
-  <div out:slide class="loading">
-    <p>loading...</p>
-  </div>
-{:else if /\/print$/.test($location)}
-  <Router {routes} restoreScrollState />
-{:else}
-  <Sidebar />
-
-  <main>
-    <MismatchError />
-    <TopAppBar />
+{#await initializing}
+  <p>Loading please wait…</p>
+{:then}
+  {#if $username && !$user && !$userError}
+    <div out:slide class="loading">
+      <p>loading...</p>
+    </div>
+  {:else if /\/print$/.test($location)}
     <Router {routes} restoreScrollState />
-    <UpdateAvailable />
-  </main>
+  {:else}
+    <Sidebar />
 
-  <RuntimeErrors />
-{/if}
+    <main>
+      <TopAppBar />
+      {#if $networkError}
+        <Alert
+          type="warning"
+          message="Please check your wallet, there's a network mismatch"
+        />
+      {/if}
+      <Router {routes} restoreScrollState />
+      <UpdateAvailable />
+    </main>
+
+    <RuntimeErrors />
+  {/if}
+{:catch}
+  <p>There was an error loading the page.</p>
+{/await}
+
+<ReloadPrompt />
 
 <style>
   .loading {
