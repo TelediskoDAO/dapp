@@ -71,7 +71,7 @@
 </svelte:head>
 
 {#await initializing}
-  <p>Loading please wait…</p>
+  <p>Loading, please wait…</p>
 {:then}
   {#if $username && !$user && !$userError}
     <div out:slide class="loading">
