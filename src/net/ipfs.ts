@@ -6,13 +6,22 @@ declare global {
   }
 }
 
-const ipfsClient = window.IpfsHttpClient.create(ipfsEndpoint)
+let ipfsClient: any = null;
+
+const getIpfsClient = () => {
+  if (!ipfsClient) {
+    ipfsClient = window.IpfsHttpClient.create(ipfsEndpoint);
+  }
+
+  return ipfsClient;
+};
 
 export async function add(data: any) {
+  const ipfsClientInstance = getIpfsClient();
   try {
-    const response = await ipfsClient.add(JSON.stringify(data));
-    const cid = response.cid.toString()
-    await ipfsClient.pin.add(cid);
+    const response = await ipfsClientInstance.add(JSON.stringify(data));
+    const cid = response.cid.toString();
+    await ipfsClientInstance.pin.add(cid);
     console.log("Content uploaded and pinned to IPFS with cid", cid);
     return cid;
   } catch (err) {
@@ -22,10 +31,11 @@ export async function add(data: any) {
 }
 
 export async function get(cid: string) {
+  const ipfsClientInstance = getIpfsClient();
   let data = new Uint8Array();
   let dataRead = 0;
   const chunks = [];
-  for await (const chunk of ipfsClient.cat(cid)) {
+  for await (const chunk of ipfsClientInstance.cat(cid)) {
     chunks.push(chunk);
     const tmp = new Uint8Array(data.byteLength + chunk.byteLength);
     tmp.set(chunk, data.byteLength);
