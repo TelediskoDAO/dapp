@@ -6,6 +6,7 @@ import { connectWeb3Modal, disconnectWeb3Modal } from "./web3Modal";
 
 export async function init() {
   await connectReadOnly();
+  console.log("init called");
 }
 
 export async function connect() {
