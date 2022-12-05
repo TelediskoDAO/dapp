@@ -5,8 +5,8 @@ import { addEthereumChain } from "./networks";
 import { connectWeb3Modal, disconnectWeb3Modal } from "./web3Modal";
 
 export async function init() {
+  console.log("calling init");
   await connectReadOnly();
-  console.log("init called");
 }
 
 export async function connect() {

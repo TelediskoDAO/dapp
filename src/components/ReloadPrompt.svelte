@@ -6,6 +6,7 @@
   const CHECK_EVERY_MS = 10000;
 
   const buildDate = "__BUILD_DATE__";
+  console.log("buildDate: ", buildDate);
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
