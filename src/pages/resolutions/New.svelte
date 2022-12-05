@@ -23,7 +23,7 @@
     });
   }
 
-  onMount(resetForm);
+  onMount(resetForm); // to check here whether is a pre-filled template or not
 
   $: {
     if ($acl.loaded && !$acl.canCreate) {

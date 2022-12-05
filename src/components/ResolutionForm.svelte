@@ -5,6 +5,7 @@
   import CircularProgress from "@smui/circular-progress";
   import Textfield from "@smui/textfield";
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
+  import { querystring } from "svelte-spa-router";
 
   import {
     currentResolution,
@@ -34,6 +35,15 @@
   export let handleExport = noop;
 
   let disabled = false;
+  const monthlyRewardsResolution =
+    new URLSearchParams($querystring).get("template") === "monthlyRewards";
+  // if (monthlyRewardsResolution) {
+  currentResolution.set({
+    title: "Ciccio",
+    content: "pasticcio",
+    typeId: "routineVeto",
+  });
+  // }
   let resolutionTypes: ResolutionTypeEntity[] = [];
 
   onMount(async () => {
@@ -70,6 +80,8 @@
       minHeight: "350px",
       maxHeight: "350px",
     });
+
+    easyMDE.codemirror.setOption("readOnly", true);
 
     easyMDE.value($currentResolution.content || "");
     easyMDE.codemirror.on("change", () => {
@@ -129,6 +141,7 @@
               class="field"
               bind:value={$currentResolution.title}
               label="Resolution Title"
+              disabled
             />
           </div>
         </Cell>
@@ -156,6 +169,7 @@
                   <Radio
                     bind:group={$currentResolution.typeId}
                     value={resolutionType.id}
+                    disabled
                   />
                   <div class="resolution-type__labels">
                     <h3>
