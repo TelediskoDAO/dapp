@@ -34,6 +34,7 @@ export async function connect() {
               console.log("Network added");
             } catch (e) {
               console.error(e);
+              throw e;
             }
           } else {
             networkError.set({

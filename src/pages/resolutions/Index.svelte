@@ -27,6 +27,8 @@
   import DaoUser from "../../components/DaoUser.svelte";
   import Delegation from "../../components/Delegation.svelte";
 
+  import { connect, signer } from "../../stores/wallet";
+
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
   let empty = false;
@@ -34,6 +36,7 @@
   let includeRejected = false;
   let stateFilter: ResolutionState | "all" = "all";
   let possibleFilters: Record<string, number> = { all: 0 };
+  let loginError: string | undefined;
 
   async function fetchAndSetResolutions() {
     const {
@@ -91,12 +94,32 @@
     target?.closest(".mdc-data-table__row")?.querySelector("a")?.click();
   }
 
+  async function handleConnect() {
+    try {
+      await connect();
+    } catch (err: any) {
+      loginError = err.toString();
+    }
+  }
+
   title.set("Resolutions");
 </script>
 
 <section>
   <CurrentTimestamp intervalMs={3000} />
+  {#if loginError}
+    <div class="centered alert">
+      <Alert type="error">
+        <p>Error: {loginError}</p>
+      </Alert>
+    </div>
+  {/if}
   <div class="header">
+    {#if !$signer}
+      <Button variant="outlined" color="primary" on:click={handleConnect}>
+        <Label>Connect Wallet</Label>
+      </Button>
+    {/if}
     {#if !empty && ready && $acl?.canCreate}
       <Button variant="outlined" href="#/resolutions/new">
         <Label>Create resolution</Label>
@@ -248,6 +271,10 @@
     display: flex;
     align-items: center;
     padding-bottom: 1rem;
+  }
+
+  .alert {
+    margin-bottom: 10px;
   }
 
   .push-right {
