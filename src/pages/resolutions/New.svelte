@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { replace } from "svelte-spa-router";
+  import { replace, querystring } from "svelte-spa-router";
   import { onMount } from "svelte";
 
   import { title } from "../../state/runtime";
@@ -23,7 +23,23 @@
     });
   }
 
-  onMount(resetForm); // to check here whether is a pre-filled template or not
+  const isMonthlyRewardsResolution =
+    new URLSearchParams($querystring).get("template") === "monthlyRewards";
+
+  onMount(() => {
+    if (isMonthlyRewardsResolution) {
+      const previousMonth = new Date(new Date().getTime());
+      previousMonth.setDate(0);
+      const month = previousMonth.toLocaleString("en-us", { month: "long" });
+      currentResolution.set({
+        title: `Rewarding Contributors for ${month}`,
+        content: "pasticcio",
+        typeId: "routineVeto",
+      });
+    } else {
+      resetForm();
+    }
+  });
 
   $: {
     if ($acl.loaded && !$acl.canCreate) {
@@ -38,5 +54,8 @@
 <AclCheck />
 
 {#if $acl.loaded}
-  <ResolutionForm handleSave={handleContractPreDraft} />
+  <ResolutionForm
+    handleSave={handleContractPreDraft}
+    fromTemplate={isMonthlyRewardsResolution}
+  />
 {/if}

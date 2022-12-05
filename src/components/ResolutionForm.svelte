@@ -5,7 +5,6 @@
   import CircularProgress from "@smui/circular-progress";
   import Textfield from "@smui/textfield";
   import LayoutGrid, { Cell, InnerGrid } from "@smui/layout-grid";
-  import { querystring } from "svelte-spa-router";
 
   import {
     currentResolution,
@@ -29,21 +28,14 @@
   export let createBy = "";
   export let createdOn = "";
   export let disabledUpdate = true;
+  export let fromTemplate = false;
   export let handleSave = (vetoTypeId: string | null) => {};
   export let handleApprove = noop;
   export let handleReject = noop;
   export let handleExport = noop;
 
   let disabled = false;
-  const monthlyRewardsResolution =
-    new URLSearchParams($querystring).get("template") === "monthlyRewards";
-  // if (monthlyRewardsResolution) {
-  currentResolution.set({
-    title: "Ciccio",
-    content: "pasticcio",
-    typeId: "routineVeto",
-  });
-  // }
+
   let resolutionTypes: ResolutionTypeEntity[] = [];
 
   onMount(async () => {
@@ -79,9 +71,12 @@
       spellChecker: false,
       minHeight: "350px",
       maxHeight: "350px",
+      ...(fromTemplate && { toolbar: false }),
     });
 
-    easyMDE.codemirror.setOption("readOnly", true);
+    if (fromTemplate) {
+      easyMDE.codemirror.setOption("readOnly", true);
+    }
 
     easyMDE.value($currentResolution.content || "");
     easyMDE.codemirror.on("change", () => {
@@ -117,6 +112,14 @@
 <section class="section">
   <LayoutGrid>
     <Cell span={12}>
+      {#if fromTemplate}
+        <Alert type="warning"
+          >This resolution is a template and thus it cannot be modified</Alert
+        >
+      {/if}
+    </Cell>
+
+    <Cell span={12}>
       <h1>
         {createBy
           ? `Editing: ${$currentResolution.title}`
@@ -141,7 +144,7 @@
               class="field"
               bind:value={$currentResolution.title}
               label="Resolution Title"
-              disabled
+              disabled={fromTemplate}
             />
           </div>
         </Cell>
@@ -149,8 +152,13 @@
     </Cell>
     <Cell span={12}>
       <InnerGrid>
-        <Cell span={12} class="editor-wrapper">
-          <textarea id="editor" />
+        <Cell
+          span={12}
+          class={fromTemplate
+            ? "editor-wrapper editor-wrapper__readonly"
+            : "editor-wrapper"}
+        >
+          <textarea id="editor" readonly={fromTemplate} />
         </Cell>
       </InnerGrid>
     </Cell>
@@ -169,7 +177,7 @@
                   <Radio
                     bind:group={$currentResolution.typeId}
                     value={resolutionType.id}
-                    disabled
+                    disabled={fromTemplate}
                   />
                   <div class="resolution-type__labels">
                     <h3>
@@ -329,6 +337,11 @@
     z-index: 11;
     height: 400px;
     padding-bottom: 2rem;
+  }
+
+  :global(.editor-wrapper__readonly) {
+    opacity: 0.6;
+    pointer-events: none;
   }
 
   :global(.editor-wrapper i.separator) {
