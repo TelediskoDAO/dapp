@@ -33,7 +33,7 @@ export async function initWeb3Modal() {
   };
   web3Modal = new Web3Modal({
     //network: import.meta.env.VITE_ETHEREUM_DEFAULT_NETWORK,
-    cacheProvider: true,
+    // cacheProvider: false,
     providerOptions,
   });
   return web3Modal;
