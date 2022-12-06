@@ -53,7 +53,8 @@
       $currentResolution,
       $resolutionContract,
       vetoTypeId: localVetoTypeId,
-      executionData: executionPayload?.map((user) => user.executionData) || [],
+      executionData:
+        executionPayload?.map((user) => user.executionData as string) || [],
       executionTo: executionPayload?.map(() => $tokenContract.address) || [],
     });
   }

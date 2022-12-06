@@ -28,8 +28,6 @@ export async function handleCreate({
   executionTo: string[];
   executionData: string[];
 }) {
-  console.log("executionData: ", executionData);
-  console.log("executionTo: ", executionTo);
   if (!$signer) {
     return push("/connect/odoo");
   }

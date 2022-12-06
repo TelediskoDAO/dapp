@@ -18,6 +18,7 @@
   import Alert from "./Alert.svelte";
   import DaoUser from "./DaoUser.svelte";
   import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
+  import { appEnv } from "../stores/config";
 
   function init(el: HTMLElement) {
     el.querySelector("input")?.focus();
@@ -183,7 +184,7 @@
                   <Radio
                     bind:group={$currentResolution.typeId}
                     value={resolutionType.id}
-                    disabled={isMonthlyRewards}
+                    disabled={isMonthlyRewards && appEnv === "production"}
                   />
                   <div class="resolution-type__labels">
                     <h3>
