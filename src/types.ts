@@ -167,7 +167,7 @@ export type ComputedBalances = {
 
 export type MonthlyRewardsUserData = {
   address: string;
-  tokens: string;
+  tokens: string | number;
   executionData?: string;
 };
 
