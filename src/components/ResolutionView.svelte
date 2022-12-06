@@ -16,6 +16,7 @@
   import VotingWidget from "./VotingWidget.svelte";
   import type {
     DaoManagerEntity,
+    MonthlyRewardsUserData,
     ResolutionEntityEnhanced,
     ResolutionVoter,
   } from "../types";
@@ -29,6 +30,7 @@
 
   export let resolution: ResolutionEntityEnhanced;
   export let daoManagerData: DaoManagerEntity;
+  export let executionPayload: MonthlyRewardsUserData[] | null = null;
   let isPrint = /\/print$/.test($location);
   let signerVoted: ResolutionVoter | null = null;
   const converter = new showdown.Converter();
@@ -151,6 +153,27 @@
     <div class="content">
       {@html converter.makeHtml(resolution.content)}
     </div>
+    {#if executionPayload && !isPrint}
+      <h3 class="secondary-title pagebreak">Execution payload:</h3>
+      <div class="execution-payload">
+        <Alert type="info"
+          >This payload will be used to automatically mint the tokens for the
+          contributors</Alert
+        >
+        <ul>
+          {#each executionPayload as userData}
+            <li>
+              <DaoUser
+                ethereumAddress={userData.address}
+                hasBg
+                title={`<b>${userData.tokens} TT</b> to`}
+                size="sm"
+              />
+            </li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
   </div>
   {#if !isPrint}
     <div class="extra">
@@ -404,6 +427,19 @@
 
   .extra {
     margin-top: 3rem;
+  }
+
+  .execution-payload {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--color-gray-5);
+    border-radius: 8px;
+  }
+
+  .execution-payload ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   @media screen and (min-width: 1024px) {

@@ -4,10 +4,10 @@
   import { location } from "svelte-spa-router";
 
   import ResolutionView from "../../components/ResolutionView.svelte";
-  import { getResolutionQuery } from "../../graphql/get-resolution.query";
   import { graphQLClient } from "../../net/graphQl";
   import type {
     DaoManagerEntity,
+    MonthlyRewardsUserData,
     ResolutionEntity,
     ResolutionEntityEnhanced,
   } from "../../types";
@@ -17,6 +17,8 @@
   import { usersWithEthereumAddress } from "../../state/odoo";
   import Alert from "../../components/Alert.svelte";
   import { getResolutionAndDaoManagerQuery } from "../../graphql/get-resolution-and-dao-manager.query";
+  import { formatEther, Interface } from "ethers/lib/utils";
+  import { TelediskoToken__factory } from "../../../contracts/typechain";
 
   type Params = {
     resolutionId: string;
@@ -31,6 +33,7 @@
   let resolutionDataEnhanced: ResolutionEntityEnhanced;
   let isPrint = /\/print$/.test($location);
   let stillLoading = false;
+  let executionPayload: MonthlyRewardsUserData[] | null = null;
 
   async function fethAndSetResolutionData() {
     const {
@@ -44,6 +47,19 @@
     });
     resolutionData = resolution;
     daoManagerData = daoManager;
+
+    if ((resolutionData?.executionData || []).length > 0) {
+      const contractInterface = new Interface(TelediskoToken__factory.abi);
+      executionPayload = (resolutionData.executionData || [])?.map((data) => {
+        const {
+          args: [address, tokens],
+        } = contractInterface.parseTransaction({ data });
+        return {
+          address,
+          tokens: formatEther(tokens),
+        };
+      });
+    }
   }
 
   onMount(async () => {
@@ -84,6 +100,10 @@
     {/if}
   {:else}
     <CurrentTimestamp />
-    <ResolutionView {daoManagerData} resolution={resolutionDataEnhanced} />
+    <ResolutionView
+      {daoManagerData}
+      resolution={resolutionDataEnhanced}
+      {executionPayload}
+    />
   {/if}
 </section>

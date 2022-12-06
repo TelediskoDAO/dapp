@@ -12,7 +12,7 @@
 
   import { graphQLClient } from "../../net/graphQl";
   import { getResolutionQuery } from "../../graphql/get-resolution.query";
-  import type { ResolutionEntity } from "../../types";
+  import type { MonthlyRewardsUserData, ResolutionEntity } from "../../types";
   import { handleUpdate } from "../../handlers/resolutions/update";
   import { handleApprove } from "../../handlers/resolutions/approve";
   import { handleReject } from "../../handlers/resolutions/reject";
@@ -41,7 +41,7 @@
   let openReject = false;
   let loaded = false;
   let isVeto = false;
-  let executionPayload = null;
+  let executionPayload: MonthlyRewardsUserData[] | null = null;
 
   onMount(async () => {
     const {
@@ -56,7 +56,7 @@
 
     if ((resolutionData?.executionData || []).length > 0) {
       const contractInterface = new Interface(TelediskoToken__factory.abi);
-      executionPayload = resolutionData.executionData?.map((data) => {
+      executionPayload = (resolutionData.executionData || []).map((data) => {
         const {
           args: [address, tokens],
         } = contractInterface.parseTransaction({ data });
@@ -192,7 +192,7 @@
     handleApprove={handlePreApprove}
     handleReject={handlePreReject}
     {disabledUpdate}
-    isMonthlyRewards={resolutionData.executionData.length > 0}
+    isMonthlyRewards={(resolutionData.executionData || []).length > 0}
     {executionPayload}
   />
 {/if}
