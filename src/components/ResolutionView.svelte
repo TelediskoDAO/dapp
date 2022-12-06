@@ -442,6 +442,10 @@
     list-style: none;
   }
 
+  .execution-payload ul li:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+
   @media screen and (min-width: 1024px) {
     .view {
       display: flex;
