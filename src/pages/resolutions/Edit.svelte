@@ -4,9 +4,10 @@
   import Dialog, { Title, Content, Actions } from "@smui/dialog";
   import { onMount } from "svelte";
   import Button, { Label } from "@smui/button";
+  import { formatEther, Interface } from "ethers/lib/utils";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
-  import { resolutionContract } from "../../stores/contracts";
+  import { resolutionContract, tokenContract } from "../../stores/contracts";
   import { signer } from "../../stores/wallet";
 
   import { graphQLClient } from "../../net/graphQl";
@@ -24,6 +25,7 @@
   import { currentResolution, resetForm } from "../../state/resolutions/form";
   import { acl } from "../../state/resolutions";
   import AclCheck from "../../components/AclCheck.svelte";
+  import { TelediskoToken__factory } from "../../../contracts/typechain";
 
   type Params = {
     resolutionId: string;
@@ -39,6 +41,7 @@
   let openReject = false;
   let loaded = false;
   let isVeto = false;
+  let executionPayload = null;
 
   onMount(async () => {
     const {
@@ -50,6 +53,19 @@
     });
 
     resolutionData = resolution;
+
+    if ((resolutionData?.executionData || []).length > 0) {
+      const contractInterface = new Interface(TelediskoToken__factory.abi);
+      executionPayload = resolutionData.executionData?.map((data) => {
+        const {
+          args: [address, tokens],
+        } = contractInterface.parseTransaction({ data });
+        return {
+          address,
+          tokens: formatEther(tokens),
+        };
+      });
+    }
 
     isVeto =
       resolutionData.resolutionType.name === "routine" &&
@@ -176,5 +192,7 @@
     handleApprove={handlePreApprove}
     handleReject={handlePreReject}
     {disabledUpdate}
+    isMonthlyRewards={resolutionData.executionData.length > 0}
+    {executionPayload}
   />
 {/if}

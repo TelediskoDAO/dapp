@@ -11,13 +11,15 @@
     formState,
     resetForm,
   } from "../state/resolutions/form";
-  import type { ResolutionTypeEntity } from "../types";
+  import type { MonthlyRewardsUserData, ResolutionTypeEntity } from "../types";
   import { graphQLClient } from "../net/graphQl";
   import { getResolutionTypesQuery } from "../graphql/get-resolution-types.query";
   import { acl } from "../state/resolutions";
   import Alert from "./Alert.svelte";
   import DaoUser from "./DaoUser.svelte";
   import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
+  import { appEnv } from "../stores/config";
+  import { getPreviousMonth } from "../helpers/resolutions";
 
   function init(el: HTMLElement) {
     el.querySelector("input")?.focus();
@@ -28,12 +30,15 @@
   export let createBy = "";
   export let createdOn = "";
   export let disabledUpdate = true;
+  export let isMonthlyRewards = false;
   export let handleSave = (vetoTypeId: string | null) => {};
   export let handleApprove = noop;
   export let handleReject = noop;
   export let handleExport = noop;
+  export let executionPayload: MonthlyRewardsUserData[] | null = null;
 
   let disabled = false;
+
   let resolutionTypes: ResolutionTypeEntity[] = [];
 
   onMount(async () => {
@@ -69,12 +74,19 @@
       spellChecker: false,
       minHeight: "350px",
       maxHeight: "350px",
+      status: false,
+      ...(isMonthlyRewards && { toolbar: false }),
     });
 
     easyMDE.value($currentResolution.content || "");
     easyMDE.codemirror.on("change", () => {
       $currentResolution.content = easyMDE.value();
     });
+
+    if (isMonthlyRewards) {
+      easyMDE.codemirror.setOption("readOnly", true);
+      easyMDE.togglePreview();
+    }
 
     return () => {
       easyMDE.cleanup();
@@ -105,6 +117,17 @@
 <section class="section">
   <LayoutGrid>
     <Cell span={12}>
+      {#if isMonthlyRewards}
+        <Alert title="Heads up" type="warning">
+          This resolution is for the monthly tokens allocation and therefore it
+          can't be modified. Please, read the text carefully and make sure the
+          resolution for the token allocation of <b>{getPreviousMonth()}</b> hasn't
+          already been created
+        </Alert>
+      {/if}
+    </Cell>
+
+    <Cell span={12}>
       <h1>
         {createBy
           ? `Editing: ${$currentResolution.title}`
@@ -129,6 +152,7 @@
               class="field"
               bind:value={$currentResolution.title}
               label="Resolution Title"
+              disabled={isMonthlyRewards}
             />
           </div>
         </Cell>
@@ -136,8 +160,13 @@
     </Cell>
     <Cell span={12}>
       <InnerGrid>
-        <Cell span={12} class="editor-wrapper">
-          <textarea id="editor" />
+        <Cell
+          span={12}
+          class={isMonthlyRewards
+            ? "editor-wrapper editor-wrapper__readonly"
+            : "editor-wrapper"}
+        >
+          <textarea id="editor" readonly={isMonthlyRewards} />
         </Cell>
       </InnerGrid>
     </Cell>
@@ -156,6 +185,7 @@
                   <Radio
                     bind:group={$currentResolution.typeId}
                     value={resolutionType.id}
+                    disabled={isMonthlyRewards && appEnv === "production"}
                   />
                   <div class="resolution-type__labels">
                     <h3>
@@ -173,6 +203,29 @@
             {/each}
           </Cell>
         </InnerGrid>
+      </Cell>
+    {/if}
+    {#if executionPayload}
+      <Cell span={8}>
+        <div class="execution-payload">
+          <h4>Execution payload</h4>
+          <Alert type="info"
+            >This payload will be used to automatically mint the tokens for the
+            contributors</Alert
+          >
+          <ul>
+            {#each executionPayload as userData}
+              <li>
+                <DaoUser
+                  ethereumAddress={userData.address}
+                  hasBg
+                  title={`<b>${userData.tokens} TT</b> to`}
+                  size="sm"
+                />
+              </li>
+            {/each}
+          </ul>
+        </div>
       </Cell>
     {/if}
     <Cell span={6}>
@@ -302,6 +355,29 @@
     padding: 0;
   }
 
+  .execution-payload {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--color-gray-5);
+    border-radius: 8px;
+  }
+
+  .execution-payload h4 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .execution-payload ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .execution-payload ul li:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+
   :global(.field) {
     width: 100%;
   }
@@ -315,6 +391,11 @@
     z-index: 11;
     height: 400px;
     padding-bottom: 2rem;
+  }
+
+  :global(.editor-wrapper__readonly .CodeMirror) {
+    opacity: 0.6;
+    border-radius: 4px;
   }
 
   :global(.editor-wrapper i.separator) {

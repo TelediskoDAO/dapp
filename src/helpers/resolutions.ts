@@ -7,9 +7,14 @@ import type {
   ResolutionTypeInfo,
   ResolutionsAcl,
   ResolutionVoter,
+  MonthlyRewardsUserData,
+  RewardsResponse,
 } from "../types";
 import { mdiEye, mdiBookEditOutline, mdiVoteOutline } from "@mdi/js";
 import { BigNumber } from "ethers";
+import { parseEther } from "ethers/lib/utils";
+
+import type { TelediskoToken } from "contracts/typechain";
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -192,4 +197,34 @@ export const getEnhancedResolutions = (
 ): ResolutionEntityEnhanced[] => {
   const mapper = getEnhancedResolutionMapper($currentTimestamp, $acl);
   return resolutions.map(mapper);
+};
+
+export const getExecutionPayload = async (
+  $tokenContract: TelediskoToken,
+  rewardsInfo: RewardsResponse
+): Promise<MonthlyRewardsUserData[]> => {
+  const {
+    rewards: { token_allocations },
+  } = rewardsInfo;
+
+  return Promise.all(
+    token_allocations.map(async (allocation) => ({
+      address: allocation.user.ethereum_address,
+      tokens: allocation.token_amount,
+      executionData:
+        (
+          await $tokenContract.populateTransaction.mint(
+            allocation.user.ethereum_address,
+            parseEther(String(allocation.token_amount))
+          )
+        )?.data || "",
+    }))
+  );
+};
+
+export const getPreviousMonth = () => {
+  const currentDate = new Date();
+  currentDate.setDate(0);
+
+  return currentDate.toLocaleString("en-us", { month: "long" });
 };

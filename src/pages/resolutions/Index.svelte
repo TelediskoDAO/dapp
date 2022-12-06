@@ -124,7 +124,15 @@
       <Button variant="outlined" href="#/resolutions/new">
         <Label>Create resolution</Label>
       </Button>
-      <div class="delegation">
+      <div class="m-left">
+        <Button
+          variant="outlined"
+          href="#/resolutions/new?template=monthlyRewards"
+        >
+          <Label>Monthly rewards</Label>
+        </Button>
+      </div>
+      <div class="m-left">
         <Delegation />
       </div>
     {/if}
@@ -281,7 +289,7 @@
     margin-left: auto;
   }
 
-  .delegation {
+  .m-left {
     margin-left: 1rem;
   }
 

@@ -165,6 +165,29 @@ export type ComputedBalances = {
   maxToOffer: number;
 };
 
+export type MonthlyRewardsUserData = {
+  address: string;
+  tokens: number;
+  executionData?: string;
+};
+
+export type RewardsResponseEntry = {
+  user: {
+    ethereum_address: string;
+  };
+  token_amount: number;
+};
+
+export type RewardsResponse = {
+  rewards: {
+    token_allocations: RewardsResponseEntry[];
+  };
+  resolution: {
+    title: string;
+    content: string;
+  };
+};
+
 declare global {
   interface Window {
     EasyMDE: any;

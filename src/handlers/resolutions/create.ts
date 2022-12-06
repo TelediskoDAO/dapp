@@ -18,11 +18,15 @@ export async function handleCreate({
   $currentResolution,
   $resolutionContract,
   vetoTypeId,
+  executionTo = [],
+  executionData = [],
 }: {
   $signer: Signer;
   $resolutionContract: ResolutionManager;
   $currentResolution: ResolutionFormState;
   vetoTypeId: string | null;
+  executionTo: string[];
+  executionData: string[];
 }) {
   if (!$signer) {
     return push("/connect/odoo");
@@ -38,8 +42,8 @@ export async function handleCreate({
       ipfsId,
       resolutionId,
       !!vetoTypeId,
-      [],
-      []
+      executionTo,
+      executionData
     );
     formState.set({
       loading: true,

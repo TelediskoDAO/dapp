@@ -20,6 +20,8 @@ export const resolutionFragment = gql`
     approveBy
     rejectBy
     hasQuorum
+    executionTo
+    executionData
     voters {
       address
       votingPower

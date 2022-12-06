@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_ETHEREUM_CHAIN_ID: string;
   readonly VITE_IPFS_ENDPOINT: string;
   readonly VITE_GRAPH_PROTOCOL_GQL_ENDPOINT: string;
+  readonly VITE_LAST_MONTH_REWARDS_ENDPOINT: string;
   readonly VITE_APP_ENV: string;
 }
 
