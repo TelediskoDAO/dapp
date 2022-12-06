@@ -177,6 +177,9 @@
   .shareholder-info {
     padding: 1rem 0;
   }
+  .shareholder-info :global(.dao-user__eth) {
+    margin-top: -0.4rem;
+  }
   .header {
     display: flex;
     align-items: center;

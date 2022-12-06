@@ -57,9 +57,9 @@
 {:else}
   <div class="wrapper wrapper--{size}" class:wrapper--has-bg={hasBg}>
     {#if title}
-      <h4 class="resolution-user-title">{title}</h4>
+      <h4 class="dao-user-title">{@html title}</h4>
     {/if}
-    <div class="resolution-user">
+    <div class="dao-user">
       {#if userDetails}
         <img
           alt={userDetails.displayName}
@@ -69,7 +69,7 @@
         <div class="unknown-user-placeholder" />
       {/if}
       <div>
-        <div class="resolution-user__name">
+        <div class="dao-user__name">
           <span>
             {userDetails?.displayName || "Unknown user"}
             {#if !hideInfo && !userDetails && $agent}
@@ -90,7 +90,7 @@
           {/if}
           <slot />
         </div>
-        <div class="resolution-user__eth">
+        <div class="dao-user__eth">
           {shortAddress ? `${ethereumAddress.slice(0, 8)}...` : ethereumAddress}
         </div>
         <slot name="after" />
@@ -127,7 +127,7 @@
     background-color: #fafafa;
     border-radius: 4px;
   }
-  .resolution-user-title {
+  .dao-user-title {
     margin: 0;
     padding: 0;
     margin-bottom: 0.4rem;
@@ -135,11 +135,14 @@
     color: var(--color-gray-7);
     font-weight: 300;
   }
-  .resolution-user {
+  .dao-user-title :global(b) {
+    color: var(--color-gray-9);
+  }
+  .dao-user {
     display: flex;
     align-items: center;
   }
-  .resolution-user img,
+  .dao-user img,
   .unknown-user-placeholder {
     border-radius: 50%;
     width: 48px;
@@ -150,36 +153,35 @@
     background-color: var(--color-gray-1);
   }
 
-  .resolution-user__name {
+  .dao-user__name {
     display: flex;
     align-items: center;
     font-size: large;
     margin-bottom: 0.2rem;
   }
-  .resolution-user__name :global(.tag) {
+  .dao-user__name :global(.tag) {
     margin-right: 0.3rem;
   }
 
-  .resolution-user__name > span {
+  .dao-user__name > span {
     display: inline-flex;
   }
-  .resolution-user__name > span:first-child {
+  .dao-user__name > span:first-child {
     margin-right: 0.3rem;
   }
-  .resolution-user__eth {
+  .dao-user__eth {
     font-size: small;
     color: var(--color-gray-7);
   }
 
-  .wrapper--sm .resolution-user__name {
+  .wrapper--sm .dao-user__name {
     font-size: 12px;
     margin-bottom: 0.1rem;
   }
-  .wrapper--sm .resolution-user__eth {
+  .wrapper--sm .dao-user__eth {
     font-size: 11px;
-    margin-top: -0.4rem;
   }
-  .wrapper--sm .resolution-user img,
+  .wrapper--sm .dao-user img,
   .wrapper--sm .unknown-user-placeholder {
     width: 32px;
     height: 32px;

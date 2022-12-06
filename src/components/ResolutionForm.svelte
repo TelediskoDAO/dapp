@@ -11,7 +11,7 @@
     formState,
     resetForm,
   } from "../state/resolutions/form";
-  import type { ResolutionTypeEntity } from "../types";
+  import type { MonthlyRewardsUserData, ResolutionTypeEntity } from "../types";
   import { graphQLClient } from "../net/graphQl";
   import { getResolutionTypesQuery } from "../graphql/get-resolution-types.query";
   import { acl } from "../state/resolutions";
@@ -28,11 +28,12 @@
   export let createBy = "";
   export let createdOn = "";
   export let disabledUpdate = true;
-  export let fromTemplate = false;
+  export let isMonthlyRewards = false;
   export let handleSave = (vetoTypeId: string | null) => {};
   export let handleApprove = noop;
   export let handleReject = noop;
   export let handleExport = noop;
+  export let executionPayload: MonthlyRewardsUserData[] | null = null;
 
   let disabled = false;
 
@@ -71,17 +72,19 @@
       spellChecker: false,
       minHeight: "350px",
       maxHeight: "350px",
-      ...(fromTemplate && { toolbar: false }),
+      status: false,
+      ...(isMonthlyRewards && { toolbar: false }),
     });
-
-    if (fromTemplate) {
-      easyMDE.codemirror.setOption("readOnly", true);
-    }
 
     easyMDE.value($currentResolution.content || "");
     easyMDE.codemirror.on("change", () => {
       $currentResolution.content = easyMDE.value();
     });
+
+    if (isMonthlyRewards) {
+      easyMDE.codemirror.setOption("readOnly", true);
+      easyMDE.togglePreview();
+    }
 
     return () => {
       easyMDE.cleanup();
@@ -112,10 +115,13 @@
 <section class="section">
   <LayoutGrid>
     <Cell span={12}>
-      {#if fromTemplate}
-        <Alert type="warning"
-          >This resolution is a template and thus it cannot be modified</Alert
-        >
+      {#if isMonthlyRewards}
+        <Alert title="Heads up" type="warning">
+          This resolution is for the monthly tokens allocation and therefore it
+          can't be modified. Please, read the text carefully and make sure the
+          resolution for the token allocation of the previous month hasn't
+          already been created
+        </Alert>
       {/if}
     </Cell>
 
@@ -144,7 +150,7 @@
               class="field"
               bind:value={$currentResolution.title}
               label="Resolution Title"
-              disabled={fromTemplate}
+              disabled={isMonthlyRewards}
             />
           </div>
         </Cell>
@@ -154,11 +160,11 @@
       <InnerGrid>
         <Cell
           span={12}
-          class={fromTemplate
+          class={isMonthlyRewards
             ? "editor-wrapper editor-wrapper__readonly"
             : "editor-wrapper"}
         >
-          <textarea id="editor" readonly={fromTemplate} />
+          <textarea id="editor" readonly={isMonthlyRewards} />
         </Cell>
       </InnerGrid>
     </Cell>
@@ -177,7 +183,7 @@
                   <Radio
                     bind:group={$currentResolution.typeId}
                     value={resolutionType.id}
-                    disabled={fromTemplate}
+                    disabled={isMonthlyRewards}
                   />
                   <div class="resolution-type__labels">
                     <h3>
@@ -195,6 +201,29 @@
             {/each}
           </Cell>
         </InnerGrid>
+      </Cell>
+    {/if}
+    {#if executionPayload}
+      <Cell span={8}>
+        <div class="execution-payload">
+          <h4>Execution payload</h4>
+          <Alert type="info"
+            >This payload will be used to automatically mint the tokens for the
+            contributors</Alert
+          >
+          <ul>
+            {#each executionPayload as userData}
+              <li>
+                <DaoUser
+                  ethereumAddress={userData.address}
+                  hasBg
+                  title={`<b>${userData.tokens} TT</b> to`}
+                  size="sm"
+                />
+              </li>
+            {/each}
+          </ul>
+        </div>
       </Cell>
     {/if}
     <Cell span={6}>
@@ -324,6 +353,29 @@
     padding: 0;
   }
 
+  .execution-payload {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--color-gray-5);
+    border-radius: 8px;
+  }
+
+  .execution-payload h4 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .execution-payload ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .execution-payload ul li:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+
   :global(.field) {
     width: 100%;
   }
@@ -339,9 +391,9 @@
     padding-bottom: 2rem;
   }
 
-  :global(.editor-wrapper__readonly) {
+  :global(.editor-wrapper__readonly .CodeMirror) {
     opacity: 0.6;
-    pointer-events: none;
+    border-radius: 4px;
   }
 
   :global(.editor-wrapper i.separator) {

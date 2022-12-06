@@ -7,9 +7,9 @@
   } from "@mdi/js";
 
   export let type: "info" | "warning" | "error" | "success" = "info";
-  export let title: string = "";
-  export let message: string = "";
-  export let marginTop: boolean = false;
+  export let title = "";
+  export let message = "";
+  export let marginTop = false;
 
   const typeIcon = {
     info: mdiInformationOutline,
