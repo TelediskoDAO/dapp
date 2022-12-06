@@ -13,7 +13,10 @@
   import { acl } from "../../state/resolutions";
   import AclCheck from "../../components/AclCheck.svelte";
   import notifications from "../../helpers/notifications";
-  import { getExecutionPayload } from "../../helpers/resolutions";
+  import {
+    getExecutionPayload,
+    getPreviousMonth,
+  } from "../../helpers/resolutions";
   import type { MonthlyRewardsUserData, RewardsResponse } from "../../types";
   import { lastMonthRewardsEndpoint } from "../../stores/config";
 
@@ -25,13 +28,6 @@
 
   const isMonthlyRewardsResolution =
     new URLSearchParams($querystring).get("template") === "monthlyRewards";
-
-  const getPreviousMonth = () => {
-    const currentDate = new Date();
-    currentDate.setDate(0);
-
-    return currentDate.toLocaleString("en-us", { month: "long" });
-  };
 
   function handleCreatePreDraft(vetoTypeId: string | null) {
     if (isMonthlyRewardsResolution) {

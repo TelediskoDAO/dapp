@@ -221,3 +221,10 @@ export const getExecutionPayload = async (
     }))
   );
 };
+
+export const getPreviousMonth = () => {
+  const currentDate = new Date();
+  currentDate.setDate(0);
+
+  return currentDate.toLocaleString("en-us", { month: "long" });
+};

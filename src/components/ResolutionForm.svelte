@@ -19,6 +19,7 @@
   import DaoUser from "./DaoUser.svelte";
   import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
   import { appEnv } from "../stores/config";
+  import { getPreviousMonth } from "../helpers/resolutions";
 
   function init(el: HTMLElement) {
     el.querySelector("input")?.focus();
@@ -120,7 +121,7 @@
         <Alert title="Heads up" type="warning">
           This resolution is for the monthly tokens allocation and therefore it
           can't be modified. Please, read the text carefully and make sure the
-          resolution for the token allocation of the previous month hasn't
+          resolution for the token allocation of <b>{getPreviousMonth()}</b> hasn't
           already been created
         </Alert>
       {/if}
