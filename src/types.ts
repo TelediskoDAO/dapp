@@ -82,6 +82,7 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
   rejectedAt: string | null;
   updatedAt: string | null;
   approvedAt: string | null;
+  executedAt: string | null;
   action: ResolutionAction;
   resolutionTypeInfo: ResolutionTypeInfo;
   votingStatus: {

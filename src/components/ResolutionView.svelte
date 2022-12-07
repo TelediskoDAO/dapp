@@ -8,6 +8,7 @@
   import Tooltip, { Wrapper } from "@smui/tooltip";
   import { Icon, Svg } from "@smui/common";
   import { mdiInformationOutline } from "@mdi/js";
+  import CircularProgress from "@smui/circular-progress/src/CircularProgress.svelte";
 
   import {
     getDateFromUnixTimestamp,
@@ -22,11 +23,14 @@
   } from "../types";
   import { acl } from "../state/resolutions";
   import Countdown from "./Countdown.svelte";
-  import { signerAddress } from "../stores/wallet";
+  import { signerAddress, signer } from "../stores/wallet";
   import Alert from "./Alert.svelte";
   import Tag from "./Tag.svelte";
   import VotingBreakdown from "./VotingBreakdown.svelte";
   import DaoUser from "./DaoUser.svelte";
+  import { handleExecute } from "../handlers/resolutions/execute";
+  import { resolutionContract } from "../stores/contracts";
+  import { executeState } from "../state/resolutions/execute";
 
   export let resolution: ResolutionEntityEnhanced;
   export let daoManagerData: DaoManagerEntity;
@@ -57,6 +61,13 @@
 
   function handlePrint() {
     window.open(`/#/resolutions/${resolution.id}/print`);
+  }
+
+  function handleExecution() {
+    handleExecute(resolution.id, {
+      $signer,
+      $resolutionContract,
+    });
   }
 
   export function getShareholderStatus(address: string) {
@@ -153,15 +164,20 @@
     <div class="content">
       {@html converter.makeHtml(resolution.content)}
     </div>
-    {#if executionPayload && !isPrint}
+    {#if (executionPayload || []).length > 0 && !isPrint && resolution.hasQuorum}
       <h3 class="secondary-title pagebreak">Execution payload:</h3>
       <div class="execution-payload">
-        <Alert type="info"
-          >This payload will be used to automatically mint the tokens for the
-          contributors</Alert
-        >
+        <Alert>
+          {#if resolution.executionTimestamp !== "0"}
+            As this resolution has been correctly executed on {resolution.executedAt},
+            these tokens have been minted for the following contributors
+          {:else}
+            This payload will be used to automatically mint the tokens for the
+            contributors
+          {/if}
+        </Alert>
         <ul>
-          {#each executionPayload as userData}
+          {#each executionPayload || [] as userData}
             <li>
               <DaoUser
                 ethereumAddress={userData.address}
@@ -195,12 +211,45 @@
       {/if}
       <div>
         <div class="extra__heading">
-          <h4 class="secondary-title">
-            {resolution.resolutionType.name}{resolution.isNegative
-              ? " (veto)"
-              : ""}
-          </h4>
-          <Tag label={resolution.state} />
+          <div>
+            <h4 class="secondary-title">
+              {resolution.resolutionType.name}{resolution.isNegative
+                ? " (veto)"
+                : ""}
+            </h4>
+            <Tag label={resolution.state} />
+          </div>
+          {#if resolution.state === RESOLUTION_STATES.ENDED && (executionPayload || []).length > 0 && resolution.hasQuorum}
+            <hr style="margin: 1rem 0;" />
+            {#if resolution.executionTimestamp === "0"}
+              <Button
+                variant="unelevated"
+                style="width: 100%;"
+                on:click={handleExecution}
+              >
+                Execute
+              </Button>
+              {#if $executeState.loading || $executeState.awaitingConfirmation}
+                <div class="progress">
+                  {#if $executeState.awaitingConfirmation}
+                    <Alert
+                      message="Awaiting for the transaction to be put on a block"
+                    />
+                  {/if}
+                  <div style="text-align: center">
+                    <CircularProgress
+                      style="height: 32px; width: 32px;"
+                      indeterminate
+                    />
+                  </div>
+                </div>
+              {/if}
+            {:else}
+              <Alert>
+                Resolution executed on {resolution.executedAt}
+              </Alert>
+            {/if}
+          {/if}
         </div>
         {#if resolution.state === RESOLUTION_STATES.VOTING}
           <hr />
@@ -467,13 +516,13 @@
     }
   }
 
-  .extra__heading {
+  .extra__heading > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .extra__heading > h4 {
+  .extra__heading > div > h4 {
     margin: 0;
     padding: 0;
   }

@@ -171,6 +171,10 @@ export const getEnhancedResolutionMapper =
         resolution.approveTimestamp !== "0"
           ? getRelativeDateFromUnixTimestamp(resolution.approveTimestamp)
           : null,
+      executedAt:
+        resolution.executionTimestamp && resolution.executionTimestamp !== "0"
+          ? getRelativeDateFromUnixTimestamp(resolution.executionTimestamp)
+          : null,
       href:
         state === RESOLUTION_STATES.PRE_DRAFT && $acl?.canUpdate
           ? `#/resolutions/${resolution.id}/edit`
