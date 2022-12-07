@@ -168,7 +168,7 @@
       <h3 class="secondary-title pagebreak">Execution payload:</h3>
       <div class="execution-payload">
         <Alert>
-          {#if resolution.executionTimestamp !== "0"}
+          {#if resolution.executionTimestamp}
             As this resolution has been correctly executed <b
               >{resolution.executedAt}</b
             >, these tokens have been minted for the following contributors
@@ -222,7 +222,7 @@
           </div>
           {#if resolution.state === RESOLUTION_STATES.ENDED && (executionPayload || []).length > 0 && resolution.hasQuorum}
             <hr style="margin: 1rem 0;" />
-            {#if resolution.executionTimestamp === "0"}
+            {#if !resolution.executionTimestamp}
               <Button
                 variant="unelevated"
                 style="width: 100%;"
