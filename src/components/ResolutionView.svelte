@@ -169,8 +169,9 @@
       <div class="execution-payload">
         <Alert>
           {#if resolution.executionTimestamp !== "0"}
-            As this resolution has been correctly executed on {resolution.executedAt},
-            these tokens have been minted for the following contributors
+            As this resolution has been correctly executed <b
+              >{resolution.executedAt}</b
+            >, these tokens have been minted for the following contributors
           {:else}
             This payload will be used to automatically mint the tokens for the
             contributors
@@ -246,7 +247,7 @@
               {/if}
             {:else}
               <Alert>
-                Resolution executed on {resolution.executedAt}
+                Resolution executed <b>{resolution.executedAt}</b>
               </Alert>
             {/if}
           {/if}
