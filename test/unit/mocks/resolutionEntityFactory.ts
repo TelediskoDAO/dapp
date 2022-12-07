@@ -45,6 +45,7 @@ const enhancedEntity: ResolutionEntityEnhanced = {
   updatedAt: null,
   approvedAt: null,
   rejectedAt: null,
+  executedAt: null,
   rejectTimestamp: "0",
   rejectBy: "42",
   href: "#/resolutions/42/edit",

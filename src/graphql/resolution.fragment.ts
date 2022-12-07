@@ -15,6 +15,7 @@ export const resolutionFragment = gql`
     updateTimestamp
     approveTimestamp
     rejectTimestamp
+    executionTimestamp
     createBy
     updateBy
     approveBy
