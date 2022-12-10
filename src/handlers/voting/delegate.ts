@@ -16,7 +16,7 @@ export async function handleDelegate(
     $signer,
     $votingContract,
     delegatingUser,
-  }: { $signer: Signer; $votingContract: Voting; delegatingUser: string }
+  }: { $signer: Signer | null; $votingContract: Voting; delegatingUser: string }
 ) {
   if (!$signer) {
     return push("/connect/odoo");

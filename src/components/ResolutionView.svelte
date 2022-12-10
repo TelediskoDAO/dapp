@@ -54,7 +54,7 @@
   $: {
     if ($signerAddress) {
       signerVoted = resolution.votingStatus.votersHaveVoted.find(
-        (voter) => voter.address === $signerAddress.toLowerCase()
+        (voter) => voter.address === $signerAddress?.toLowerCase()
       );
     }
   }

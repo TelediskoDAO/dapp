@@ -30,13 +30,13 @@
     if ($signerAddress) {
       votingOnBehalfOf = resolutionVoters.filter(
         (user) =>
-          user.address.toLowerCase() !== $signerAddress.toLowerCase() &&
-          user.delegated.toLowerCase() === $signerAddress.toLowerCase()
+          user.address.toLowerCase() !== $signerAddress?.toLowerCase() &&
+          user.delegated.toLowerCase() === $signerAddress?.toLowerCase()
       );
       delegatedTo = resolutionVoters.find(
         (user) =>
-          user.address.toLowerCase() === $signerAddress.toLowerCase() &&
-          user.delegated.toLowerCase() !== $signerAddress.toLowerCase()
+          user.address.toLowerCase() === $signerAddress?.toLowerCase() &&
+          user.delegated.toLowerCase() !== $signerAddress?.toLowerCase()
       );
     }
     if (signerVoted?.hasVoted && votedYes === null) {

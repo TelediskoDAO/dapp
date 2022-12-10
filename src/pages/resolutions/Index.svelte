@@ -27,7 +27,7 @@
   import DaoUser from "../../components/DaoUser.svelte";
   import Delegation from "../../components/Delegation.svelte";
 
-  import { connect, signer } from "../../stores/wallet";
+  import { connect, signer, networkError } from "../../stores/wallet";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
@@ -36,7 +36,6 @@
   let includeRejected = false;
   let stateFilter: ResolutionState | "all" = "all";
   let possibleFilters: Record<string, number> = { all: 0 };
-  let loginError: string | undefined;
 
   async function fetchAndSetResolutions() {
     const {
@@ -93,30 +92,21 @@
     const target = e.target as HTMLElement;
     target?.closest(".mdc-data-table__row")?.querySelector("a")?.click();
   }
-
-  async function handleConnect() {
-    try {
-      await connect();
-    } catch (err: any) {
-      loginError = err.toString();
-    }
-  }
-
   title.set("Resolutions");
 </script>
 
 <section>
   <CurrentTimestamp intervalMs={3000} />
-  {#if loginError}
+  {#if $networkError}
     <div class="centered alert">
       <Alert type="error">
-        <p>Error: {loginError}</p>
+        <p>Error: {$networkError}</p>
       </Alert>
     </div>
   {/if}
   <div class="header">
     {#if !$signer}
-      <Button variant="outlined" color="primary" on:click={handleConnect}>
+      <Button variant="outlined" color="primary" on:click={connect}>
         <Label>Connect Wallet</Label>
       </Button>
     {/if}

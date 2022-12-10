@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { init, networkError } from "./stores/wallet";
+  import { networkError } from "./stores/wallet";
 
   import { user, userError, username } from "./state/odoo";
   import { title } from "./state/runtime";
@@ -31,8 +31,6 @@
 
   import PageResolutions from "./pages/resolutions/Index.svelte";
   import ReloadPrompt from "./components/ReloadPrompt.svelte";
-
-  const initializing = init();
 
   const routes = {
     "/": PageIndex,
@@ -70,35 +68,29 @@
   <title>{$title}</title>
 </svelte:head>
 
-{#await initializing}
-  <p>Loading, please wait…</p>
-{:then}
-  {#if $username && !$user && !$userError}
-    <div out:slide class="loading">
-      <p>loading...</p>
-    </div>
-  {:else if /\/print$/.test($location)}
+{#if $username && !$user && !$userError}
+  <div out:slide class="loading">
+    <p>loading...</p>
+  </div>
+{:else if /\/print$/.test($location)}
+  <Router {routes} restoreScrollState />
+{:else}
+  <Sidebar />
+
+  <main>
+    <TopAppBar />
+    {#if $networkError}
+      <Alert
+        type="warning"
+        message="Please check your wallet, there's a network mismatch"
+      />
+    {/if}
     <Router {routes} restoreScrollState />
-  {:else}
-    <Sidebar />
+    <UpdateAvailable />
+  </main>
 
-    <main>
-      <TopAppBar />
-      {#if $networkError}
-        <Alert
-          type="warning"
-          message="Please check your wallet, there's a network mismatch"
-        />
-      {/if}
-      <Router {routes} restoreScrollState />
-      <UpdateAvailable />
-    </main>
-
-    <RuntimeErrors />
-  {/if}
-{:catch}
-  <p>There was an error loading the page.</p>
-{/await}
+  <RuntimeErrors />
+{/if}
 
 <ReloadPrompt />
 

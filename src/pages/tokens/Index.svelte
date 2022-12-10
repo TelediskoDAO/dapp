@@ -11,12 +11,7 @@
   import { getTokensPageData } from "../../graphql/get-tokens-page-data";
   import { computeBalances } from "../../helpers/tokens";
   import { graphQLClient } from "../../net/graphQl";
-  import {
-    connect,
-    hasAgent,
-    signer,
-    signerAddress,
-  } from "../../stores/wallet";
+  import { connect, signer, signerAddress } from "../../stores/wallet";
   import { title } from "../../state/runtime";
   import type { ComputedBalances, DaoUser, Offer } from "../../types";
 
@@ -24,8 +19,8 @@
   let openOffer = false;
 
   let offers: Offer[] = [];
-  let daoUser: DaoUser = null;
-  let computedBalances: ComputedBalances = null;
+  let daoUser: DaoUser | null = null;
+  let computedBalances: ComputedBalances | null = null;
 
   let loadedOffers: boolean;
 
@@ -49,16 +44,6 @@
   });
 
   title.set("My tokens");
-
-  let loginError;
-
-  async function handleConnect() {
-    try {
-      await connect();
-    } catch (e) {
-      loginError = e.toString();
-    }
-  }
 
   $: {
     if ($signerAddress) {
@@ -109,16 +94,9 @@
   </Dialog>
 {:else}
   <div class="centered">
-    <Button variant="outlined" color="primary" on:click={handleConnect}
+    <Button variant="outlined" color="primary" on:click={connect}
       >Connect wallet</Button
     >
-  </div>
-{/if}
-{#if loginError}
-  <div class="centered">
-    <Alert type="error">
-      <p>Login error: {loginError}</p>
-    </Alert>
   </div>
 {/if}
 
