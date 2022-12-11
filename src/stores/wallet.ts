@@ -7,7 +7,7 @@ import {
 } from "./config";
 import { ethers, BigNumber } from "ethers";
 import type { Signer } from "ethers";
-import { derived, writable, type Readable } from "svelte/store";
+import { get, derived, writable, type Readable } from "svelte/store";
 import { configureChains, createClient, fetchSigner } from "@wagmi/core";
 import { infuraProvider } from "@wagmi/core/providers/infura";
 import { asyncDerived } from "./utils";
@@ -50,10 +50,13 @@ export const web3Modal = new Web3Modal(
 );
 
 ethClient.watchNetwork(async (network) => {
-  const chainId = network?.chain?.id;
+  networkName.set(network?.chain?.name);
+  networkChainId.set(network?.chain?.id);
+
+  const chainId = get(networkChainId);
   if (chainId) {
     if (chainId !== ethereumChainId) {
-      const currentChainName = network?.chain?.name || "unknown";
+      const currentChainName = get(networkName) || "unknown";
       const ethereumChainName =
         ethers.providers.getNetwork(ethereumChainId)?.name || "unknown";
       networkError.set({
@@ -63,14 +66,15 @@ ethClient.watchNetwork(async (network) => {
       return;
     }
     signer.set(await fetchSigner({ chainId }));
+    networkError.set(null);
   } else {
     signer.set(null);
   }
-  networkName.set(network?.chain?.name);
 });
 
 export const signer = writable<Signer | null>(null);
 export const networkName = writable<string | undefined>();
+export const networkChainId = writable<number | undefined>();
 export const networkError = writable<{ got: string; want: string } | null>();
 
 export const signerAddress: Readable<string | null> = asyncDerived(

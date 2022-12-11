@@ -27,7 +27,7 @@
   import DaoUser from "../../components/DaoUser.svelte";
   import Delegation from "../../components/Delegation.svelte";
 
-  import { connect, signer, networkError } from "../../stores/wallet";
+  import { connect, signer } from "../../stores/wallet";
 
   let resolutions: ResolutionEntityEnhanced[] = [];
   let ready = false;
@@ -97,13 +97,6 @@
 
 <section>
   <CurrentTimestamp intervalMs={3000} />
-  {#if $networkError}
-    <div class="centered alert">
-      <Alert type="error">
-        <p>Error: {$networkError}</p>
-      </Alert>
-    </div>
-  {/if}
   <div class="header">
     {#if !$signer}
       <Button variant="outlined" color="primary" on:click={connect}>
