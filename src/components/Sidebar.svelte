@@ -40,12 +40,7 @@
         <Panel>
           <Header class="user-header">
             <section class="user-data">
-              <div
-                class="user-avatar"
-                style="border-color: var({$signer
-                  ? '--color-green-9'
-                  : '--ruby-red'});"
-              >
+              <div class="user-avatar">
                 <img
                   alt="User's avatar"
                   src="data:image/jpeg;base64,{$user.image}"
