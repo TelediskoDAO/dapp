@@ -71,8 +71,8 @@ jobs:
           SMART_CONTRACT_PATH: ./contracts/deployments/networks.json # todo we will probably have /contracts-#project-name#/
           HTML_TITLE: neokingdom DAO
           HTML_DESCRIPTION: neokingdom DAO
-          HTML_BASE_URL: https://dao.neokingdom.com/
-          HTML_IMAGE: https://dao.neokingdom.com/preview.png
+          HTML_BASE_URL: https://dao.neokingdom.org/
+          HTML_IMAGE: https://dao.neokingdom.org/preview.png
           HTML_IMAGE_ALT: neokingdom DAO logo
           VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.org:8545
           VITE_ETHEREUM_CHAIN_ID: 9001
@@ -82,7 +82,7 @@ jobs:
           VITE_APP_ENV: production
           VITE_WALLETCONNECT_PROJECT_ID: 6cd4f91f5ec4c39c80b196f4623a8805
         if: startsWith(github.ref, 'refs/tags/v')
-        run: pnpm build:production; echo "dao.neokingdom.com" > dist/CNAME
+        run: pnpm build:production; echo "dao.neokingdom.org" > dist/CNAME
 
       - name: Build for staging teledisko
         env:
