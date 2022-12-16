@@ -46,7 +46,8 @@ export const delegationStatus: Readable<DelegationStatus> = derived(
             .map((user) => ({
               ...user,
               canBeDelegated:
-                user.address === user.delegated && signerDelegatedBy.length === 0,
+                user.address === user.delegated &&
+                signerDelegatedBy.length === 0,
             })),
         });
       } else {

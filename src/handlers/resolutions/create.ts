@@ -21,7 +21,7 @@ export async function handleCreate({
   executionTo = [],
   executionData = [],
 }: {
-  $signer: Signer;
+  $signer: Signer | null;
   $resolutionContract: ResolutionManager;
   $currentResolution: ResolutionFormState;
   vetoTypeId: string | null;

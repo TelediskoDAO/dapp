@@ -1,164 +1,90 @@
-import { ethers, Signer, BigNumber } from "ethers";
-import { derived, writable, type Readable, readable } from "svelte/store";
-import { ethereumEndpoint, ethereumChainId, ipfsEndpoint } from "./config";
-import { addEthereumChain } from "./networks";
-import { connectWeb3Modal, disconnectWeb3Modal } from "./web3Modal";
+import {
+  walletconnectProjectId,
+  infuraKey,
+  evmosChain,
+  ethereumChainId,
+  appEnv,
+} from "./config";
+import { ethers, BigNumber } from "ethers";
+import type { Signer } from "ethers";
+import { get, derived, writable, type Readable } from "svelte/store";
+import { configureChains, createClient, fetchSigner } from "@wagmi/core";
+import { infuraProvider } from "@wagmi/core/providers/infura";
+import { asyncDerived } from "./utils";
 
-export async function init() {
-  console.log("calling init");
-  await connectReadOnly();
+import {
+  EthereumClient,
+  modalConnectors,
+  walletConnectProvider,
+} from "@web3modal/ethereum";
+import { Web3Modal } from "@web3modal/html";
+
+if (!walletconnectProjectId) {
+  throw new Error("You need to provide VITE_PROJECT_ID env variable");
 }
 
-export async function connect() {
-  const connection = await connectWeb3Modal();
+const networkChains = [];
+if (appEnv === "production") {
+  networkChains.push(evmosChain.mainnet);
+} else {
+  networkChains.push(evmosChain.testnet);
+}
 
-  async function resetProvider(promptNetwork = false) {
-    const web3Provider = new ethers.providers.Web3Provider(connection);
-    const { name, chainId } = await web3Provider.getNetwork();
+// Configure wagmi client
+const { chains, provider } = configureChains(networkChains, [
+  infuraProvider({ apiKey: infuraKey }),
+  walletConnectProvider({ projectId: walletconnectProjectId }),
+]);
 
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: modalConnectors({ appName: "web3Modal", chains }),
+  provider,
+});
+
+// Create ethereum and modal clients
+const ethClient = new EthereumClient(wagmiClient, chains);
+export const web3Modal = new Web3Modal(
+  { projectId: walletconnectProjectId },
+  ethClient
+);
+
+ethClient.watchNetwork(async (network) => {
+  networkName.set(network?.chain?.name);
+  networkChainId.set(network?.chain?.id);
+
+  const chainId = get(networkChainId);
+  if (chainId) {
     if (chainId !== ethereumChainId) {
-      if (promptNetwork && web3Provider.provider?.request) {
-        try {
-          await web3Provider.provider.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: "0x" + ethereumChainId.toString(16) }],
-          });
-        } catch (e: any) {
-          console.error(e);
-          if (e.code === 4902) {
-            try {
-              await addEthereumChain(
-                web3Provider,
-                "0x" + ethereumChainId.toString(16)
-              );
-              console.log("Network added");
-            } catch (e) {
-              console.error(e);
-              throw e;
-            }
-          } else {
-            networkError.set({
-              got: name,
-              want:
-                ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
-            });
-          }
-          return provider.set(null);
-        }
-      } else {
-        networkError.set({
-          got: name,
-          want: ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
-        });
-        return provider.set(null);
-      }
-    } else {
-      networkError.set(null);
+      const currentChainName = get(networkName) || "unknown";
+      const ethereumChainName =
+        ethers.providers.getNetwork(ethereumChainId)?.name || "unknown";
+      networkError.set({
+        got: `${currentChainName}:${chainId}`,
+        want: `${ethereumChainName}:${ethereumChainId}`,
+      });
+      return;
     }
-    provider.set(web3Provider);
+    signer.set(await fetchSigner({ chainId }));
+    networkError.set(null);
+  } else {
+    signer.set(null);
   }
-  await resetProvider(true);
-  connection.on("accountsChanged", (accounts: string[]) => {
-    console.log("User changed account", accounts);
-    accountsChanged.set(Date.now());
-  });
-  connection.on("chainChanged", async (newChainId: number) => {
-    console.log("User changed network", newChainId);
-    await resetProvider();
-  });
+});
 
-  /*
-  connection.on("connect", (info: { chainId: number }) => {
-    console.log("connect", info);
-  });
-  connection.on("disconnect", (error: { code: number; message: string }) => {
-    console.log("disconnect", error);
-  });
-  */
-}
-
-export async function connectReadOnly() {
-  providerReadOnly.set(new ethers.providers.JsonRpcProvider(ethereumEndpoint));
-}
-
-export async function disconnect() {
-  await disconnectWeb3Modal();
-  await connectReadOnly();
-  provider.set(null);
-}
-
+export const signer = writable<Signer | null>(null);
+export const networkName = writable<string | undefined>();
+export const networkChainId = writable<number | undefined>();
 export const networkError = writable<{ got: string; want: string } | null>();
 
-export const provider = writable<ethers.providers.Web3Provider | null>();
-
-export const providerReadOnly =
-  writable<ethers.providers.JsonRpcProvider | null>();
-
-export const accountsChanged = writable(0);
-
-export const signer: Readable<Signer | null> = derived(
-  [provider, accountsChanged],
-  ([$provider], set) => {
-    if ($provider) {
-      (async () => {
-        const _signer = $provider.getSigner();
-        let _address: string;
-        // Check if signer has an address. A signer might not have any address
-        // available if the user disconnects all accounts.
-        try {
-          _address = await _signer.getAddress();
-        } catch (e) {
-          set(null);
-          address.set(null);
-          return;
-        }
-        set(_signer);
-        address.set(_address);
-      })();
-    } else {
-      set(null);
-      address.set(null);
-    }
-  }
+export const signerAddress: Readable<string | null> = asyncDerived(
+  signer,
+  async ($signer, set) =>
+    $signer ? set(await $signer.getAddress()) : set(null)
 );
 
-export const address = writable<string | null>();
-
-export const shortAddress = derived(address, ($address) =>
+export const shortAddress = derived(signerAddress, ($address) =>
   $address ? $address.substring(0, 6) + "…" + $address.substring(38) : null
-);
-
-export const signerChainId: Readable<number | null> = derived(
-  provider,
-  ($provider, set) => {
-    if ($provider) {
-      $provider.getNetwork().then(({ chainId }) => set(chainId));
-    } else {
-      set(null);
-    }
-  }
-);
-
-export const chainId: Readable<number | null> = derived(
-  providerReadOnly,
-  ($provider, set) => {
-    if ($provider) {
-      $provider.getNetwork().then(({ chainId }) => set(chainId));
-    } else {
-      set(null);
-    }
-  }
-);
-
-export const network: Readable<string | null> = derived(
-  providerReadOnly,
-  ($provider, set) => {
-    if ($provider) {
-      $provider.getNetwork().then(({ name }) => set(name));
-    } else {
-      set(null);
-    }
-  }
 );
 
 export const balance: Readable<BigNumber | null> = derived(
@@ -177,22 +103,10 @@ export const balance: Readable<BigNumber | null> = derived(
   }
 );
 
-export const etherscanUrl = derived(
-  [chainId, network],
-  ([$chainId, $network]) =>
-    `https://${$chainId === 1 ? "" : $network + "."}etherscan.io`
-);
+export async function connect() {
+  web3Modal.openModal();
+}
 
-export const hasAgent = readable(window.ethereum !== undefined);
-
-export const signerAddress: Readable<string> = derived(
-  signer,
-  ($signer, set) => {
-    (async () => {
-      if ($signer) {
-        const signerAddress = await $signer.getAddress();
-        set(signerAddress);
-      }
-    })();
-  }
-);
+export async function disconnect() {
+  ethClient.disconnect();
+}

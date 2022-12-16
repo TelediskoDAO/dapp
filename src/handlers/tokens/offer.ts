@@ -16,7 +16,7 @@ export async function handleOffer(
   {
     $signer,
     $tokenContract,
-  }: { $signer: Signer; $tokenContract: TelediskoToken }
+  }: { $signer: Signer | null; $tokenContract: TelediskoToken }
 ) {
   if (!$signer) {
     return push("/connect/odoo");

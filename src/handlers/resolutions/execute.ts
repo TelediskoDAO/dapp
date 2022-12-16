@@ -19,7 +19,7 @@ export async function handleExecute(
   {
     $signer,
     $resolutionContract,
-  }: { $signer: Signer; $resolutionContract: ResolutionManager }
+  }: { $signer: Signer | null; $resolutionContract: ResolutionManager }
 ) {
   if (!$signer) {
     return push("/connect/odoo");

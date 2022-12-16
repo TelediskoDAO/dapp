@@ -2,6 +2,16 @@
   import active from "svelte-spa-router/active";
   import CurrentTask from "./CurrentTask.svelte";
   import { user, refresh } from "../state/odoo";
+  import {
+    signer,
+    shortAddress,
+    networkName,
+    networkChainId,
+    connect,
+    disconnect,
+  } from "../stores/wallet";
+  import Accordion, { Panel, Content, Header } from "@smui-extra/accordion";
+  import Button, { Label } from "@smui/button";
 
   $: refreshTime = new Date($refresh).toLocaleTimeString();
 
@@ -25,13 +35,64 @@
 <aside>
   <input id="sidebar--toggle" type="checkbox" />
   <nav class="content">
-    <section class="user-data">
-      {#if $user}
-        <img alt="User's avatar" src="data:image/jpeg;base64,{$user.image}" />
-        {$user.name}
-      {/if}
-    </section>
-
+    {#if $user}
+      <Accordion>
+        <Panel>
+          <Header class="user-header">
+            <section class="user-data">
+              <div class="user-avatar">
+                <img
+                  alt="User's avatar"
+                  src="data:image/jpeg;base64,{$user.image}"
+                />
+                <div
+                  class="user-avatar-connected"
+                  style="background-color: var({$signer
+                    ? '--color-green-9'
+                    : '--ruby-red'});"
+                />
+              </div>
+              <span>{$user.name}</span>
+            </section>
+          </Header>
+          <Content>
+            {#if !$signer}
+              <div class="centered">
+                <Button variant="outlined" color="primary" on:click={connect}
+                  >Connect wallet</Button
+                >
+              </div>
+            {:else}
+              <div class="user-info">
+                <table>
+                  <tr>
+                    <th>Address:</th>
+                    <td>{$shortAddress}</td>
+                  </tr>
+                  <tr>
+                    <th>Network:</th>
+                    <td>{$networkName}</td>
+                  </tr>
+                  <tr>
+                    <th>ChainID:</th>
+                    <td>{$networkChainId}</td>
+                  </tr>
+                </table>
+                <div class="btn-disconnect">
+                  <Button
+                    variant="outlined"
+                    style="width:100%;"
+                    on:click={disconnect}
+                  >
+                    <Label>Disconnect</Label>
+                  </Button>
+                </div>
+              </div>
+            {/if}
+          </Content>
+        </Panel>
+      </Accordion>
+    {/if}
     <CurrentTask />
 
     <section>
@@ -125,6 +186,27 @@
 </aside>
 
 <style>
+  .user-avatar {
+    position: relative;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .user-avatar + span {
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .user-avatar-connected {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 3px;
+  }
+
   .user-data {
     display: flex;
     align-items: center;
@@ -161,6 +243,29 @@
   }
   :global(aside section ul a.active i) {
     color: black !important;
+  }
+
+  :global(.smui-accordion__header__title) {
+    padding: 0 !important;
+  }
+
+  :global(.smui-paper__content) {
+    padding: 0 !important;
+  }
+
+  .centered {
+    padding: 16px;
+    text-align: center;
+  }
+
+  .user-info {
+    width: 100%;
+    padding: 8px;
+    overflow-y: auto;
+  }
+
+  .btn-disconnect {
+    margin: 8px auto;
   }
 
   .refresh h5 {

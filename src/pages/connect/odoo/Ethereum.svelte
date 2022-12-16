@@ -1,15 +1,5 @@
 <script>
-  import { connect, signer, hasAgent } from "../../../stores/wallet";
-
-  let loginError;
-
-  async function handleConnect() {
-    try {
-      await connect();
-    } catch (e) {
-      loginError = e.toString();
-    }
-  }
+  import { connect, signer } from "../../../stores/wallet";
 </script>
 
 <section>
@@ -17,7 +7,6 @@
   {#if $signer}
     <p>Your wallet is connected.</p>
   {:else}
-    <button on:click={handleConnect}>Connect</button>
+    <button on:click={connect}>Connect</button>
   {/if}
-  {#if loginError}Login error: {loginError}{/if}
 </section>

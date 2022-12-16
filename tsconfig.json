@@ -14,7 +14,7 @@
     "allowJs": true,
     "strict": true,
     "checkJs": true,
-    "types": ["vite-plugin-pwa/client", "mocha"]
+    "types": ["vite-plugin-pwa/client", "mocha"],
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

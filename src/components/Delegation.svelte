@@ -24,7 +24,7 @@
 
   async function onDelegate(toDelegate: string) {
     delegatingUser =
-      toDelegate.toLowerCase() !== $signerAddress.toLowerCase()
+      toDelegate.toLowerCase() !== $signerAddress?.toLowerCase()
         ? $usersWithEthereumAddress[toDelegate.toLowerCase()]?.displayName ||
           toDelegate
         : "";
@@ -46,8 +46,8 @@
 
   $: {
     currentUserDelegated =
-      $delegationStatus?.signerDelegationStatus.delegated !==
-      $delegationStatus?.signerDelegationStatus.address;
+      $delegationStatus?.signerDelegationStatus?.delegated !==
+      $delegationStatus?.signerDelegationStatus?.address;
     currentUserDelegatedBy = $delegationStatus?.signerDelegatedBy.length > 0;
   }
 </script>
@@ -63,7 +63,7 @@
     <Tooltip yPos="below">
       {#if currentUserDelegated}
         You're currently delegating <DaoUser
-          ethereumAddress={$delegationStatus?.signerDelegationStatus.delegated}
+          ethereumAddress={$delegationStatus?.signerDelegationStatus?.delegated}
           inline
         />
       {/if}
