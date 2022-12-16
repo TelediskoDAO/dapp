@@ -23,15 +23,15 @@ if (!walletconnectProjectId) {
   throw new Error("You need to provide VITE_PROJECT_ID env variable");
 }
 
-const networkChains = [];
+const chains = [];
 if (appEnv === "production") {
-  networkChains.push(evmosChain.mainnet);
+  chains.push(evmosChain.mainnet);
 } else {
-  networkChains.push(evmosChain.testnet);
+  chains.push(evmosChain.testnet);
 }
 
 // Configure wagmi client
-const { chains, provider } = configureChains(networkChains, [
+const { provider } = configureChains(chains, [
   infuraProvider({ apiKey: infuraKey }),
   walletConnectProvider({ projectId: walletconnectProjectId }),
 ]);
