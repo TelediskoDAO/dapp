@@ -16,13 +16,13 @@
   });
 
   $: {
-    if ($acl.loaded) {
+    if ($acl?.loaded) {
       clearTimeout(timeout);
     }
   }
 </script>
 
-{#if !$acl.loaded}
+{#if !$acl?.loaded}
   {#if displayConnect}
     <Ethereum />
   {:else}

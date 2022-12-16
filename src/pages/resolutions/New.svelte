@@ -62,7 +62,7 @@
   });
 
   $: {
-    if ($acl.loaded && !$acl.canCreate) {
+    if ($acl?.loaded && !$acl?.canCreate) {
       notifications.error(
         "It looks you cannot create resolutions. Your role is not Contributor"
       );
@@ -113,11 +113,11 @@
   </Dialog>
 {/if}
 
-{#if $acl.loaded && !isMonthlyRewardsResolution}
+{#if $acl?.loaded && !isMonthlyRewardsResolution}
   <ResolutionForm handleSave={handleCreatePreDraft} />
 {/if}
 
-{#if $acl.loaded && isMonthlyRewardsResolution && executionPayload}
+{#if $acl?.loaded && isMonthlyRewardsResolution && executionPayload}
   <ResolutionForm
     handleSave={handleCreatePreDraft}
     isMonthlyRewards

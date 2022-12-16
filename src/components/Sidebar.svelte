@@ -52,7 +52,7 @@
                     : '--ruby-red'});"
                 />
               </div>
-              {$user.name}
+              <span>{$user.name}</span>
             </section>
           </Header>
           <Content>
@@ -190,6 +190,12 @@
     position: relative;
     display: inline-block;
     margin-right: 5px;
+  }
+
+  .user-avatar + span {
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
   }
 
   .user-avatar-connected {
