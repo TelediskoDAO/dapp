@@ -54,7 +54,7 @@ jobs:
           cp -rv typechain ../src/contracts
           cp -rv deployments/* ../src/contracts
 
-      - name: Build for production
+      - name: Build for production teledisko
         env:
           VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.org:8545
           VITE_ETHEREUM_CHAIN_ID: 9001
@@ -64,9 +64,27 @@ jobs:
           VITE_APP_ENV: production
           VITE_WALLETCONNECT_PROJECT_ID: de8d61ef86c9e54fafa789668d13c83e
         if: startsWith(github.ref, 'refs/tags/v')
-        run: pnpm build-production
+        run: pnpm build:production; echo "dao.teledisko.com" > dist/CNAME
 
-      - name: Build for staging
+      - name: Build for production neokingdom
+        env:
+          SMART_CONTRACT_PATH: ./contracts/deployments/networks.json # todo we will probably have /contracts-#project-name#/
+          HTML_TITLE: neokingdom DAO
+          HTML_DESCRIPTION: neokingdom DAO
+          HTML_BASE_URL: https://dao.neokingdom.com/
+          HTML_IMAGE: https://dao.neokingdom.com/preview.png
+          HTML_IMAGE_ALT: neokingdom DAO logo
+          VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.org:8545
+          VITE_ETHEREUM_CHAIN_ID: 9001
+          VITE_IPFS_ENDPOINT: https://graph.dao.teledisko.com/ipfs/api/v0 # todo change whenever we will have NKD ipfs deployed
+          VITE_GRAPH_PROTOCOL_GQL_ENDPOINT: https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao # todo change whenever we will have NKD graph deployed
+          VITE_LAST_MONTH_REWARDS_ENDPOINT: https://graph.dao.teledisko.com/oracle/resolutions/rewards/last # todo change whenever we will have NKD oracle deployed
+          VITE_APP_ENV: production
+          VITE_WALLETCONNECT_PROJECT_ID: 6cd4f91f5ec4c39c80b196f4623a8805
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: pnpm build:production; echo "dao.neokingdom.com" > dist/CNAME
+
+      - name: Build for staging teledisko
         env:
           VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.dev:8545
           VITE_ETHEREUM_CHAIN_ID: 9000
@@ -76,22 +94,12 @@ jobs:
           VITE_APP_ENV: staging
           VITE_WALLETCONNECT_PROJECT_ID: de8d61ef86c9e54fafa789668d13c83e
         if: startsWith(github.ref, 'refs/tags/v') != true
-        run: pnpm build-staging
+        run: pnpm build:staging; echo "dao-staging.teledisko.com" > dist/CNAME
 
       - name: Add .nojekyll file
         run: touch dist/.nojekyll
 
-      - name: Add staging CNAME
-        if: startsWith(github.ref, 'refs/tags/v') != true
-        run: |
-          echo "dao-staging.teledisko.com" > dist/CNAME
-
-      - name: Add production CNAME
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          echo "dao.teledisko.com" > dist/CNAME
-
-      - name: Deploy to staging
+      - name: Deploy to staging teledisko
         if: startsWith(github.ref, 'refs/tags/v') != true
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
@@ -100,7 +108,7 @@ jobs:
           folder: dist
           ssh-key: ${{ secrets.STAGING_DEPLOY_KEY }}
 
-      - name: Deploy to production
+      - name: Deploy to production teledisko
         if: startsWith(github.ref, 'refs/tags/v')
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
@@ -108,3 +116,12 @@ jobs:
           branch: main
           folder: dist
           ssh-key: ${{ secrets.PRODUCTION_DEPLOY_KEY }}
+
+      - name: Deploy to production neokingdom
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
+        with:
+          repository-name: NeokingdomDAO/dao.neokingdom.com
+          branch: main
+          folder: dist
+          ssh-key: ${{ secrets.PRODUCTION_DEPLOY_KEY_NEOKINGDOM }}
