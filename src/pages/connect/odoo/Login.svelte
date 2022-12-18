@@ -1,5 +1,6 @@
 <script>
   import { connectToOdoo, user, username, password } from "../../../state/odoo";
+  import { projectKey } from "../../../stores/config";
   import { push } from "svelte-spa-router";
 
   let loginError = false;
@@ -56,11 +57,7 @@
     <p>
       Your credentials are stored in your browser and are
       <strong>only</strong>
-      used to load and save data in the
-      <a href="https://odoo.teledisko.com/" target="_blank" rel="noreferrer"
-        >odoo.teledisko.com</a
-      >
-      server. There is
+      used to load and save data in the {projectKey}'s odoo server. There is
       <strong>no third party involved</strong>.
     </p>
 

@@ -21,6 +21,7 @@ jobs:
       VITE_INFURA_API_KEY: f03f549204b84fb49ab1e3f4bdd243c9
       VITE_SW_DEV_ENABLED: false
       VITE_PROJECT_KEY: teledisko
+      VITE_ODOO_ENDPOINT: https://odoo.teledisko.com/jsonrpc
 
     steps:
       - name: Checkout

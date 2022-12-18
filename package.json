@@ -1,7 +1,7 @@
 {
-  "name": "teledisko-dao",
+  "name": "neokingdom-dao",
   "version": "0.22.0",
-  "description": "Teledisko DAO",
+  "description": "Neokingdom DAO",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

@@ -27,11 +27,15 @@ async function jsonRpc(url, method, params) {
 }
 
 async function call(url, service, method, ...args) {
-  return await jsonRpc(url, "call", {
-    service: service,
-    method: method,
-    args: args,
-  });
+  try {
+    return await jsonRpc(url, "call", {
+      service: service,
+      method: method,
+      args: args,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function tuplify(query = {}) {

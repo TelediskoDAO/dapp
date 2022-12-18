@@ -2,6 +2,7 @@
   import active from "svelte-spa-router/active";
   import CurrentTask from "./CurrentTask.svelte";
   import { user, refresh } from "../state/odoo";
+  import { projectKey } from "../stores/config";
   import {
     signer,
     shortAddress,
@@ -116,24 +117,26 @@
               Report</a
             >
           </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/tokens"
-              ><i>account_balance</i>
-              Tokens</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/resolutions"
-              ><i>verified</i>
-              Resolutions</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/shareholders"
-              ><i>people</i>
-              Shareholders</a
-            >
-          </li>
+          {#if projectKey === "teledisko"}
+            <li>
+              <a use:active on:click={closeSidebar} href="#/tokens"
+                ><i>account_balance</i>
+                Tokens</a
+              >
+            </li>
+            <li>
+              <a use:active on:click={closeSidebar} href="#/resolutions"
+                ><i>verified</i>
+                Resolutions</a
+              >
+            </li>
+            <li>
+              <a use:active on:click={closeSidebar} href="#/shareholders"
+                ><i>people</i>
+                Shareholders</a
+              >
+            </li>
+          {/if}
           <li>
             <a use:active on:click={closeSidebar} href="#/connect/odoo"
               ><i>settings</i>

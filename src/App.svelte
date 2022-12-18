@@ -1,5 +1,6 @@
 <script lang="ts">
   import { networkError } from "./stores/wallet";
+  import { projectKey } from "./stores/config";
 
   import { user, userError, username } from "./state/odoo";
   import { title } from "./state/runtime";
@@ -31,20 +32,22 @@
 
   import PageResolutions from "./pages/resolutions/Index.svelte";
   import ReloadPrompt from "./components/ReloadPrompt.svelte";
-
+  
   const routes = {
     "/": PageIndex,
     "/tasks": PageTaskIndex,
     "/tasks/:stage": PageTaskIndex,
     "/timeline": PageTimeline,
     "/report": PageReport,
-    "/tokens": PageTokens,
-    "/resolutions": PageResolutions,
-    "/resolutions/new": PageResolutionsNew,
-    "/resolutions/:resolutionId": PageResolutionsView,
-    "/resolutions/:resolutionId/edit": PageResolutionsEdit,
-    "/resolutions/:resolutionId/print": PageResolutionsView,
-    "/shareholders": PageShareholders,
+    ...(projectKey === "teledisko" && {
+      "/tokens": PageTokens,
+      "/resolutions": PageResolutions,
+      "/resolutions/new": PageResolutionsNew,
+      "/resolutions/:resolutionId": PageResolutionsView,
+      "/resolutions/:resolutionId/edit": PageResolutionsEdit,
+      "/resolutions/:resolutionId/print": PageResolutionsView,
+      "/shareholders": PageShareholders,
+    }),
     "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
