@@ -11,7 +11,6 @@
 <Ethereum />
 <hr />
 <Info />
-<hr />
 
 <!-- <ShowFeatures /> -->
 <style>
