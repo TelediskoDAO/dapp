@@ -2,8 +2,6 @@ name: Deploy neokingdom
 
 on:
   push:
-    branches:
-      - main
     tags:
       - v*
 
@@ -64,14 +62,12 @@ jobs:
           VITE_LAST_MONTH_REWARDS_ENDPOINT: https://graph.dao.teledisko.com/oracle/resolutions/rewards/last # todo change whenever we will have NKD oracle deployed
           VITE_APP_ENV: production
           VITE_WALLETCONNECT_PROJECT_ID: 6cd4f91f5ec4c39c80b196f4623a8805
-        if: startsWith(github.ref, 'refs/tags/v')
         run: pnpm build:production; echo "dao.neokingdom.org" > dist/CNAME
 
       - name: Add .nojekyll file
         run: touch dist/.nojekyll
 
       - name: Deploy to production
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
           repository-name: NeokingdomDAO/dao.neokingdom.org
