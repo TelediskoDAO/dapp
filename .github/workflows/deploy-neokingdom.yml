@@ -1,0 +1,80 @@
+name: Deploy neokingdom
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SMART_CONTRACT_PATH: ./contracts/deployments/networks.json # todo to change whenever we will have NKD contracts
+      HTML_TITLE: neokingdom DAO
+      HTML_DESCRIPTION: neokingdom DAO
+      HTML_BASE_URL: https://dao.neokingdom.org/
+      HTML_IMAGE: https://dao.neokingdom.org/preview.png
+      HTML_IMAGE_ALT: neokingdom DAO logo
+      VITE_INFURA_API_KEY: f03f549204b84fb49ab1e3f4bdd243c9
+      VITE_SW_DEV_ENABLED: false
+      VITE_PROJECT_KEY: neokingdom
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Install
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6
+          run_install: true
+
+      - name: Checkout "contracts" submodule
+        run: git submodule update --init contracts # todo to change whenever we will have NKD contracts
+
+      - name: Install contracts
+        working-directory: contracts
+        run: |
+          pnpm install
+
+      - name: Compile contracts
+        working-directory: contracts # todo to change whenever we will have NKD contracts
+        run: |
+          pnpm run compile
+          cp -rv typechain ../src/contracts
+          cp -rv deployments/* ../src/contracts
+
+      - name: Build for production
+        env:
+          VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.org:8545
+          VITE_ETHEREUM_CHAIN_ID: 9001
+          VITE_IPFS_ENDPOINT: https://graph.dao.teledisko.com/ipfs/api/v0 # todo change whenever we will have NKD ipfs deployed
+          VITE_GRAPH_PROTOCOL_GQL_ENDPOINT: https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao # todo change whenever we will have NKD graph deployed
+          VITE_LAST_MONTH_REWARDS_ENDPOINT: https://graph.dao.teledisko.com/oracle/resolutions/rewards/last # todo change whenever we will have NKD oracle deployed
+          VITE_APP_ENV: production
+          VITE_WALLETCONNECT_PROJECT_ID: 6cd4f91f5ec4c39c80b196f4623a8805
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: pnpm build:production; echo "dao.neokingdom.org" > dist/CNAME
+
+      - name: Add .nojekyll file
+        run: touch dist/.nojekyll
+
+      - name: Deploy to production
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
+        with:
+          repository-name: NeokingdomDAO/dao.neokingdom.org
+          branch: main
+          folder: dist
+          ssh-key: ${{ secrets.PRODUCTION_DEPLOY_KEY_NEOKINGDOM }}

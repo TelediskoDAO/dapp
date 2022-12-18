@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy teledisko
 
 on:
   push:
@@ -20,6 +20,7 @@ jobs:
       HTML_IMAGE_ALT: teledisko DAO logo
       VITE_INFURA_API_KEY: f03f549204b84fb49ab1e3f4bdd243c9
       VITE_SW_DEV_ENABLED: false
+      VITE_PROJECT_KEY: teledisko
 
     steps:
       - name: Checkout
@@ -54,7 +55,7 @@ jobs:
           cp -rv typechain ../src/contracts
           cp -rv deployments/* ../src/contracts
 
-      - name: Build for production teledisko
+      - name: Build for production
         env:
           VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.org:8545
           VITE_ETHEREUM_CHAIN_ID: 9001
@@ -66,25 +67,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: pnpm build:production; echo "dao.teledisko.com" > dist/CNAME
 
-      - name: Build for production neokingdom
-        env:
-          SMART_CONTRACT_PATH: ./contracts/deployments/networks.json # todo we will probably have /contracts-#project-name#/
-          HTML_TITLE: neokingdom DAO
-          HTML_DESCRIPTION: neokingdom DAO
-          HTML_BASE_URL: https://dao.neokingdom.org/
-          HTML_IMAGE: https://dao.neokingdom.org/preview.png
-          HTML_IMAGE_ALT: neokingdom DAO logo
-          VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.org:8545
-          VITE_ETHEREUM_CHAIN_ID: 9001
-          VITE_IPFS_ENDPOINT: https://graph.dao.teledisko.com/ipfs/api/v0 # todo change whenever we will have NKD ipfs deployed
-          VITE_GRAPH_PROTOCOL_GQL_ENDPOINT: https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao # todo change whenever we will have NKD graph deployed
-          VITE_LAST_MONTH_REWARDS_ENDPOINT: https://graph.dao.teledisko.com/oracle/resolutions/rewards/last # todo change whenever we will have NKD oracle deployed
-          VITE_APP_ENV: production
-          VITE_WALLETCONNECT_PROJECT_ID: 6cd4f91f5ec4c39c80b196f4623a8805
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: pnpm build:production; echo "dao.neokingdom.org" > dist/CNAME
-
-      - name: Build for staging teledisko
+      - name: Build for staging
         env:
           VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.dev:8545
           VITE_ETHEREUM_CHAIN_ID: 9000
@@ -116,12 +99,3 @@ jobs:
           branch: main
           folder: dist
           ssh-key: ${{ secrets.PRODUCTION_DEPLOY_KEY }}
-
-      - name: Deploy to production neokingdom
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: JamesIves/github-pages-deploy-action@v4.2.3
-        with:
-          repository-name: NeokingdomDAO/dao.neokingdom.org
-          branch: main
-          folder: dist
-          ssh-key: ${{ secrets.PRODUCTION_DEPLOY_KEY_NEOKINGDOM }}
