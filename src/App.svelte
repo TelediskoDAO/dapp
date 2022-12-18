@@ -32,13 +32,14 @@
 
   import PageResolutions from "./pages/resolutions/Index.svelte";
   import ReloadPrompt from "./components/ReloadPrompt.svelte";
-  
+
   const routes = {
     "/": PageIndex,
     "/tasks": PageTaskIndex,
     "/tasks/:stage": PageTaskIndex,
     "/timeline": PageTimeline,
     "/report": PageReport,
+    "/connect/odoo": PageConnectOdoo,
     ...(projectKey === "teledisko" && {
       "/tokens": PageTokens,
       "/resolutions": PageResolutions,
@@ -48,7 +49,6 @@
       "/resolutions/:resolutionId/print": PageResolutionsView,
       "/shareholders": PageShareholders,
     }),
-    "/connect/odoo": PageConnectOdoo,
     "*": NotFound,
   };
 

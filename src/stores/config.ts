@@ -11,6 +11,7 @@ export const contractsAddresses: ContractsAddresses =
 export const infuraKey: string = import.meta.env.VITE_INFURA_API_KEY;
 export const projectKey = import.meta.env.VITE_PROJECT_KEY;
 export const odooEndpoint = import.meta.env.VITE_ODOO_ENDPOINT;
+export const odooDbName = import.meta.env.VITE_ODOO_DB_NAME;
 export const ethereumEndpoint: string = import.meta.env.VITE_ETHEREUM_ENDPOINT;
 export const ethereumChainId: number = parseInt(
   import.meta.env.VITE_ETHEREUM_CHAIN_ID,

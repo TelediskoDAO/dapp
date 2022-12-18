@@ -1,4 +1,5 @@
 <script>
+  import Button, { Label } from "@smui/button";
   import { logs } from "../../../state/runtime";
   let showLogs = false;
 
@@ -34,13 +35,24 @@
 
 <section>
   <h2>App info</h2>
-  {#if navigator.serviceWorker}
-    <button on:click={handleCheckForUpdates}>Check for updates</button>
-  {/if}
-  <button on:click={handleReset}>Reset Storage and Cache</button>
-  <br />
-  <button on:click={handleShowLogs}>Show Logs</button>
-  <button on:click={() => window.location.reload()}>Reload</button>
+  <p>
+    {#if navigator.serviceWorker}
+      <Button variant="outlined" on:click={handleCheckForUpdates}>
+        <Label>Check for updates</Label>
+      </Button>
+    {/if}
+    <Button variant="outlined" on:click={handleReset}>
+      <Label>Reset Storage and Cache</Label>
+    </Button>
+  </p>
+  <p>
+    <Button variant="outlined" on:click={handleShowLogs}>
+      <Label>Show Logs</Label>
+    </Button>
+    <Button variant="outlined" on:click={window.location.reload}>
+      <Label>Reload</Label>
+    </Button>
+  </p>
 </section>
 
 <section>

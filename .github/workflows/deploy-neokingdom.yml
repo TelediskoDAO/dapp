@@ -20,6 +20,7 @@ jobs:
       VITE_SW_DEV_ENABLED: false
       VITE_PROJECT_KEY: neokingdom
       VITE_ODOO_ENDPOINT: https://odoo.neokingdom.org/jsonrpc
+      VITE_ODOO_DB_NAME: neokingdomdao
 
     steps:
       - name: Checkout

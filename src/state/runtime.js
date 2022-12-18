@@ -1,8 +1,9 @@
+import { projectKey } from "../stores/config";
 import { writable } from "svelte/store";
 
 export const errors = writable([]);
 export const platform = writable({});
-export const title = writable("Teledisko DAO");
+export const title = writable(projectKey);
 export const updateAvailable = writable();
 
 function getLogs() {

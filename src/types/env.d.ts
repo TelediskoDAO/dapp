@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_LAST_MONTH_REWARDS_ENDPOINT: string;
   readonly VITE_APP_ENV: string;
   readonly VITE_ODOO_ENDPOINT: string;
+  readonly VITE_ODOO_DB_NAME: string;
 }
 
 interface ImportMeta {

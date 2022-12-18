@@ -2,10 +2,7 @@ import { derived } from "svelte/store";
 import { persistable, derivable } from "../utils";
 import { clock } from "../clock";
 import { session } from "../../net/odoo";
-import { odooEndpoint, projectKey } from "../../stores/config";
-
-const URL = odooEndpoint;
-const DB = projectKey;
+import { odooEndpoint as URL, odooDbName as DB } from "../../stores/config";
 
 export const username = persistable("odoo.username", "");
 export const password = persistable("odoo.password", "");

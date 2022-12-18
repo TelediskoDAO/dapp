@@ -22,6 +22,7 @@ jobs:
       VITE_SW_DEV_ENABLED: false
       VITE_PROJECT_KEY: teledisko
       VITE_ODOO_ENDPOINT: https://odoo.teledisko.com/jsonrpc
+      VITE_ODOO_DB_NAME: teledisko
 
     steps:
       - name: Checkout
