@@ -10,6 +10,7 @@ function parseDate(s) {
 }
 
 export function parseTask(task) {
+  console.log("task: ", task);
   const upstreamStage = STAGES[task.stage_id[0]];
   const stage = ["backlog", "progress"].includes(upstreamStage)
     ? "todo"
@@ -26,9 +27,9 @@ export function parseTask(task) {
     isSubtask: !!task.parent_id,
     subtaskIds: task.child_ids,
     hasSubtasks: task.child_ids.length > 0,
-    hasDurations: true, // todo fixme => task.duration_entry.length > 0,
+    hasDurations: task.durations?.length > 0,
     parentId: task.task_id ? task.task_id[0] : null,
-    durations: [], // todo fixme => task.duration_entry,
+    durations: task.durations.map((duration) => duration.id),
     projectId: task.project_id[0],
     projectName: task.project_id[1],
     tier: task.tier && task.tier[1],
@@ -46,7 +47,7 @@ export function parseDuration(duration) {
     taskId: duration.task_id[0],
     start: parseDate(duration.start),
     end: parseDate(duration.end),
-    hours: duration.value,
+    hours: duration.unit_amount,
   };
 }
 

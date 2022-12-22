@@ -56,8 +56,10 @@ export const createDuration = derived(
         // maybe user_id? the the user id of the task id
       };
       const hours = $hoursByTask[taskId] + calculateHours(start, end);
-      const durationId = await $agent.create("hr.timesheet", duration);
-      const [newDuration] = await $agent.read("hr.timesheet", [durationId]);
+      const durationId = await $agent.create("account.analytic.line", duration);
+      const [newDuration] = await $agent.read("account.analytic.line", [
+        durationId,
+      ]);
       // If the task is in backlog, put it in progress.
       const task = $tasks[taskId];
       if (task.stage === "backlog") {
@@ -88,8 +90,10 @@ export const startDuration = derived(
         start: utc(),
       };
       const hours = $hoursByTask[taskId];
-      const durationId = await $agent.create("hr.timesheet", duration);
-      const [newDuration] = await $agent.read("hr.timesheet", [durationId]);
+      const durationId = await $agent.create("account.analytic.line", duration);
+      const [newDuration] = await $agent.read("account.analytic.line", [
+        durationId,
+      ]);
       let updatedParentTask;
       // If the task is in backlog, put it in progress.
       const task = $tasks[taskId];
@@ -131,12 +135,14 @@ export const stopDuration = derived(
     async (durationId) => {
       const now = new Date();
       const duration = $durations[durationId];
-      const taskId = duration.task_id;
+      const taskId = duration.taskId;
       const hours = $hoursByTask[taskId] + calculateHours(duration.start, now);
-      await $agent.update("hr.timesheet", durationId, {
+      await $agent.update("account.analytic.line", durationId, {
         end: utc(now),
       });
-      const [updatedDuration] = await $agent.read("hr.timesheet", [durationId]);
+      const [updatedDuration] = await $agent.read("account.analytic.line", [
+        durationId,
+      ]);
 
       await $agent.update("project.task", taskId, {
         effective_hours: hours,
@@ -156,8 +162,8 @@ export const removeDuration = derived(
   ([$agent, $tasks, $durations, $hoursByTask]) =>
     async (durationId) => {
       const duration = $durations[durationId];
-      const taskId = duration.task_id;
-      await $agent.remove("hr.timesheet", [durationId]);
+      const taskId = duration.taskId;
+      await $agent.remove("account.analytic.line", [durationId]);
       const hours =
         $hoursByTask[taskId] - calculateHours(duration.start, duration.end);
       // If the task has no durations, then move it to backlog.
@@ -186,16 +192,18 @@ export const updateDuration = derived(
   ([$agent, $durations, $hoursByTask]) =>
     async (durationId, start, end) => {
       const duration = $durations[durationId];
-      const taskId = duration.task_id;
+      const taskId = duration.taskId;
       const hours =
         $hoursByTask[taskId] -
         calculateHours(duration.start, duration.end) +
         calculateHours(start, end);
-      await $agent.update("hr.timesheet", durationId, {
+      await $agent.update("account.analytic.line", durationId, {
         start: utc(start),
         end: end && utc(end),
       });
-      const [updatedDuration] = await $agent.read("hr.timesheet", [durationId]);
+      const [updatedDuration] = await $agent.read("account.analytic.line", [
+        durationId,
+      ]);
       await $agent.update("project.task", taskId, {
         effective_hours: hours,
       });

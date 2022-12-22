@@ -30,7 +30,7 @@ export const upstream = derivable(
       const projects = group(
         await $agent.read("project.project", Array.from(projectIds))
       );
-      console.log("projects: ", projects);
+
       set({ tasks, durations, projects });
     }
   },
@@ -41,7 +41,11 @@ export const upstream = derivable(
 const data = derived(upstream, ($upstream) => {
   const now = new Date();
 
-  console.log("$upstream: ", $upstream);
+  Object.values($upstream.tasks).forEach((task) => {
+    task.durations = Object.values($upstream.durations).filter(
+      (duration) => duration.task_id[0] === task.id
+    );
+  });
   const tasks = map($upstream.tasks, parseTask);
   const durations = map($upstream.durations, parseDuration);
   const projects = map($upstream.projects, parseProject);
@@ -201,12 +205,12 @@ export const tasksToFix = derived(
     let fixme = new Set(
       Object.values($durations)
         .filter((duration) => duration.start === false || duration.hours < 0)
-        .map((duration) => duration.task_id)
+        .map((duration) => duration.taskId)
     );
     if ($durationsOpen.length > 1) {
       fixme = new Set([
         ...fixme,
-        ...$durationsOpen.map((duration) => duration.task_id),
+        ...$durationsOpen.map((duration) => duration.taskId),
       ]);
     }
 
@@ -232,7 +236,7 @@ export const currentDuration = derived(
 export const currentTask = derived(
   [tasks, currentDuration],
   ([$tasks, $currentDuration]) =>
-    $tasks && $currentDuration && $tasks[$currentDuration.task_id]
+    $tasks && $currentDuration && $tasks[$currentDuration.taskId]
 );
 
 export const currentHours = derived(

@@ -86,7 +86,7 @@ const activityPerDayObjects = derived(
         const total = coagula - solve;
         const e = {
           duration: curr,
-          task: $tasks[curr.task_id],
+          task: $tasks[curr.taskId],
         };
         if (sameDay(day, start)) {
           e.start = start;
