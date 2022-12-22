@@ -1,8 +1,8 @@
 const STAGES = {
-  1: "backlog",
-  5: "progress",
-  2: "done",
-  3: "approved",
+  29: "backlog",
+  30: "progress",
+  31: "done",
+  32: "approved",
 };
 
 function parseDate(s) {
@@ -21,14 +21,14 @@ export function parseTask(task) {
     name: task.name,
     description: task.description,
     isTracking: false,
-    isParentTask: task.subtask_ids.length > 0 && !task.is_subtask,
-    isSingleTask: task.subtask_ids.length === 0 && !task.is_subtask,
-    isSubtask: task.is_subtask,
-    subtaskIds: task.subtask_ids,
-    hasSubtasks: task.subtask_ids.length > 0,
-    hasDurations: task.duration_entry.length > 0,
+    isParentTask: task.child_ids.length > 0 && !task.parent_id,
+    isSingleTask: task.child_ids.length === 0 && !task.parent_id,
+    isSubtask: !!task.parent_id,
+    subtaskIds: task.child_ids,
+    hasSubtasks: task.child_ids.length > 0,
+    hasDurations: true, // todo fixme => task.duration_entry.length > 0,
     parentId: task.task_id ? task.task_id[0] : null,
-    durations: task.duration_entry,
+    durations: [], // todo fixme => task.duration_entry,
     projectId: task.project_id[0],
     projectName: task.project_id[1],
     tier: task.tier && task.tier[1],
@@ -43,7 +43,7 @@ export function parseTask(task) {
 export function parseDuration(duration) {
   return {
     id: duration.id,
-    taskId: duration.task[0],
+    taskId: duration.task_id[0],
     start: parseDate(duration.start),
     end: parseDate(duration.end),
     hours: duration.value,

@@ -74,6 +74,7 @@
           {#each project.taskIds as taskId}
             {#if $tasks[taskId] && $tasks[taskId].isParentTask}
               <li>
+                {taskId}
                 <Task
                   stages={stages[project.id]}
                   task={$tasks[taskId]}

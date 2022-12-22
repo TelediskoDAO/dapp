@@ -13,32 +13,16 @@ export const upstream = derivable(
       let tasks = group(
         await $agent.search("project.task", [
           ["user_id", "=", $uid],
-          ["stage_id", "in", [1, 2, 5]],
+          ["stage_id", "in", [29, 30, 31]],
         ])
       );
-      const missingTaskIds = Object.values(tasks).reduce(
-        (acc, curr) =>
-          curr.task_id[0] !== undefined && tasks[curr.task_id[0]] === undefined
-            ? acc.concat(curr.task_id[0])
-            : acc,
-        []
-      );
-      const missingTasks = group(
-        await $agent.search("project.task", [["id", "in", missingTaskIds]])
-      );
-
-      tasks = {
-        ...tasks,
-        ...missingTasks,
-      };
-
-      const durationIds = Object.values(tasks).reduce(
-        (acc, curr) => acc.concat(curr.duration_entry),
-        []
-      );
+      const taskIds = Object.values(tasks).map(({ id }) => id);
       const durations = group(
-        await $agent.read("project.task.duration", durationIds)
+        await $agent.search("account.analytic.line", [
+          ["task_id", "in", taskIds],
+        ])
       );
+
       const projectIds = Object.values(tasks).reduce(
         (acc, curr) => acc.add(curr.project_id[0]),
         new Set()
@@ -46,6 +30,7 @@ export const upstream = derivable(
       const projects = group(
         await $agent.read("project.project", Array.from(projectIds))
       );
+      console.log("projects: ", projects);
       set({ tasks, durations, projects });
     }
   },
@@ -56,6 +41,7 @@ export const upstream = derivable(
 const data = derived(upstream, ($upstream) => {
   const now = new Date();
 
+  console.log("$upstream: ", $upstream);
   const tasks = map($upstream.tasks, parseTask);
   const durations = map($upstream.durations, parseDuration);
   const projects = map($upstream.projects, parseProject);
@@ -122,6 +108,11 @@ const data = derived(upstream, ($upstream) => {
     ]);
   });
 
+  console.log("{ tasks, durations, projects }: ", {
+    tasks,
+    durations,
+    projects,
+  });
   return { tasks, durations, projects };
 });
 
@@ -210,12 +201,12 @@ export const tasksToFix = derived(
     let fixme = new Set(
       Object.values($durations)
         .filter((duration) => duration.start === false || duration.hours < 0)
-        .map((duration) => duration.taskId)
+        .map((duration) => duration.task_id)
     );
     if ($durationsOpen.length > 1) {
       fixme = new Set([
         ...fixme,
-        ...$durationsOpen.map((duration) => duration.taskId),
+        ...$durationsOpen.map((duration) => duration.task_id),
       ]);
     }
 
@@ -241,7 +232,7 @@ export const currentDuration = derived(
 export const currentTask = derived(
   [tasks, currentDuration],
   ([$tasks, $currentDuration]) =>
-    $tasks && $currentDuration && $tasks[$currentDuration.taskId]
+    $tasks && $currentDuration && $tasks[$currentDuration.task_id]
 );
 
 export const currentHours = derived(
@@ -252,7 +243,7 @@ export const currentHours = derived(
 
 export const currentHoursTotal = derived(
   [currentTask, currentDuration, hoursByTask, clock],
-  ([$currentTask, $currentDuration, $hoursByTask, $clock]) =>
+  ([$currentTask, $currentDuration, $hoursByTask]) =>
     $currentTask &&
     $currentDuration &&
     $hoursByTask &&

@@ -37,8 +37,8 @@
     "/": PageIndex,
     "/tasks": PageTaskIndex,
     "/tasks/:stage": PageTaskIndex,
-    "/timeline": PageTimeline,
-    "/report": PageReport,
+    // "/timeline": PageTimeline,
+    // "/report": PageReport,
     "/connect/odoo": PageConnectOdoo,
     ...(projectKey === "teledisko" && {
       "/tokens": PageTokens,

@@ -55,6 +55,8 @@
       await $markAsDone(task.id);
     }
   }
+
+  console.log("stages: ", stages);
 </script>
 
 <!--{task.id}, {task.name}, {task.lastUpdate}, {Array.from(task.stages).toString()}-->
