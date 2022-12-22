@@ -1,5 +1,5 @@
 <script>
-  import { durations as d } from "../../state/odoo";
+  import { durations as d } from "../../../state/teledisko/odoo";
   import Duration from "./Duration.svelte";
 
   export let taskId;

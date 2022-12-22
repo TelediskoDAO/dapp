@@ -2,9 +2,9 @@
   import { parse } from "qs";
   import { afterUpdate } from "svelte";
   import { replace, querystring } from "svelte-spa-router";
-  import { tasks, currentTask } from "../../state/odoo";
+  import { tasks, currentTask } from "../../../state/teledisko/odoo";
   import Task from "./Task.svelte";
-  import Foldable from "../../components/Foldable.svelte";
+  import Foldable from "../../../components/Foldable.svelte";
 
   export let list;
   export let openDetails = false;
@@ -74,7 +74,6 @@
           {#each project.taskIds as taskId}
             {#if $tasks[taskId] && $tasks[taskId].isParentTask}
               <li>
-                {taskId}
                 <Task
                   stages={stages[project.id]}
                   task={$tasks[taskId]}

@@ -1,9 +1,9 @@
 import { derived } from "svelte/store";
-import { agent, refresh } from "../agent";
-import { uid } from "../user";
+import { agent, refresh } from "../../../odoo/agent";
+import { uid } from "../../../odoo/user";
 import { parseTask, parseDuration, parseProject } from "./parsers";
-import { derivable, group, map } from "../../utils";
-import { clock } from "../../clock";
+import { derivable, group, map } from "../../../utils";
+import { clock } from "../../../clock";
 
 // Load data from Odoo
 export const upstream = derivable(

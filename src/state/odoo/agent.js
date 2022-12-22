@@ -8,6 +8,7 @@ export const username = persistable("odoo.username", "");
 export const password = persistable("odoo.password", "");
 
 let lastRefresh = Date.now();
+
 export const refresh = derivable(
   clock,
   ($clock, set) => {

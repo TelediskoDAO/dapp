@@ -1,7 +1,8 @@
 import { derived } from "svelte/store";
-import { utc } from "../../../utils";
+
+import { agent } from "../../../odoo";
+import { utc } from "../../../../utils";
 import { upstream, tasks, hoursByTask, durations } from "./objects";
-import { agent } from "../agent";
 
 const STAGES_TO_ID = {
   backlog: 1,

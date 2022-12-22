@@ -9,8 +9,8 @@
     startDuration,
     stopDuration,
     markAsDone,
-  } from "../../state/odoo";
-  import { toPrettyDuration } from "../../utils";
+  } from "../../../state/neokingdom/odoo";
+  import { toPrettyDuration } from "../../../utils";
   import Durations from "./Durations.svelte";
 
   export let task;

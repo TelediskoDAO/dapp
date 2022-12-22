@@ -1,6 +1,6 @@
 <script lang="ts">
   import active from "svelte-spa-router/active";
-  import CurrentTask from "./CurrentTask.svelte";
+  // import CurrentTask from "./CurrentTask.svelte";
   import { user, refresh } from "../state/odoo";
   import { projectKey } from "../stores/config";
   import {
@@ -95,7 +95,7 @@
         </Panel>
       </Accordion>
     {/if}
-    <CurrentTask />
+    <!-- <CurrentTask /> -->
 
     <section>
       <ul>
@@ -104,18 +104,6 @@
             <a use:active on:click={closeSidebar} href="#/tasks"
               ><i>timer</i>
               Time Tracking</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/timeline"
-              ><i>calendar_today</i>
-              Timeline</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/report"
-              ><i>fact_check</i>
-              Report</a
             >
           </li>
           {#if projectKey === "teledisko"}

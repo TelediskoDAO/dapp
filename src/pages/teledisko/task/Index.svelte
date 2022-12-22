@@ -1,5 +1,5 @@
 <script>
-  import { tasksToFix, projectList } from "../../state/odoo";
+  import { tasksToFix, projectList } from "../../../state/teledisko/odoo";
   import Task from "./Task.svelte";
   import Tasks from "./Tasks.svelte";
   import { title } from "../../../state/runtime";
