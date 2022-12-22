@@ -15,9 +15,8 @@
   // Pages
   import PageIndex from "./pages/Index.svelte";
   import PageConnectOdoo from "./pages/connect/odoo/Index.svelte";
-  import PageTaskIndex from "./pages/task/Index.svelte";
-  import PageTimeline from "./pages/timeline/Index.svelte";
-  import PageReport from "./pages/report/Index.svelte";
+  import PageTaskIndexNeokingdom from "./pages/neokingdom/task/Index.svelte";
+  import PageTaskIndexTeledisko from "./pages/teledisko/task/Index.svelte";
   import PageTokens from "./pages/tokens/Index.svelte";
   import PageResolutionsNew from "./pages/resolutions/New.svelte";
   import PageResolutionsView from "./pages/resolutions/View.svelte";
@@ -35,12 +34,15 @@
 
   const routes = {
     "/": PageIndex,
-    "/tasks": PageTaskIndex,
-    "/tasks/:stage": PageTaskIndex,
-    // "/timeline": PageTimeline,
-    // "/report": PageReport,
     "/connect/odoo": PageConnectOdoo,
+    ...(projectKey === "neokingdom" && {
+      // todo investigate how to dynamically load this
+      "/tasks": PageTaskIndexNeokingdom,
+      "/tasks/:stage": PageTaskIndexNeokingdom,
+    }),
     ...(projectKey === "teledisko" && {
+      "/tasks": PageTaskIndexTeledisko,
+      "/tasks/:stage": PageTaskIndexTeledisko,
       "/tokens": PageTokens,
       "/resolutions": PageResolutions,
       "/resolutions/new": PageResolutionsNew,
