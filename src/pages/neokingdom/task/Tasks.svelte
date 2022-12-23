@@ -5,6 +5,8 @@
   import { tasks, currentTask } from "../../../state/neokingdom/odoo";
   import Task from "./Task.svelte";
   import Foldable from "../../../components/Foldable.svelte";
+  import Accordion, { Content, Header, Panel } from "@smui-extra/accordion";
+  import IconButton, { Icon } from "@smui/icon-button";
 
   export let list;
   export let openDetails = false;
@@ -44,50 +46,48 @@
 </script>
 
 {#each sortedList as project}
-  <Foldable
-    key={["project", project.id].join(":")}
-    show={false}
-    showOverride={project.isTracking}
-  >
-    <div slot="header" class="header" let:visible>
-      <h2>{project.name}</h2>
-      <button>
-        {#if visible}<i>unfold_less</i>{:else}<i>unfold_more</i>{/if}
-      </button>
-    </div>
-
-    <div slot="body">
-      <div class="metadata">
-        {#if project.stagesCount.done > 0}
-          <p>
-            <span
-              class="toggle"
-              on:click|stopPropagation={toggleDone.bind(null, project.id)}
-              >{stages[project.id].includes("done") ? "Hide" : "Show"}
-              completed tasks</span
-            >
-          </p>
+  <Accordion>
+    <Panel>
+      <Header>
+        {project.name}
+        <IconButton slot="icon" toggle>
+          <Icon class="material-icons" on>expand_less</Icon>
+          <Icon class="material-icons">expand_more</Icon>
+        </IconButton>
+      </Header>
+      <Content>
+        <div class="metadata">
+          {#if project.stagesCount.done > 0}
+            <p>
+              <span
+                class="toggle"
+                on:click|stopPropagation={toggleDone.bind(null, project.id)}
+                >{stages[project.id].includes("done") ? "Hide" : "Show"}
+                completed tasks</span
+              >
+            </p>
+          {/if}
+        </div>
+        {#if project.taskIds.length}
+          <ul>
+            {#each project.taskIds as taskId}
+              {#if $tasks[taskId] && $tasks[taskId].isParentTask}
+                <li>
+                  <Task
+                    stages={stages[project.id]}
+                    task={$tasks[taskId]}
+                    {openDetails}
+                  />
+                </li>
+              {/if}
+            {/each}
+          </ul>
+        {:else}
+          <p>No tasks.</p>
         {/if}
-      </div>
-      {#if project.taskIds.length}
-        <ul>
-          {#each project.taskIds as taskId}
-            {#if $tasks[taskId] && $tasks[taskId].isParentTask}
-              <li>
-                <Task
-                  stages={stages[project.id]}
-                  task={$tasks[taskId]}
-                  {openDetails}
-                />
-              </li>
-            {/if}
-          {/each}
-        </ul>
-      {:else}
-        <p>No tasks.</p>
-      {/if}
-    </div>
-  </Foldable>
+      </Content>
+    </Panel>
+  </Accordion>
 {/each}
 
 <style>

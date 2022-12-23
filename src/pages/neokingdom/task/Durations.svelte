@@ -1,4 +1,5 @@
 <script>
+  import DataTable, { Body, Cell, Head, Row } from "@smui/data-table";
   import { durations as d } from "../../../state/neokingdom/odoo";
   import Duration from "./Duration.svelte";
 
@@ -23,35 +24,34 @@
 </script>
 
 {#if createTimeEntry}
-  <table>
-    <Duration {taskId} handleDone={onCreateTimeEntryDone} />
-  </table>
+  <DataTable
+    table$aria-label="Durations list"
+    style="width: 100%; margin: 1rem 0; margin-bottom: 2rem;"
+  >
+    <Body>
+      <Duration {taskId} handleDone={onCreateTimeEntryDone} />
+    </Body>
+  </DataTable>
 {/if}
 
-<table>
-  {#if durations.length}
-    <thead>
-      <tr>
-        <th>Duration</th>
-        <th>Range</th>
-        <th />
-      </tr>
-    </thead>
-    <tbody>
-      {#each activeDurations as duration}
-        <Duration {editable} {duration} />
-      {/each}
-      {#each pastDurations as duration}
-        <Duration {editable} {duration} />
-      {/each}
-    </tbody>
-  {/if}
-</table>
-
-<style>
-  table {
-    margin-top: var(--size-s);
-    width: 100%;
-    padding-bottom: var(--size-m);
-  }
-</style>
+<DataTable
+  table$aria-label="Durations list"
+  style="width: 100%; margin: 1rem 0; margin-bottom: 2rem;"
+>
+  <Head>
+    <Row>
+      <Cell>Duration</Cell>
+      <Cell>Range</Cell>
+      <Cell>Desription</Cell>
+      <Cell />
+    </Row>
+  </Head>
+  <Body>
+    {#each activeDurations as duration}
+      <Duration {editable} {duration} />
+    {/each}
+    {#each pastDurations as duration}
+      <Duration {editable} {duration} />
+    {/each}
+  </Body>
+</DataTable>

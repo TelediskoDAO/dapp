@@ -16,12 +16,16 @@
     splitDate,
     joinDate,
   } from "../../../utils";
+  import { Cell, Row } from "@smui/data-table";
+  import IconButton, { Icon } from "@smui/icon-button";
+  import Button from "@smui/button";
+  import Textfield from "@smui/textfield";
 
   export let editable = true;
   export let handleDone = null;
   export let taskId = null;
   export let duration = null;
-  let description = duration?.description;
+  let description = duration?.description || "";
 
   let edit = duration ? false : true;
 
@@ -70,11 +74,12 @@
 
 {#if duration}
   {#if !range.start}
-    <tr>
-      <td><span class="duration"> <i class="warning">warning</i> </span></td>
-      <td>Empty interval!</td>
-
-      <td class="options">
+    <Row>
+      <Cell><span class="duration"> <i class="warning">warning</i> </span></Cell
+      >
+      <Cell>Empty interval!</Cell>
+      <Cell>-</Cell>
+      <Cell class="options">
         <div class="buttons">
           <button
             on:click={() =>
@@ -83,44 +88,48 @@
             <i>delete</i>
           </button>
         </div>
-      </td>
-    </tr>
+      </Cell>
+    </Row>
   {:else}
-    <tr>
-      <td>
+    <Row>
+      <Cell>
         {#if hours < 0 || ($durationsOpen.length > 1 && !range.end)}
           <i class="warning">warning</i>
         {/if}
         <span class="duration">{toPrettyDuration(hours)}</span>
         {#if !range.end}<i class="timer">timer</i>{/if}
-      </td>
-      <td>
+      </Cell>
+      <Cell>
         <span class="range"
           >{range.start}–{#if range.end}
             {range.end}
           {:else}<strong class="timer">now</strong>{/if}</span
         >
-      </td>
-
-      <td class="options">
+      </Cell>
+      <Cell>{duration.description}</Cell>
+      <Cell class="options">
         {#if editable}
           <div class="buttons">
-            <button on:click={() => (edit = true)}> <i>edit</i> </button><button
+            <IconButton on:click={() => (edit = true)} slot="icon">
+              <Icon class="material-icons">edit</Icon>
+            </IconButton>
+            <IconButton
               on:click={() =>
                 confirm("Are you sure?") && $removeDuration(duration.id)}
+              slot="icon"
             >
-              <i>delete</i>
-            </button>
+              <Icon class="material-icons">delete</Icon>
+            </IconButton>
           </div>
         {/if}
-      </td>
-    </tr>
+      </Cell>
+    </Row>
   {/if}
 {/if}
 
 {#if edit}
-  <tr class="edit">
-    <td colspan="3">
+  <Row class="edit">
+    <Cell colspan="4">
       <form on:submit|preventDefault={handleSubmit}>
         <p>
           <span>Start</span>
@@ -148,7 +157,7 @@
             />
           </p>
         {/if}
-        <input type="text" bind:value={description} />
+        <Textfield label="Entry description" bind:value={description} />
         <!--
         {#if duration.end}
           <p>
@@ -159,16 +168,22 @@
         {/if}
         -->
         <div class="buttons">
-          <button type="submit">Save</button>
+          <Button type="submit" variant="outlined">Save</Button>
           {#if duration}
-            <button type="reset" on:click={() => (edit = false)}>Cancel</button>
+            <Button
+              variant="outlined"
+              type="reset"
+              on:click={() => (edit = false)}>Cancel</Button
+            >
           {:else}
-            <button type="reset" on:click={() => handleDone()}>Cancel</button>
+            <Button variant="outlined" type="reset" on:click={handleDone}
+              >Cancel</Button
+            >
           {/if}
         </div>
       </form>
-    </td>
-  </tr>
+    </Cell>
+  </Row>
 {/if}
 
 <style>
@@ -192,6 +207,10 @@
 
   .buttons {
     justify-content: flex-end;
+  }
+
+  .buttons :global(button:hover) {
+    box-shadow: none;
   }
 
   .edit .buttons {

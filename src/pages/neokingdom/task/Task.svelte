@@ -1,4 +1,5 @@
 <script>
+  import Button, { Icon, Label } from "@smui/button";
   import { slide } from "svelte/transition";
   import {
     tasks,
@@ -134,30 +135,42 @@
 
           <div class="buttons">
             {#if task.stage === "done"}
-              <button disabled={working} on:click={handleStart}>
-                <i>play_arrow</i>
-                Track time
-              </button>
+              <Button
+                variant="outlined"
+                disabled={working}
+                on:click={handleStart}
+              >
+                <Icon class="material-icons">play_arrow</Icon>
+                <Label>Track time</Label>
+              </Button>
             {:else if task.stage !== "approved"}
-              <button on:click={handleMarkAsDone} disabled={!task.hasDurations}>
-                <i>done</i>
-                Mark as done
-              </button>
+              <Button
+                variant="outlined"
+                on:click={handleMarkAsDone}
+                disabled={!task.hasDurations}
+              >
+                <Icon class="material-icons">done</Icon>
+                <Label>Mark as done</Label>
+              </Button>
             {/if}
-
-            <a
-              href="https://odoo.neokingdom.org/web#model=project.task&id={task.id}&view_type=form"
+            <Button
+              variant="outlined"
               target="_blank"
-              class="button"
+              href="https://odoo.neokingdom.org/web#model=project.task&id={task.id}&view_type=form"
             >
-              <i>open_in_new</i> Open in Odoo
-            </a>
+              <Icon class="material-icons">open_in_new</Icon>
+              <Label>Open in odoo</Label>
+            </Button>
 
             {#if task.stage !== "approved"}
-              <button on:click={() => (createTimeEntry = true)}>
-                <i>more_time</i>
-                New time entry
-              </button>
+              <Button
+                variant="outlined"
+                on:click={() => (createTimeEntry = true)}
+                style="margin-left: .2rem;"
+              >
+                <Icon class="material-icons">more_time</Icon>
+                <Label>New time entry</Label>
+              </Button>
             {/if}
           </div>
 
