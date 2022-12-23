@@ -21,6 +21,7 @@
   export let handleDone = null;
   export let taskId = null;
   export let duration = null;
+  let description = duration?.description;
 
   let edit = duration ? false : true;
 
@@ -58,10 +59,10 @@
       //}
     }
     if (duration) {
-      await $updateDuration(duration.id, start, end);
+      await $updateDuration(duration.id, start, end, description);
       edit = false;
     } else if (taskId) {
-      await $createDuration(taskId, start, end);
+      await $createDuration(taskId, start, end, description);
       handleDone();
     }
   }
@@ -147,6 +148,7 @@
             />
           </p>
         {/if}
+        <input type="text" bind:value={description} />
         <!--
         {#if duration.end}
           <p>

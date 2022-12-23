@@ -48,6 +48,7 @@ export function parseDuration(duration) {
     start: parseDate(duration.start),
     end: parseDate(duration.end),
     hours: duration.unit_amount,
+    description: duration.name,
   };
 }
 

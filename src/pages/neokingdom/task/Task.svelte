@@ -146,7 +146,7 @@
             {/if}
 
             <a
-              href="https://odoo.teledisko.com/web#model=project.task&id={task.id}&view_type=form"
+              href="https://odoo.neokingdom.org/web#model=project.task&id={task.id}&view_type=form"
               target="_blank"
               class="button"
             >

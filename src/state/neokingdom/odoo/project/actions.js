@@ -4,10 +4,10 @@ import { upstream, tasks, hoursByTask, durations } from "./objects";
 import { agent } from "../../../odoo/agent";
 
 const STAGES_TO_ID = {
-  backlog: 1,
-  progress: 5,
-  done: 2,
-  approved: 3,
+  backlog: 29,
+  progress: 30,
+  done: 31,
+  approved: 32,
 };
 
 export const markAsDone = derived(
@@ -48,12 +48,12 @@ function calculateHours(start, end) {
 export const createDuration = derived(
   [agent, tasks, hoursByTask],
   ([$agent, $tasks, $hoursByTask]) =>
-    async (taskId, start, end) => {
+    async (taskId, start, end, description) => {
       const duration = {
         task_id: taskId,
         start: utc(start),
         end: end && utc(end),
-        // maybe user_id? the the user id of the task id
+        name: description,
       };
       const hours = $hoursByTask[taskId] + calculateHours(start, end);
       const durationId = await $agent.create("account.analytic.line", duration);
@@ -88,6 +88,7 @@ export const startDuration = derived(
       const duration = {
         task_id: taskId,
         start: utc(),
+        end: utc(),
       };
       const hours = $hoursByTask[taskId];
       const durationId = await $agent.create("account.analytic.line", duration);
@@ -190,7 +191,7 @@ export const removeDuration = derived(
 export const updateDuration = derived(
   [agent, durations, hoursByTask],
   ([$agent, $durations, $hoursByTask]) =>
-    async (durationId, start, end) => {
+    async (durationId, start, end, description) => {
       const duration = $durations[durationId];
       const taskId = duration.taskId;
       const hours =
@@ -200,6 +201,7 @@ export const updateDuration = derived(
       await $agent.update("account.analytic.line", durationId, {
         start: utc(start),
         end: end && utc(end),
+        name: description,
       });
       const [updatedDuration] = await $agent.read("account.analytic.line", [
         durationId,
