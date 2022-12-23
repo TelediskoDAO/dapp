@@ -10,6 +10,7 @@
   export let title = "";
   export let message = "";
   export let marginTop = false;
+  export let showIcon = true;
 
   const typeIcon = {
     info: mdiInformationOutline,
@@ -20,11 +21,13 @@
 </script>
 
 <div class={`alert alert--${type} ${marginTop ? "alert--has-margin-top" : ""}`}>
-  <div class="alert-icon">
-    <Icon component={Svg} viewBox="0 0 24 24">
-      <path fill="currentColor" d={typeIcon[type]} />
-    </Icon>
-  </div>
+  {#if showIcon}
+    <div class="alert-icon">
+      <Icon component={Svg} viewBox="0 0 24 24">
+        <path fill="currentColor" d={typeIcon[type]} />
+      </Icon>
+    </div>
+  {/if}
   <div class="alert-content">
     {#if title}
       <div class="alert-title">{title}</div>

@@ -1,13 +1,22 @@
 <script>
-  import { connectToOdoo, user, username, password } from "../../../state/odoo";
   import { push } from "svelte-spa-router";
+  import Accordion, { Panel, Content, Header } from "@smui-extra/accordion";
+  import IconButton, { Icon } from "@smui/icon-button";
+  import Textfield from "@smui/textfield";
+
+  import { connectToOdoo, user, username, password } from "../../../state/odoo";
+  import { odooEndpoint, projectKey } from "../../../stores/config";
+  import Button, { Label } from "@smui/button";
+  import Alert from "../../../components/Alert.svelte";
 
   let loginError = false;
+  let panelOpen = false;
+  let uName = "";
+  let uPass = "";
 
-  async function handleConnect(e) {
-    const form = new FormData(e.target);
+  async function handleConnect() {
     try {
-      await connectToOdoo(form.get("username"), form.get("password"));
+      await connectToOdoo(uName, uPass);
       push("/");
     } catch (e) {
       loginError = true;
@@ -24,57 +33,90 @@
 <section>
   <h2>Odoo Login</h2>
   {#if $user}
-    <p>You are connected already.</p>
-    <button on:click={handleDisconnect}>Disconnect</button>
+    <Alert>You are connected already.</Alert>
+    <Button variant="outlined" on:click={handleDisconnect}>
+      <Label>Disconnect</Label>
+    </Button>
+    <br />
+    <br />
   {:else}
     <form on:submit|preventDefault={handleConnect}>
       <fieldset>
-        <legend>Connect using your Odoo credentials.</legend>
+        <legend>Connect using your <b>{projectKey}</b> Odoo credentials.</legend
+        >
         <p>
-          <label>Odoo Username<br /> <input name="username" required /> </label>
+          <Textfield
+            type="text"
+            label="Odoo username"
+            style="min-width: 250px;"
+            required
+            bind:value={uName}
+            variant="filled"
+          />
         </p>
         <p>
-          <label
-            >Odoo Password<br />
-            <input name="password" type="password" required />
-          </label>
+          <Textfield
+            type="password"
+            label="Odoo password"
+            style="min-width: 250px;"
+            required
+            bind:value={uPass}
+            variant="filled"
+          />
         </p>
 
         {#if loginError}
-          <p class="error">
+          <Alert type="error">
             Login error, please check your username and password.
-          </p>
+          </Alert>
         {/if}
 
-        <button type="submit">Connect</button>
+        <Button variant="outlined" type="submit">
+          <Label>Connect</Label>
+        </Button>
       </fieldset>
     </form>
   {/if}
-
-  <details>
-    <summary>Is it secure?</summary>
-    <p>
-      Your credentials are stored in your browser and are
-      <strong>only</strong>
-      used to load and save data in the
-      <a href="https://odoo.teledisko.com/" target="_blank" rel="noreferrer"
-        >odoo.teledisko.com</a
-      >
-      server. There is
-      <strong>no third party involved</strong>.
-    </p>
-
-    <p>
-      <strong>Note:</strong>
-      this is just a temporary solution until
-      <a href="https://gitlab.com/teledisko/dao/-/tree/master/tips/2">TIP-2</a>
-      is ready.
-    </p>
-  </details>
+  <Accordion>
+    <Panel bind:open={panelOpen}>
+      <Header>
+        Is it secure?
+        <IconButton slot="icon" toggle pressed={panelOpen}>
+          <Icon class="material-icons" on>expand_less</Icon>
+          <Icon class="material-icons">expand_more</Icon>
+        </IconButton>
+      </Header>
+      <Content>
+        <p>
+          Your credentials are stored in your browser and are
+          <strong>only</strong>
+          used to load and save data in the
+          <a
+            href={odooEndpoint.replace("/jsonrpc", "")}
+            target="_blank"
+            referrerpolicy="no-referrer"
+            rel="noreferrer">{projectKey}'s odoo server</a
+          >. There is
+          <strong>no third party involved</strong>.
+        </p>
+        <p>
+          <strong>Note:</strong>
+          this is just a temporary solution until
+          <a href="https://gitlab.com/teledisko/dao/-/tree/master/tips/2"
+            >TIP-2</a
+          >
+          is ready.
+        </p>
+      </Content>
+    </Panel>
+  </Accordion>
 </section>
 
 <style>
-  details {
-    margin-top: var(--size-l);
+  fieldset {
+    padding: 1.4rem;
+    padding-top: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
   }
 </style>

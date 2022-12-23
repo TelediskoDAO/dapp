@@ -1,7 +1,7 @@
 import { derived } from "svelte/store";
-import { agent } from "../agent";
-import { uid } from "../user";
-import { group, map } from "../../utils"
+import { agent } from "../../../odoo/agent";
+import { uid } from "../../../odoo/user";
+import { group, map } from "../../../utils";
 import { parseTask, parseDuration } from "./parsers";
 
 function midnight(d) {
@@ -42,7 +42,7 @@ const data = derived(
   async ([$agent, $uid], set) => {
     if ($agent && $uid) {
       const durations = group(
-        await $agent.search("project.task.duration", { create_uid: $uid })
+        await $agent.search("hr.timesheet", { create_uid: $uid })
       );
       const taskIds = Object.values(durations).reduce(
         (acc, curr) => acc.concat(curr.task[0]),

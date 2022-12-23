@@ -1,7 +1,7 @@
 import { derived } from "svelte/store";
-import { agent, refresh } from "../agent";
+import { agent, refresh } from "../../../odoo/agent";
 import { tasks, durations } from "../project/objects";
-import { uid } from "../user";
+import { uid } from "../../../odoo/user";
 import { parseLine } from "./parsers";
 import { TIER_TO_RATE } from "./constants";
 

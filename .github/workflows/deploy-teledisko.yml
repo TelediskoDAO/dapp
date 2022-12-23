@@ -21,6 +21,9 @@ jobs:
       VITE_INFURA_API_KEY: f03f549204b84fb49ab1e3f4bdd243c9
       VITE_SW_DEV_ENABLED: false
       VITE_PROJECT_KEY: teledisko
+      VITE_ODOO_ENDPOINT: https://odoo.teledisko.com/jsonrpc
+      VITE_ODOO_DB_NAME: teledisko
+      VITE_WALLETCONNECT_PROJECT_ID: de8d61ef86c9e54fafa789668d13c83e
 
     steps:
       - name: Checkout
@@ -63,7 +66,6 @@ jobs:
           VITE_GRAPH_PROTOCOL_GQL_ENDPOINT: https://graph.dao.teledisko.com/subgraphs/name/TelediskoDAO/dao
           VITE_LAST_MONTH_REWARDS_ENDPOINT: https://graph.dao.teledisko.com/oracle/resolutions/rewards/last
           VITE_APP_ENV: production
-          VITE_WALLETCONNECT_PROJECT_ID: de8d61ef86c9e54fafa789668d13c83e
         if: startsWith(github.ref, 'refs/tags/v')
         run: pnpm build:production; echo "dao.teledisko.com" > dist/CNAME
 
@@ -75,7 +77,6 @@ jobs:
           VITE_GRAPH_PROTOCOL_GQL_ENDPOINT: https://graph.dao-staging.teledisko.com/subgraphs/name/TelediskoDAO/dao
           VITE_LAST_MONTH_REWARDS_ENDPOINT: https://graph.dao-staging.teledisko.com/oracle/resolutions/rewards/last
           VITE_APP_ENV: staging
-          VITE_WALLETCONNECT_PROJECT_ID: de8d61ef86c9e54fafa789668d13c83e
         if: startsWith(github.ref, 'refs/tags/v') != true
         run: pnpm build:staging; echo "dao-staging.teledisko.com" > dist/CNAME
 

@@ -1,7 +1,7 @@
 {
-  "name": "teledisko-dao",
-  "version": "0.22.0",
-  "description": "Teledisko DAO",
+  "name": "neokingdom-whitelabel-dao",
+  "version": "0.22.2",
+  "description": "Neokingdom whitelabel DAO",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

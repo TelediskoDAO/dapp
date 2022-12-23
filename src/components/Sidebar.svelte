@@ -1,7 +1,8 @@
 <script lang="ts">
   import active from "svelte-spa-router/active";
-  import CurrentTask from "./CurrentTask.svelte";
+  // import CurrentTask from "./CurrentTask.svelte";
   import { user, refresh } from "../state/odoo";
+  import { projectKey } from "../stores/config";
   import {
     signer,
     shortAddress,
@@ -11,7 +12,8 @@
     disconnect,
   } from "../stores/wallet";
   import Accordion, { Panel, Content, Header } from "@smui-extra/accordion";
-  import Button, { Label } from "@smui/button";
+  import Button, { Icon, Label } from "@smui/button";
+  import Alert from "./Alert.svelte";
 
   $: refreshTime = new Date($refresh).toLocaleTimeString();
 
@@ -93,7 +95,7 @@
         </Panel>
       </Accordion>
     {/if}
-    <CurrentTask />
+    <!-- <CurrentTask /> -->
 
     <section>
       <ul>
@@ -104,36 +106,26 @@
               Time Tracking</a
             >
           </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/timeline"
-              ><i>calendar_today</i>
-              Timeline</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/report"
-              ><i>fact_check</i>
-              Report</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/tokens"
-              ><i>account_balance</i>
-              Tokens</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/resolutions"
-              ><i>verified</i>
-              Resolutions</a
-            >
-          </li>
-          <li>
-            <a use:active on:click={closeSidebar} href="#/shareholders"
-              ><i>people</i>
-              Shareholders</a
-            >
-          </li>
+          {#if projectKey === "teledisko"}
+            <li>
+              <a use:active on:click={closeSidebar} href="#/tokens"
+                ><i>account_balance</i>
+                Tokens</a
+              >
+            </li>
+            <li>
+              <a use:active on:click={closeSidebar} href="#/resolutions"
+                ><i>verified</i>
+                Resolutions</a
+              >
+            </li>
+            <li>
+              <a use:active on:click={closeSidebar} href="#/shareholders"
+                ><i>people</i>
+                Shareholders</a
+              >
+            </li>
+          {/if}
           <li>
             <a use:active on:click={closeSidebar} href="#/connect/odoo"
               ><i>settings</i>
@@ -157,19 +149,25 @@
       </ul>
     </section>
 
-    <section class="refresh">
-      <h5>Last refresh: {refreshTime}</h5>
-      <button on:click={handleRefresh} on:click={closeSidebar} class="small"
-        ><i>sync</i>Refresh</button
-      >
-    </section>
-
-    <section class="build-info">
+    <Alert showIcon={false}>
+      <h5 style="margin: 0">Last refresh: {refreshTime}</h5>
+      <div class="refresh-wrapper">
+        <Button
+          on:click={handleRefresh}
+          on:click={closeSidebar}
+          variant="outlined"
+          color="secondary"
+        >
+          <Icon class="material-icons">refresh</Icon>
+          <Label>Refresh</Label>
+        </Button>
+      </div>
       {#if appEnv === "production"}
         <small>Version: {version}</small>
       {:else}
         <small>Version: {appEnv}</small>
       {/if}
+      <br />
       {#if appEnv === "staging"}
         <small
           >Commit: <a
@@ -180,7 +178,9 @@
         >
       {/if}
       <small>Build date: {buildDate.substring(0, 19).replace("T", " ")}</small>
-    </section>
+    </Alert>
+
+    <section class="build-info" />
   </nav>
   <label class="overlay" for="sidebar--toggle" />
 </aside>
@@ -219,9 +219,9 @@
     border-radius: 100%;
   }
 
-  .build-info small {
-    color: var(--color-gray-5);
-    display: block;
+  .refresh-wrapper {
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
   }
   ul {
     margin: 0;
@@ -245,11 +245,11 @@
     color: black !important;
   }
 
-  :global(.smui-accordion__header__title) {
+  .content :global(.smui-accordion__header__title) {
     padding: 0 !important;
   }
 
-  :global(.smui-paper__content) {
+  .content :global(.smui-paper__content) {
     padding: 0 !important;
   }
 
@@ -266,10 +266,5 @@
 
   .btn-disconnect {
     margin: 8px auto;
-  }
-
-  .refresh h5 {
-    font-weight: normal;
-    margin-bottom: var(--size-xs);
   }
 </style>

@@ -20,7 +20,9 @@ import {
 import { Web3Modal } from "@web3modal/html";
 
 if (!walletconnectProjectId) {
-  throw new Error("You need to provide VITE_PROJECT_ID env variable");
+  throw new Error(
+    "You need to provide VITE_WALLETCONNECT_PROJECT_ID env variable"
+  );
 }
 
 const chains = [];
