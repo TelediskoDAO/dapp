@@ -1,5 +1,8 @@
 <script>
   import Button, { Icon, Label } from "@smui/button";
+  import Menu from "@smui/menu";
+  import List, { Item, Graphic, Text } from "@smui/list";
+
   import { slide } from "svelte/transition";
   import {
     tasks,
@@ -20,6 +23,7 @@
 
   let createTimeEntry = false;
   let working = false;
+  let menu;
 
   $: subtasks = task.subtaskIds.map((id) => $tasks[id]).filter((task) => task);
   $: tracking = $currentTask && $currentTask.id === task.id;
@@ -133,17 +137,8 @@
             {/if}
           </p>
 
-          <div class="buttons">
-            {#if task.stage === "done"}
-              <Button
-                variant="outlined"
-                disabled={working}
-                on:click={handleStart}
-              >
-                <Icon class="material-icons">play_arrow</Icon>
-                <Label>Track time</Label>
-              </Button>
-            {:else if task.stage !== "approved"}
+          <div class="menu">
+            {#if task.stage !== "approved"}
               <Button
                 variant="outlined"
                 on:click={handleMarkAsDone}
@@ -153,25 +148,41 @@
                 <Label>Mark as done</Label>
               </Button>
             {/if}
-            <Button
-              variant="outlined"
-              target="_blank"
-              href="https://odoo.neokingdom.org/web#model=project.task&id={task.id}&view_type=form"
-            >
-              <Icon class="material-icons">open_in_new</Icon>
-              <Label>Open in odoo</Label>
-            </Button>
-
-            {#if task.stage !== "approved"}
-              <Button
-                variant="outlined"
-                on:click={() => (createTimeEntry = true)}
-                style="margin-left: .2rem;"
-              >
-                <Icon class="material-icons">more_time</Icon>
-                <Label>New time entry</Label>
+            <div>
+              <Button variant="outlined" on:click={() => menu.setOpen(true)}>
+                <Graphic class="material-icons" style="margin-right: 0"
+                  >settings</Graphic
+                >
               </Button>
-            {/if}
+              <Menu anchorCorner="TOP_LEFT" bind:this={menu}>
+                <List>
+                  {#if task.stage === "done"}
+                    <Item disabled={working} on:SMUI:action={handleStart}>
+                      <Graphic class="material-icons">play_arrow</Graphic>
+                      <Text>Track time</Text>
+                    </Item>
+                  {/if}
+                  <Item
+                    on:SMUI:action={() => {
+                      window.open(
+                        `https://odoo.neokingdom.org/web#model=project.task&id=${task.id}&view_type=form`,
+                        "_blank"
+                      );
+                    }}
+                  >
+                    <Graphic class="material-icons">open_in_new</Graphic>
+                    <Text>Open in odoo</Text>
+                  </Item>
+
+                  {#if task.stage !== "approved"}
+                    <Item on:SMUI:action={() => (createTimeEntry = true)}>
+                      <Graphic class="material-icons">more_time</Graphic>
+                      <Text>New time entry</Text>
+                    </Item>
+                  {/if}
+                </List>
+              </Menu>
+            </div>
           </div>
 
           <Durations
@@ -266,8 +277,10 @@
     padding: 0;
   }
 
-  .buttons {
+  .menu {
     margin-top: var(--size-s);
+    display: flex;
+    gap: 5px;
   }
 
   i {
