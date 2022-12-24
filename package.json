@@ -1,6 +1,6 @@
 {
   "name": "neokingdom-whitelabel-dao",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "description": "Neokingdom whitelabel DAO",
   "main": "index.js",
   "scripts": {
