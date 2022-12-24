@@ -42,7 +42,7 @@
     <Row>
       <Cell>Duration</Cell>
       <Cell>Range</Cell>
-      <Cell>Desription</Cell>
+      <Cell>Description</Cell>
       <Cell />
     </Row>
   </Head>
