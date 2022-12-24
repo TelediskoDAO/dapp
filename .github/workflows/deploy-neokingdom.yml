@@ -14,7 +14,7 @@ jobs:
       HTML_TITLE: neokingdom DAO
       HTML_DESCRIPTION: neokingdom DAO
       HTML_BASE_URL: https://dao.neokingdom.org/
-      HTML_IMAGE: https://dao.neokingdom.org/preview.png
+      HTML_IMAGE: https://dao.neokingdom.org/images/neokingdom/logo-512.png
       HTML_IMAGE_ALT: neokingdom DAO logo
       VITE_INFURA_API_KEY: f03f549204b84fb49ab1e3f4bdd243c9
       VITE_SW_DEV_ENABLED: false

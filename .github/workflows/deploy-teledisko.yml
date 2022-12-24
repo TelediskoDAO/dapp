@@ -16,7 +16,7 @@ jobs:
       HTML_TITLE: teledisko DAO
       HTML_DESCRIPTION: teledisko DAO
       HTML_BASE_URL: https://dao.teledisko.com/
-      HTML_IMAGE: https://dao.teledisko.com/preview.png
+      HTML_IMAGE: https://dao.teledisko.com/images/teledisko/logo-512.png
       HTML_IMAGE_ALT: teledisko DAO logo
       VITE_INFURA_API_KEY: f03f549204b84fb49ab1e3f4bdd243c9
       VITE_SW_DEV_ENABLED: false
