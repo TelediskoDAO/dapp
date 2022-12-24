@@ -214,9 +214,24 @@
   }
   .user-data img {
     width: var(--size-m);
+    height: var(--size-m);
+    position: relative;
     display: block;
     margin-right: var(--size-xs);
     border-radius: 100%;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .user-data img::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .refresh-wrapper {
