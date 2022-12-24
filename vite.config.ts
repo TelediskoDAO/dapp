@@ -16,23 +16,23 @@ type Networks = {
 
 const nodeEnv = process.env.NODE_ENV?.toLowerCase() || "development";
 
-const buildPwaOptions = () =>
+const buildPwaOptions = (env) =>
   ({
     mode: process.env.NODE_ENV ? "production" : "development",
     base: "/",
     manifest: {
-      short_name: "teleDAO",
-      name: "teledisko DAO",
-      description: "Access all teledisko DAO features from this nifty app.",
+      short_name: env.HTML_TITLE,
+      name: env.HTML_TITLE,
+      description: "DAO mission control",
       icons: [
         {
-          src: "/images/logo-192.png",
+          src: `/images/${env.VITE_PROJECT_KEY}/logo-192.png`,
           type: "image/png",
           sizes: "192x192",
           purpose: "any maskable",
         },
         {
-          src: "/images/logo-512.png",
+          src: `/images/${env.VITE_PROJECT_KEY}/logo-512.png`,
           type: "image/png",
           sizes: "512x512",
           purpose: "any maskable",
@@ -101,7 +101,7 @@ export default async ({ mode }) => {
     smartContractPath.split(";")
   );
 
-  const pwaOptions = buildPwaOptions();
+  const pwaOptions = buildPwaOptions(env);
 
   return defineConfig({
     base: "./",
