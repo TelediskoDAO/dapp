@@ -88,7 +88,6 @@ export const startDuration = derived(
       const duration = {
         task_id: taskId,
         start: utc(),
-        end: utc(),
       };
       const hours = $hoursByTask[taskId];
       const durationId = await $agent.create("account.analytic.line", duration);
