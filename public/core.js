@@ -30,17 +30,17 @@
     }
   }, 5000);
 
-  function displayError(event) {
+  function displayError(message) {
     const html = `
       <div class="CORE">
         <section class="runtime-error">
           <p>
             <strong>Error:</strong>
-            <code>${event.reason.message}</code>
+            <code>${message}</code>
           </p>
           <p>
             What to do now? Would be nice if you can
-            <a href="https://gitlab.com/teledisko/dao/-/issues/new" target="_blank">create an issue</a>
+            <a href="https://github.com/telediskodao/dapp/issues/new" target="_blank">create an issue</a>
             describing what happened. To keep using this app
             <button onClick="(() => window.location.reload())()">reload the page</button>.
           </p>
@@ -54,11 +54,11 @@
 
   window.addEventListener("error", function (event) {
     console.log("[CORE] Error", event);
-    displayError(event);
+    displayError(event.reason);
   });
 
   window.addEventListener("unhandledrejection", function (event) {
     console.log("[CORE] Unhandled Rejection", event);
-    displayError(event);
+    displayError(event.reason);
   });
 })();

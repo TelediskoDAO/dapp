@@ -10,7 +10,6 @@ function parseDate(s) {
 }
 
 export function parseTask(task) {
-  console.log("task: ", task);
   const upstreamStage = STAGES[task.stage_id[0]];
   const stage = ["backlog", "progress"].includes(upstreamStage)
     ? "todo"

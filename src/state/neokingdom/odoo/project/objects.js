@@ -16,6 +16,17 @@ export const upstream = derivable(
           ["stage_id", "in", [29, 30, 31]],
         ])
       );
+      const childTaskIds = Object.values(tasks).reduce(
+        (acc, { child_ids }) => acc.concat(child_ids),
+        []
+      );
+      const childTasks = group(
+        await $agent.search("project.task", [["id", "in", childTaskIds]])
+      );
+      tasks = {
+        ...tasks,
+        ...childTasks,
+      };
       const taskIds = Object.values(tasks).map(({ id }) => id);
       const durations = group(
         await $agent.search("account.analytic.line", [
