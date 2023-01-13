@@ -43,14 +43,14 @@
     ...(projectKey === "teledisko" && {
       "/tasks": PageTaskIndexTeledisko,
       "/tasks/:stage": PageTaskIndexTeledisko,
-      "/tokens": PageTokens,
-      "/resolutions": PageResolutions,
-      "/resolutions/new": PageResolutionsNew,
-      "/resolutions/:resolutionId": PageResolutionsView,
-      "/resolutions/:resolutionId/edit": PageResolutionsEdit,
-      "/resolutions/:resolutionId/print": PageResolutionsView,
-      "/shareholders": PageShareholders,
     }),
+    "/tokens": PageTokens,
+    "/resolutions": PageResolutions,
+    "/resolutions/new": PageResolutionsNew,
+    "/resolutions/:resolutionId": PageResolutionsView,
+    "/resolutions/:resolutionId/edit": PageResolutionsEdit,
+    "/resolutions/:resolutionId/print": PageResolutionsView,
+    "/shareholders": PageShareholders,
     "*": NotFound,
   };
 
