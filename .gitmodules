@@ -2,3 +2,6 @@
 	path = contracts
 	url = https://github.com/TelediskoDAO/contracts.git
 	branch = main
+[submodule "contracts-nkd"]
+	path = contracts-nkd
+	url = https://github.com/NeokingdomDAO/contracts.git

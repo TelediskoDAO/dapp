@@ -123,11 +123,6 @@ const data = derived(upstream, ($upstream) => {
     ]);
   });
 
-  console.log("{ tasks, durations, projects }: ", {
-    tasks,
-    durations,
-    projects,
-  });
   return { tasks, durations, projects };
 });
 

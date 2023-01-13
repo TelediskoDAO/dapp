@@ -7,7 +7,7 @@
   import { formatEther, Interface } from "ethers/lib/utils";
 
   import ResolutionForm from "../../components/ResolutionForm.svelte";
-  import { resolutionContract, tokenContract } from "../../stores/contracts";
+  import { resolutionContract } from "../../stores/contracts";
   import { signer } from "../../stores/wallet";
 
   import { graphQLClient } from "../../net/graphQl";

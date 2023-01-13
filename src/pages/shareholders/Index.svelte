@@ -17,13 +17,14 @@
   import { graphQLClient } from "../../net/graphQl";
   import { title } from "../../state/runtime";
   import type { DaoManagerEntity, DaoUser as DaoUserType } from "../../types";
+  import Alert from "../../components/Alert.svelte";
 
   title.set("Shareholders");
 
   let daoManager: DaoManagerEntity = null;
   let daoUsers: DaoUserType[] = [];
   let daoUsersComputed = {};
-  let daoUsersAddresses: string[] = [];
+  let daoUsersAddresses: string[] | null = null;
 
   let currentFilter = "all";
   let possibleFilters = {};
@@ -100,7 +101,7 @@
 
 <section>
   <div class="header">
-    {#if Object.keys(possibleFilters).length > 1}
+    {#if Object.keys(possibleFilters).length > 1 && Array.isArray(daoUsersAddresses) && daoUsersAddresses.length > 0}
       <div class="push-right">
         <Select bind:value={currentFilter} label="Filter by status">
           <Option value={"all"}>all</Option>
@@ -115,12 +116,14 @@
       </div>
     {/if}
   </div>
-  {#if daoUsersAddresses.length === 0}
+  {#if !daoUsersAddresses}
     <Skeleton height={300} style="margin-top: 72px">
       <rect width="100%" height="67" x="0" y="0" rx="6px" ry="6px" />
       <rect width="100%" height="67" x="0" y="69" rx="6px" ry="6px" />
       <rect width="100%" height="67" x="0" y="138" rx="6px" ry="6px" />
     </Skeleton>
+  {:else if Array.isArray(daoUsersAddresses) && daoUsersAddresses.length === 0}
+    <Alert>No shareholders at this moment</Alert>
   {:else}
     <DataTable table$aria-label="List of DAO shareholders" style="width: 100%;">
       <Head>

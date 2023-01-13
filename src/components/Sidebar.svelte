@@ -106,26 +106,24 @@
               Time Tracking</a
             >
           </li>
-          {#if projectKey === "teledisko"}
-            <li>
-              <a use:active on:click={closeSidebar} href="#/tokens"
-                ><i>account_balance</i>
-                Tokens</a
-              >
-            </li>
-            <li>
-              <a use:active on:click={closeSidebar} href="#/resolutions"
-                ><i>verified</i>
-                Resolutions</a
-              >
-            </li>
-            <li>
-              <a use:active on:click={closeSidebar} href="#/shareholders"
-                ><i>people</i>
-                Shareholders</a
-              >
-            </li>
-          {/if}
+          <li>
+            <a use:active on:click={closeSidebar} href="#/tokens"
+              ><i>account_balance</i>
+              Tokens</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/resolutions"
+              ><i>verified</i>
+              Resolutions</a
+            >
+          </li>
+          <li>
+            <a use:active on:click={closeSidebar} href="#/shareholders"
+              ><i>people</i>
+              Shareholders</a
+            >
+          </li>
           <li>
             <a use:active on:click={closeSidebar} href="#/connect/odoo"
               ><i>settings</i>
