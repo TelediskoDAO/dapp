@@ -41,7 +41,7 @@ jobs:
           run_install: true
 
       - name: Checkout "contracts" submodule
-        run: git submodule update --init contracts # todo to change whenever we will have NKD contracts
+        run: git submodule update --init contracts
 
       - name: Install contracts
         working-directory: contracts
@@ -49,11 +49,26 @@ jobs:
           pnpm install
 
       - name: Compile contracts
-        working-directory: contracts # todo to change whenever we will have NKD contracts
+        working-directory: contracts
         run: |
           pnpm run compile
           cp -rv typechain ../src/contracts
           cp -rv deployments/* ../src/contracts
+
+      - name: Checkout "contracts-nkd" submodule
+        run: git submodule update --init contracts-nkd
+
+      - name: Install contracts-nkd
+        working-directory: contracts-nkd
+        run: |
+          pnpm install
+
+      - name: Compile contracts-nkd
+        working-directory: contracts-nkd
+        run: |
+          pnpm run compile
+          cp -rv typechain ../src/contracts-nkd
+          cp -rv deployments/* ../src/contracts-nkd
 
       - name: Build for production
         env:
