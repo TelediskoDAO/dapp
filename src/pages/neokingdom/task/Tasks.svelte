@@ -44,45 +44,51 @@
 </script>
 
 {#each sortedList as project}
-  <Paper>
-    <Title>
-      {project.name}
-    </Title>
-    <Content>
-      <div class="metadata">
-        {#if project.stagesCount.done > 0}
-          <p>
-            <span
-              class="toggle"
-              on:click|stopPropagation={toggleDone.bind(null, project.id)}
-              >{stages[project.id].includes("done") ? "Hide" : "Show"}
-              completed tasks</span
-            >
-          </p>
+  <div class="container">
+    <Paper>
+      <Title>
+        {project.name}
+      </Title>
+      <Content>
+        <div class="metadata">
+          {#if project.stagesCount.done > 0}
+            <p>
+              <span
+                class="toggle"
+                on:click|stopPropagation={toggleDone.bind(null, project.id)}
+                >{stages[project.id].includes("done") ? "Hide" : "Show"}
+                completed tasks</span
+              >
+            </p>
+          {/if}
+        </div>
+        {#if project.taskIds.length}
+          <ul>
+            {#each project.taskIds as taskId}
+              {#if $tasks[taskId] && $tasks[taskId].isParentTask}
+                <li>
+                  <Task
+                    stages={stages[project.id]}
+                    task={$tasks[taskId]}
+                    {openDetails}
+                  />
+                </li>
+              {/if}
+            {/each}
+          </ul>
+        {:else}
+          <p>No tasks.</p>
         {/if}
-      </div>
-      {#if project.taskIds.length}
-        <ul>
-          {#each project.taskIds as taskId}
-            {#if $tasks[taskId] && $tasks[taskId].isParentTask}
-              <li>
-                <Task
-                  stages={stages[project.id]}
-                  task={$tasks[taskId]}
-                  {openDetails}
-                />
-              </li>
-            {/if}
-          {/each}
-        </ul>
-      {:else}
-        <p>No tasks.</p>
-      {/if}
-    </Content>
-  </Paper>
+      </Content>
+    </Paper>
+  </div>
 {/each}
 
 <style>
+  .container {
+    margin-bottom: 2rem;
+  }
+
   ul {
     list-style-type: none;
     margin: 0 0 var(--size-m) 0;
