@@ -1,3 +1,4 @@
+import { projectKey } from "../../stores/config";
 import { derived, writable, type Readable } from "svelte/store";
 import { derivable } from "../../state/utils";
 import type { OdooUser, UsersWithEthereumAddress } from "../../types";
@@ -15,7 +16,7 @@ export const user = derived(agent, async ($agent, set) => {
       set({
         uid: data.id,
         name: data.name,
-        image: data.image_medium,
+        image: projectKey === "teledisko" ? data.image_medium : data.avatar_256,
         address: data.ethereum_address,
       });
     } catch (e) {
@@ -34,10 +35,15 @@ export const usersList: Readable<OdooUser[]> = derived(
   async ($agent, set) => {
     if ($agent) {
       try {
-        const data: OdooUser[] = await $agent.search("res.users", [], {
-          fields: ["display_name", "email", "ethereum_address", "image"],
+        let data: OdooUser[] = await $agent.search("res.users", [], {
+          fields:
+            projectKey === "teledisko"
+              ? ["display_name", "email", "ethereum_address", "image"]
+              : ["display_name", "email", "ethereum_address", "avatar_256"],
         });
-
+        if (projectKey === "neokingdom") {
+          data = data.map((d) => ({ ...d, image: d.avatar_256 }));
+        }
         set(data);
       } catch (e) {
         userError.set(

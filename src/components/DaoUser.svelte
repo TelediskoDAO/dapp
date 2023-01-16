@@ -148,6 +148,8 @@
     width: 48px;
     height: 48px;
     margin-right: 1rem;
+    background-color: var(--color-gray-1);
+    text-indent: -99999px;
   }
   .unknown-user-placeholder {
     background-color: var(--color-gray-1);
