@@ -14,7 +14,9 @@
       r &&
         setInterval(() => {
           console.log("Checking for sw update");
-          r.update();
+          r.update().catch((e) => {
+            console.log(e);
+          });
         }, CHECK_EVERY_MS);
     },
     onRegisterError(error) {
