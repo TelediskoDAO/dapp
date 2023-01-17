@@ -31,6 +31,7 @@
   import { handleExecute } from "../handlers/resolutions/execute";
   import { resolutionContract } from "../stores/contracts";
   import { executeState } from "../state/resolutions/execute";
+  import { projectKey } from "../stores/config";
 
   export let resolution: ResolutionEntityEnhanced;
   export let daoManagerData: DaoManagerEntity;
@@ -89,10 +90,12 @@
     <div>
       <div class="info-business">
         <p>
-          <b>Business name:</b> teledisko DAO OÜ
+          <b>Business name:</b>
+          {projectKey} DAO OÜ
         </p>
         <p>
-          <b>Registry code:</b> 16374990
+          <b>Registry code:</b>
+          {projectKey === "teledisko" ? "16374990" : "16638166"}
         </p>
         <p>
           <b>Registered office:</b> Kaarli pst 1 // Roosikrantsi tn 2, 10119 Tallinn,
