@@ -50,7 +50,7 @@ export const RESOLUTION_TYPES_TEXTS: Record<string, any> = {
   genesis: {
     title: "Genesis",
     description:
-      "Bruce Wayne, eccentric billionaire. My anger outweights my guilt. Bats frighten me. It's time my enemies shared my dread. Does it come in black? It's not who I am underneath but what I do that defines me.",
-    disabled: true,
+      "It looks like you are creating a new DAO! This resolution has no notice and has a voting time of 4 days.",
+    disabled: false,
   },
 };
