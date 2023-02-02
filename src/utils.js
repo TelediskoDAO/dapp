@@ -7,8 +7,8 @@ export function utc(date) {
   const day = d.getUTCDate().toString().padStart(2, "0");
   const hour = d.getUTCHours().toString().padStart(2, "0");
   const minute = d.getUTCMinutes().toString().padStart(2, "0");
-  const second = d.getUTCSeconds().toString().padStart(2, "0");
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  //const second = d.getUTCSeconds().toString().padStart(2, "0");
+  return `${year}-${month}-${day} ${hour}:${minute}:00`;
 }
 
 export function toPrettyDuration(hours) {
