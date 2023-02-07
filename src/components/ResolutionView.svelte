@@ -98,8 +98,7 @@
           {projectKey === "teledisko" ? "16374990" : "16638166"}
         </p>
         <p>
-          <b>Registered office:</b> Kaarli pst 1 // Roosikrantsi tn 2, 10119 Tallinn,
-          Estonia
+          <b>Registered office:</b> Laki tn 11/1, 12915 Tallinn, Estonia
         </p>
       </div>
       <hr />
