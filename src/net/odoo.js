@@ -45,9 +45,39 @@ function tuplify(query = {}) {
   return params;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function session(url, db, username, password) {
   const uid = await call(url, "common", "login", db, username, password);
-  const model = call.bind(null, url, "object", "execute_kw", db, uid, password);
+  const model = async (...args) => {
+    for (let i = 0; i <= 3; i++) {
+      if (i > 0) {
+        console.log(`[${i}/3] Retry fetch`);
+      }
+      try {
+        return await call(
+          url,
+          "object",
+          "execute_kw",
+          db,
+          uid,
+          password,
+          ...args
+        );
+      } catch (e) {
+        if (e.toString().includes("Failed to fetch")) {
+          if (i == 3) {
+            throw e;
+          }
+          await sleep(2 ** i * 1000);
+        } else {
+          throw e;
+        }
+      }
+    }
+  };
   return {
     create: async (name, object) => model(name, "create", [object]),
     read: async (name, ids) => model(name, "read", [ids]),
