@@ -29,7 +29,9 @@
     style="width: 100%; margin: 1rem 0; margin-bottom: 2rem;"
   >
     <Body>
-      <Duration {taskId} handleDone={onCreateTimeEntryDone} />
+      {#key taskId}
+        <Duration {taskId} handleDone={onCreateTimeEntryDone} />
+      {/key}
     </Body>
   </DataTable>
 {/if}
@@ -48,10 +50,14 @@
   </Head>
   <Body>
     {#each activeDurations as duration}
-      <Duration {editable} {duration} />
+      {#key duration.id}
+        <Duration {editable} {duration} />
+      {/key}
     {/each}
     {#each pastDurations as duration}
-      <Duration {editable} {duration} />
+      {#key duration.id}
+        <Duration {editable} {duration} />
+      {/key}
     {/each}
   </Body>
 </DataTable>

@@ -56,7 +56,11 @@
     // If there is no `duration`, we create a new duration connected to `taskId`
     let start = joinDate(startDate, startTime);
     let end = keepTracking ? false : joinDate(endDate, endTime);
-    if (keepTracking && $currentTask !== undefined && $currentTask !== taskId) {
+    if (
+      $currentTask &&
+      ($currentTask.id !== duration?.taskId ||
+        (taskId && $currentTask.id !== taskId))
+    ) {
       //const message = `You are tracking "${$currentTask.name}". `;
       //if (confirm(message)) {
       await $stopDuration($currentDuration.id);
@@ -161,16 +165,25 @@
             />
           </p>
         {/if}
-        <Textfield label="Entry description" bind:value={description} />
-        <!--
-        {#if duration.end}
+
+        {#if duration?.end}
           <p>
-            <label>Continue tracking the task
+            <label
+              >Continue tracking the task
               <input bind:checked={keepTracking} type="checkbox" />
             </label>
           </p>
         {/if}
-        -->
+
+        <Textfield
+          label="Entry description"
+          bind:value={description}
+          style="width: 100%;"
+          helperLine$style="width: 100%;"
+          input$rows={4}
+          textarea
+        />
+
         <div class="buttons">
           <Button type="submit" variant="outlined">Save</Button>
           {#if duration}
@@ -220,7 +233,7 @@
   p {
     max-width: 20rem;
     word-break: break-word;
-    white-space: normal;
+    white-space: pre-wrap;
   }
 
   .edit .buttons {
