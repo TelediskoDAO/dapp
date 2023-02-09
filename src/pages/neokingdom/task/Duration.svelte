@@ -106,7 +106,11 @@
           {:else}<strong class="timer">now</strong>{/if}</span
         >
       </Cell>
-      <Cell>{duration.description}</Cell>
+      <Cell>
+        <p>
+          {duration.description}
+        </p>
+      </Cell>
       <Cell class="options">
         {#if editable}
           <div class="buttons">
@@ -211,6 +215,12 @@
 
   .buttons :global(button:hover) {
     box-shadow: none;
+  }
+
+  p {
+    max-width: 20rem;
+    word-break: break-word;
+    white-space: normal;
   }
 
   .edit .buttons {
