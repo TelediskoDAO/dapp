@@ -166,15 +166,6 @@
           </p>
         {/if}
 
-        {#if duration?.end}
-          <p>
-            <label
-              >Continue tracking the task
-              <input bind:checked={keepTracking} type="checkbox" />
-            </label>
-          </p>
-        {/if}
-
         <Textfield
           label="Entry description"
           bind:value={description}
