@@ -111,7 +111,7 @@
         >
       </Cell>
       <Cell>
-        <p>
+        <p class="description">
           {duration.description}
         </p>
       </Cell>
@@ -221,7 +221,7 @@
     box-shadow: none;
   }
 
-  p {
+  .description {
     max-width: 20rem;
     word-break: break-word;
     white-space: pre-wrap;
