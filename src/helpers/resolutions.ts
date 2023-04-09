@@ -154,8 +154,14 @@ export const getEnhancedResolutionMapper =
       resolutionTypeInfo
     );
     const resolutionVoters = getResolutionVoters(resolution);
+    const hasQuorum =
+      resolution.hasQuorum ||
+      (resolution.isNegative &&
+        state === RESOLUTION_STATES.ENDED &&
+        resolution.yesVotesTotal === "0");
     return {
       ...resolution,
+      hasQuorum,
       voters: resolutionVoters,
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
