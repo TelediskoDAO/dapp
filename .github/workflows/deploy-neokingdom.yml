@@ -13,8 +13,8 @@ jobs:
       SMART_CONTRACT_PATH: ./contracts/deployments/networks.json # todo to change whenever we will have NKD contracts
       HTML_TITLE: neokingdom DAO
       HTML_DESCRIPTION: neokingdom DAO
-      HTML_BASE_URL: https://dao.neokingdom.org/
-      HTML_IMAGE: https://dao.neokingdom.org/images/neokingdom/logo-512.png
+      HTML_BASE_URL: https://dao.legacy.neokingdom.org/
+      HTML_IMAGE: https://dao.legacy.neokingdom.org/images/neokingdom/logo-512.png
       HTML_IMAGE_ALT: neokingdom DAO logo
       VITE_INFURA_API_KEY: f03f549204b84fb49ab1e3f4bdd243c9
       VITE_SW_DEV_ENABLED: false
@@ -79,7 +79,7 @@ jobs:
           VITE_LAST_MONTH_REWARDS_ENDPOINT: https://api.neokingdom.org/oracle/resolutions/rewards/last
           VITE_APP_ENV: production
           VITE_WALLETCONNECT_PROJECT_ID: 6cd4f91f5ec4c39c80b196f4623a8805
-        run: pnpm build:production; echo "dao.neokingdom.org" > dist/CNAME
+        run: pnpm build:production; echo "dao.legacy.neokingdom.org" > dist/CNAME
 
       - name: Add .nojekyll file
         run: touch dist/.nojekyll
