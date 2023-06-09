@@ -255,7 +255,7 @@ export const PDF_SIGNER = {
       from: new Date("6/8/2023").getTime(),
     },
   ],
-}[projectKey];
+}[projectKey as "teledisko" | "neokingdom"];
 
 export const getPdfSigner = (resolution: ResolutionEntityEnhanced) => {
   const resolutionApprovedTs = getDateFromUnixTimestamp(
