@@ -15,6 +15,7 @@ import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 
 import type { TelediskoToken } from "contracts/typechain";
+import { projectKey } from "../stores/config";
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -231,4 +232,38 @@ export const getPreviousMonth = () => {
   currentDate.setDate(0);
 
   return currentDate.toLocaleString("en-us", { month: "long" });
+};
+
+export const PDF_SIGNER = {
+  teledisko: [
+    {
+      name: "Benjamin Gregor Uphues",
+      from: new Date("1/1/2020").getTime(),
+    },
+    {
+      name: "Ragnar Reindoff",
+      from: new Date("6/8/2023").getTime(),
+    },
+  ],
+  neokingdom: [
+    {
+      name: "Benjamin Gregor Uphues",
+      from: new Date("1/1/2020").getTime(),
+    },
+    {
+      name: "Ragnar Reindoff",
+      from: new Date("6/8/2023").getTime(),
+    },
+  ],
+}[projectKey];
+
+export const getPdfSigner = (resolution: ResolutionEntityEnhanced) => {
+  const resolutionApprovedTs = getDateFromUnixTimestamp(
+    resolution.approveTimestamp
+  ).getTime();
+  return (
+    PDF_SIGNER.sort((a, b) => b.from - a.from).find(
+      (signer) => signer.from <= resolutionApprovedTs
+    )?.name || "Benjamin Gregor Uphues"
+  );
 };

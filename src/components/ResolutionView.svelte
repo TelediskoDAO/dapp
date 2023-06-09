@@ -12,6 +12,7 @@
 
   import {
     getDateFromUnixTimestamp,
+    getPdfSigner,
     RESOLUTION_STATES,
   } from "../helpers/resolutions";
   import VotingWidget from "./VotingWidget.svelte";
@@ -40,6 +41,8 @@
   let signerVoted: ResolutionVoter | null = null;
   const converter = new showdown.Converter();
   converter.setFlavor("github");
+
+  const secretary = resolution ? getPdfSigner(resolution) : "";
 
   onMount(() => {
     if (isPrint) {
@@ -139,7 +142,8 @@
             <a href={window.location.href}>{window.location.href}</a>
           </p>
           <p>
-            <b>Recording secretary:</b> Benjamin Gregor Uphues
+            <b>Recording secretary:</b>
+            {secretary}
           </p>
         </div>
         <hr />
@@ -431,7 +435,7 @@
   <div class="signed">
     <p>/signed digitally/</p>
     --------------------------------------
-    <p>Benjamin Gregor Uphues</p>
+    <p>{secretary}</p>
     <p>Member of management board</p>
   </div>
 {/if}
