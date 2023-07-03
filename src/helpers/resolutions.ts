@@ -258,12 +258,12 @@ export const PDF_SIGNER = {
 }[projectKey as "teledisko" | "neokingdom"];
 
 export const getPdfSigner = (resolution: ResolutionEntityEnhanced) => {
-  const resolutionApprovedTs = getDateFromUnixTimestamp(
-    resolution.approveTimestamp
+  const resolutionCreatedTs = getDateFromUnixTimestamp(
+    resolution.createTimestamp
   ).getTime();
   return (
     PDF_SIGNER.sort((a, b) => b.from - a.from).find(
-      (signer) => signer.from <= resolutionApprovedTs
+      (signer) => signer.from <= resolutionCreatedTs
     )?.name || "Benjamin Gregor Uphues"
   );
 };
