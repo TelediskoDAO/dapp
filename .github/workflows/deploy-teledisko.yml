@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SMART_CONTRACT_PATH: ./contracts/deployments/networks.json
+      SMART_CONTRACT_PATH: ./deployments/networks.json
       HTML_TITLE: teledisko DAO
       HTML_DESCRIPTION: teledisko DAO
       HTML_BASE_URL: https://dao.teledisko.com/
