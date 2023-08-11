@@ -1,6 +1,7 @@
 .env
 build/
-src/contracts
+# Forgive me father for I've sinned 🙏
+# src/contracts
 
 # Logs
 logs

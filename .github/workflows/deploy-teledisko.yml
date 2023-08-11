@@ -37,41 +37,41 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
-      - name: Install
-        uses: pnpm/action-setup@v2
-        with:
-          version: 6
-          run_install: true
-
-      - name: Checkout "contracts" submodule
-        run: git submodule update --init contracts
-
-      - name: Install contracts
-        working-directory: contracts
-        run: |
-          pnpm install
-
-      - name: Compile contracts
-        working-directory: contracts
-        run: |
-          pnpm run compile
-          cp -rv typechain ../src/contracts
-          cp -rv deployments/* ../src/contracts
-
-      - name: Checkout "contracts-nkd" submodule
-        run: git submodule update --init contracts-nkd
-
-      - name: Install contracts-nkd
-        working-directory: contracts-nkd
-        run: |
-          pnpm install
-
-      - name: Compile contracts-nkd
-        working-directory: contracts-nkd
-        run: |
-          pnpm run compile
-          cp -rv typechain ../src/contracts-nkd
-          cp -rv deployments/* ../src/contracts-nkd
+#      - name: Install
+#        uses: pnpm/action-setup@v2
+#        with:
+#          version: 6
+#          run_install: true
+#
+#      - name: Checkout "contracts" submodule
+#        run: git submodule update --init contracts
+#
+#      - name: Install contracts
+#        working-directory: contracts
+#        run: |
+#          pnpm install
+#
+#      - name: Compile contracts
+#        working-directory: contracts
+#        run: |
+#          pnpm run compile
+#          cp -rv typechain ../src/contracts
+#          cp -rv deployments/* ../src/contracts
+#
+#      - name: Checkout "contracts-nkd" submodule
+#        run: git submodule update --init contracts-nkd
+#
+#      - name: Install contracts-nkd
+#        working-directory: contracts-nkd
+#        run: |
+#          pnpm install
+#
+#      - name: Compile contracts-nkd
+#        working-directory: contracts-nkd
+#        run: |
+#          pnpm run compile
+#          cp -rv typechain ../src/contracts-nkd
+#          cp -rv deployments/* ../src/contracts-nkd
 
       - name: Build for production
         env:
