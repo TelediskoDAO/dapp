@@ -41,23 +41,6 @@ jobs:
           version: 8
           run_install: true
 
-      - name: Checkout "contracts" submodule
-        run: |
-          cd contracts
-          git pull origin main
-
-      - name: Install contracts
-        run: |
-          cd contracts
-          pnpm install
-
-      - name: Compile contracts
-        run: |
-          cd contracts
-          pnpm run compile
-          cp -rv typechain ../src/contracts
-          cp -rv deployments/* ../src/contracts
-
       - name: Build for production
         env:
           VITE_ETHEREUM_ENDPOINT: https://eth.bd.evmos.org:8545
