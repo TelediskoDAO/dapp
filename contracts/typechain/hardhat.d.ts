@@ -57,18 +57,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IAccessControl__factory>;
     getContractFactory(
-      name: "ERC20",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ERC20__factory>;
-    getContractFactory(
-      name: "IERC20Metadata",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC20Metadata__factory>;
-    getContractFactory(
-      name: "IERC20",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC20__factory>;
-    getContractFactory(
       name: "ERC165",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC165__factory>;
@@ -89,14 +77,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Snapshottable__factory>;
     getContractFactory(
-      name: "InternalMarket",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.InternalMarket__factory>;
-    getContractFactory(
-      name: "InternalMarketBase",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.InternalMarketBase__factory>;
-    getContractFactory(
       name: "ERC20Mock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Mock__factory>;
@@ -104,10 +84,6 @@ declare module "hardhat/types/runtime" {
       name: "NewTelediskoTokenMock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NewTelediskoTokenMock__factory>;
-    getContractFactory(
-      name: "ResolutionExecutorMock",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ResolutionExecutorMock__factory>;
     getContractFactory(
       name: "ResolutionManagerV2Mock",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -125,29 +101,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TelediskoTokenV2Mock__factory>;
     getContractFactory(
-      name: "TokenMock",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.TokenMock__factory>;
-    getContractFactory(
       name: "VotingMock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.VotingMock__factory>;
-    getContractFactory(
-      name: "IStdReference",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IStdReference__factory>;
-    getContractFactory(
-      name: "PriceOracle",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.PriceOracle__factory>;
-    getContractFactory(
-      name: "IRedemptionController",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IRedemptionController__factory>;
-    getContractFactory(
-      name: "RedemptionController",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.RedemptionController__factory>;
     getContractFactory(
       name: "ResolutionManager",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -257,21 +213,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IAccessControl>;
     getContractAt(
-      name: "ERC20",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ERC20>;
-    getContractAt(
-      name: "IERC20Metadata",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC20Metadata>;
-    getContractAt(
-      name: "IERC20",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC20>;
-    getContractAt(
       name: "ERC165",
       address: string,
       signer?: ethers.Signer
@@ -297,16 +238,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Snapshottable>;
     getContractAt(
-      name: "InternalMarket",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.InternalMarket>;
-    getContractAt(
-      name: "InternalMarketBase",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.InternalMarketBase>;
-    getContractAt(
       name: "ERC20Mock",
       address: string,
       signer?: ethers.Signer
@@ -316,11 +247,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.NewTelediskoTokenMock>;
-    getContractAt(
-      name: "ResolutionExecutorMock",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ResolutionExecutorMock>;
     getContractAt(
       name: "ResolutionManagerV2Mock",
       address: string,
@@ -342,35 +268,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.TelediskoTokenV2Mock>;
     getContractAt(
-      name: "TokenMock",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.TokenMock>;
-    getContractAt(
       name: "VotingMock",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.VotingMock>;
-    getContractAt(
-      name: "IStdReference",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IStdReference>;
-    getContractAt(
-      name: "PriceOracle",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PriceOracle>;
-    getContractAt(
-      name: "IRedemptionController",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IRedemptionController>;
-    getContractAt(
-      name: "RedemptionController",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.RedemptionController>;
     getContractAt(
       name: "ResolutionManager",
       address: string,

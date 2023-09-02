@@ -24,71 +24,85 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface TelediskoTokenSnapshotInterface extends utils.Interface {
   functions: {
+    "OFFER_EXPIRATION()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "balanceOfAt(address,uint256)": FunctionFragment;
+    "createOffer(uint256)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "getCurrentSnapshotId()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
+    "lockedBalanceOf(address)": FunctionFragment;
     "name()": FunctionFragment;
+    "offeredBalanceOf(address)": FunctionFragment;
     "snapshot()": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "totalSupplyAt(uint256)": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "unlockedBalanceOf(address)": FunctionFragment;
     "vestingBalanceOf(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "OFFER_EXPIRATION"
       | "allowance"
       | "approve"
       | "balanceOf"
       | "balanceOfAt"
+      | "createOffer"
       | "decimals"
       | "decreaseAllowance"
       | "getCurrentSnapshotId"
       | "increaseAllowance"
       | "initialize"
+      | "lockedBalanceOf"
       | "name"
+      | "offeredBalanceOf"
       | "snapshot"
       | "symbol"
       | "totalSupply"
       | "totalSupplyAt"
       | "transfer"
       | "transferFrom"
+      | "unlockedBalanceOf"
       | "vestingBalanceOf"
   ): FunctionFragment;
 
   encodeFunctionData(
+    functionFragment: "OFFER_EXPIRATION",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "allowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "approve",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "balanceOfAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createOffer",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getCurrentSnapshotId",
@@ -96,13 +110,21 @@ export interface TelediskoTokenSnapshotInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lockedBalanceOf",
+    values: [string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "offeredBalanceOf",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "snapshot", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -111,30 +133,38 @@ export interface TelediskoTokenSnapshotInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "totalSupplyAt",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "transfer",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "transferFrom",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "unlockedBalanceOf",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "vestingBalanceOf",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "OFFER_EXPIRATION",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfAt",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "createOffer",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
@@ -151,7 +181,15 @@ export interface TelediskoTokenSnapshotInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lockedBalanceOf",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "offeredBalanceOf",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "snapshot", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
@@ -168,6 +206,10 @@ export interface TelediskoTokenSnapshotInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "unlockedBalanceOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "vestingBalanceOf",
     data: BytesLike
   ): Result;
@@ -175,6 +217,9 @@ export interface TelediskoTokenSnapshotInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
+    "OfferCreated(uint128,address,uint256,uint256)": EventFragment;
+    "OfferExpired(uint128,address,uint256)": EventFragment;
+    "OfferMatched(uint128,address,address,uint256)": EventFragment;
     "Snapshot(uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "VestingSet(address,uint256)": EventFragment;
@@ -182,6 +227,9 @@ export interface TelediskoTokenSnapshotInterface extends utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OfferCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OfferExpired"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OfferMatched"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Snapshot"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VestingSet"): EventFragment;
@@ -205,6 +253,44 @@ export interface InitializedEventObject {
 export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+
+export interface OfferCreatedEventObject {
+  id: BigNumber;
+  from: string;
+  amount: BigNumber;
+  expiration: BigNumber;
+}
+export type OfferCreatedEvent = TypedEvent<
+  [BigNumber, string, BigNumber, BigNumber],
+  OfferCreatedEventObject
+>;
+
+export type OfferCreatedEventFilter = TypedEventFilter<OfferCreatedEvent>;
+
+export interface OfferExpiredEventObject {
+  id: BigNumber;
+  from: string;
+  amount: BigNumber;
+}
+export type OfferExpiredEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  OfferExpiredEventObject
+>;
+
+export type OfferExpiredEventFilter = TypedEventFilter<OfferExpiredEvent>;
+
+export interface OfferMatchedEventObject {
+  id: BigNumber;
+  from: string;
+  to: string;
+  amount: BigNumber;
+}
+export type OfferMatchedEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber],
+  OfferMatchedEventObject
+>;
+
+export type OfferMatchedEventFilter = TypedEventFilter<OfferMatchedEvent>;
 
 export interface SnapshotEventObject {
   id: BigNumber;
@@ -263,55 +349,69 @@ export interface TelediskoTokenSnapshot extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    OFFER_EXPIRATION(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
+      owner: string,
+      spender: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    balanceOf(
-      account: PromiseOrValue<string>,
+    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    balanceOfAt(
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    createOffer(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      name: string,
+      symbol: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    lockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    offeredBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
@@ -319,78 +419,97 @@ export interface TelediskoTokenSnapshot extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    unlockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     vestingBalanceOf(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
   };
 
+  OFFER_EXPIRATION(overrides?: CallOverrides): Promise<BigNumber>;
+
   allowance(
-    owner: PromiseOrValue<string>,
-    spender: PromiseOrValue<string>,
+    owner: string,
+    spender: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   approve(
-    spender: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  balanceOf(
-    account: PromiseOrValue<string>,
+  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  balanceOfAt(
+    account: string,
+    snapshotId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  balanceOfAt(
-    account: PromiseOrValue<string>,
-    snapshotId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  createOffer(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
-    spender: PromiseOrValue<string>,
-    subtractedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    spender: string,
+    subtractedValue: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
   increaseAllowance(
-    spender: PromiseOrValue<string>,
-    addedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    spender: string,
+    addedValue: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   initialize(
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    name: string,
+    symbol: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  lockedBalanceOf(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  offeredBalanceOf(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   snapshot(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
@@ -398,75 +517,91 @@ export interface TelediskoTokenSnapshot extends BaseContract {
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   totalSupplyAt(
-    snapshotId: PromiseOrValue<BigNumberish>,
+    snapshotId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   transfer(
-    to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    to: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   transferFrom(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    from: string,
+    to: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  unlockedBalanceOf(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   vestingBalanceOf(
-    account: PromiseOrValue<string>,
+    account: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   callStatic: {
+    OFFER_EXPIRATION(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
+      owner: string,
+      spender: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      spender: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    balanceOf(
-      account: PromiseOrValue<string>,
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    balanceOfAt(
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    createOffer(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
+      spender: string,
+      addedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
+      name: string,
+      symbol: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    lockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<string>;
+
+    offeredBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     snapshot(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -475,55 +610,97 @@ export interface TelediskoTokenSnapshot extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      to: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      from: string,
+      to: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    unlockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     vestingBalanceOf(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   filters: {
     "Approval(address,address,uint256)"(
-      owner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
+      owner?: string | null,
+      spender?: string | null,
       value?: null
     ): ApprovalEventFilter;
     Approval(
-      owner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
+      owner?: string | null,
+      spender?: string | null,
       value?: null
     ): ApprovalEventFilter;
 
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
+    "OfferCreated(uint128,address,uint256,uint256)"(
+      id?: null,
+      from?: null,
+      amount?: null,
+      expiration?: null
+    ): OfferCreatedEventFilter;
+    OfferCreated(
+      id?: null,
+      from?: null,
+      amount?: null,
+      expiration?: null
+    ): OfferCreatedEventFilter;
+
+    "OfferExpired(uint128,address,uint256)"(
+      id?: null,
+      from?: null,
+      amount?: null
+    ): OfferExpiredEventFilter;
+    OfferExpired(
+      id?: null,
+      from?: null,
+      amount?: null
+    ): OfferExpiredEventFilter;
+
+    "OfferMatched(uint128,address,address,uint256)"(
+      id?: null,
+      from?: null,
+      to?: null,
+      amount?: null
+    ): OfferMatchedEventFilter;
+    OfferMatched(
+      id?: null,
+      from?: null,
+      to?: null,
+      amount?: null
+    ): OfferMatchedEventFilter;
+
     "Snapshot(uint256)"(id?: null): SnapshotEventFilter;
     Snapshot(id?: null): SnapshotEventFilter;
 
     "Transfer(address,address,uint256)"(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
+      from?: string | null,
+      to?: string | null,
       value?: null
     ): TransferEventFilter;
     Transfer(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
+      from?: string | null,
+      to?: string | null,
       value?: null
     ): TransferEventFilter;
 
@@ -535,55 +712,69 @@ export interface TelediskoTokenSnapshot extends BaseContract {
   };
 
   estimateGas: {
+    OFFER_EXPIRATION(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
+      owner: string,
+      spender: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    createOffer(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      name: string,
+      symbol: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    lockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    offeredBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
@@ -591,59 +782,71 @@ export interface TelediskoTokenSnapshot extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    unlockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     vestingBalanceOf(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    OFFER_EXPIRATION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
+      owner: string,
+      spender: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    createOffer(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getCurrentSnapshotId(
@@ -651,21 +854,31 @@ export interface TelediskoTokenSnapshot extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      name: string,
+      symbol: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    lockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    offeredBalanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -673,25 +886,30 @@ export interface TelediskoTokenSnapshot extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unlockedBalanceOf(
+      account: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     vestingBalanceOf(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

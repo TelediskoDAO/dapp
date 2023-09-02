@@ -17,7 +17,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface RolesInterface extends utils.Interface {
@@ -26,7 +25,6 @@ export interface RolesInterface extends utils.Interface {
     "OPERATOR_ROLE()": FunctionFragment;
     "RESOLUTION_ROLE()": FunctionFragment;
     "SHAREHOLDER_REGISTRY_ROLE()": FunctionFragment;
-    "TOKEN_MANAGER_ROLE()": FunctionFragment;
   };
 
   getFunction(
@@ -35,7 +33,6 @@ export interface RolesInterface extends utils.Interface {
       | "OPERATOR_ROLE"
       | "RESOLUTION_ROLE"
       | "SHAREHOLDER_REGISTRY_ROLE"
-      | "TOKEN_MANAGER_ROLE"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -54,10 +51,6 @@ export interface RolesInterface extends utils.Interface {
     functionFragment: "SHAREHOLDER_REGISTRY_ROLE",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "TOKEN_MANAGER_ROLE",
-    values?: undefined
-  ): string;
 
   decodeFunctionResult(
     functionFragment: "ESCROW_ROLE",
@@ -73,10 +66,6 @@ export interface RolesInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "SHAREHOLDER_REGISTRY_ROLE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "TOKEN_MANAGER_ROLE",
     data: BytesLike
   ): Result;
 
@@ -117,8 +106,6 @@ export interface Roles extends BaseContract {
     RESOLUTION_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     SHAREHOLDER_REGISTRY_ROLE(overrides?: CallOverrides): Promise<[string]>;
-
-    TOKEN_MANAGER_ROLE(overrides?: CallOverrides): Promise<[string]>;
   };
 
   ESCROW_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -129,8 +116,6 @@ export interface Roles extends BaseContract {
 
   SHAREHOLDER_REGISTRY_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  TOKEN_MANAGER_ROLE(overrides?: CallOverrides): Promise<string>;
-
   callStatic: {
     ESCROW_ROLE(overrides?: CallOverrides): Promise<string>;
 
@@ -139,8 +124,6 @@ export interface Roles extends BaseContract {
     RESOLUTION_ROLE(overrides?: CallOverrides): Promise<string>;
 
     SHAREHOLDER_REGISTRY_ROLE(overrides?: CallOverrides): Promise<string>;
-
-    TOKEN_MANAGER_ROLE(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -153,8 +136,6 @@ export interface Roles extends BaseContract {
     RESOLUTION_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     SHAREHOLDER_REGISTRY_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    TOKEN_MANAGER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -165,10 +146,6 @@ export interface Roles extends BaseContract {
     RESOLUTION_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     SHAREHOLDER_REGISTRY_ROLE(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    TOKEN_MANAGER_ROLE(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

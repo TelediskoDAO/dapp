@@ -24,7 +24,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface VotingBaseInterface extends utils.Interface {
@@ -49,31 +48,18 @@ export interface VotingBaseInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "afterTokenTransfer",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [string, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "canVote",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "delegate",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getDelegate",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "canVote", values: [string]): string;
+  encodeFunctionData(functionFragment: "delegate", values: [string]): string;
+  encodeFunctionData(functionFragment: "getDelegate", values: [string]): string;
   encodeFunctionData(
     functionFragment: "getTotalVotingPower",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getVotingPower",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
 
   decodeFunctionResult(
@@ -157,114 +143,93 @@ export interface VotingBase extends BaseContract {
 
   functions: {
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    canVote(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    canVote(account: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     delegate(
-      newDelegate: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newDelegate: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getDelegate(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    getDelegate(account: string, overrides?: CallOverrides): Promise<[string]>;
 
     getTotalVotingPower(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getVotingPower(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
   };
 
   afterTokenTransfer(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    from: string,
+    to: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  canVote(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  canVote(account: string, overrides?: CallOverrides): Promise<boolean>;
 
   delegate(
-    newDelegate: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newDelegate: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getDelegate(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  getDelegate(account: string, overrides?: CallOverrides): Promise<string>;
 
   getTotalVotingPower(overrides?: CallOverrides): Promise<BigNumber>;
 
   getVotingPower(
-    account: PromiseOrValue<string>,
+    account: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   callStatic: {
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      from: string,
+      to: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    canVote(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    canVote(account: string, overrides?: CallOverrides): Promise<boolean>;
 
-    delegate(
-      newDelegate: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    delegate(newDelegate: string, overrides?: CallOverrides): Promise<void>;
 
-    getDelegate(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getDelegate(account: string, overrides?: CallOverrides): Promise<string>;
 
     getTotalVotingPower(overrides?: CallOverrides): Promise<BigNumber>;
 
     getVotingPower(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   filters: {
     "DelegateChanged(address,address,address)"(
-      delegator?: PromiseOrValue<string> | null,
+      delegator?: string | null,
       currentDelegate?: null,
       newDelegate?: null
     ): DelegateChangedEventFilter;
     DelegateChanged(
-      delegator?: PromiseOrValue<string> | null,
+      delegator?: string | null,
       currentDelegate?: null,
       newDelegate?: null
     ): DelegateChangedEventFilter;
 
     "DelegateVotesChanged(address,uint256,uint256)"(
-      account?: PromiseOrValue<string> | null,
+      account?: string | null,
       oldVotingPower?: null,
       newVotingPower?: null
     ): DelegateVotesChangedEventFilter;
     DelegateVotesChanged(
-      account?: PromiseOrValue<string> | null,
+      account?: string | null,
       oldVotingPower?: null,
       newVotingPower?: null
     ): DelegateVotesChangedEventFilter;
@@ -272,55 +237,49 @@ export interface VotingBase extends BaseContract {
 
   estimateGas: {
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    canVote(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    canVote(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     delegate(
-      newDelegate: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newDelegate: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getDelegate(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getDelegate(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalVotingPower(overrides?: CallOverrides): Promise<BigNumber>;
 
     getVotingPower(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     canVote(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     delegate(
-      newDelegate: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newDelegate: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getDelegate(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -329,7 +288,7 @@ export interface VotingBase extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getVotingPower(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

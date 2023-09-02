@@ -24,7 +24,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface ShareholderRegistryMockInterface extends utils.Interface {
@@ -81,21 +80,15 @@ export interface ShareholderRegistryMockInterface extends utils.Interface {
     functionFragment: "SHAREHOLDER_STATUS",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "balanceOfAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "getStatus",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "getStatus", values: [string]): string;
   encodeFunctionData(
     functionFragment: "getStatusAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -103,23 +96,15 @@ export interface ShareholderRegistryMockInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "isAtLeast",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
+    values: [BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: "isAtLeastAt",
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [BytesLike, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "mock_isAtLeast",
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<string>,
-      PromiseOrValue<boolean>
-    ]
+    values: [BytesLike, string, boolean]
   ): string;
   encodeFunctionData(functionFragment: "snapshot", values?: undefined): string;
   encodeFunctionData(
@@ -128,7 +113,7 @@ export interface ShareholderRegistryMockInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "totalSupplyAt",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
 
   decodeFunctionResult(
@@ -226,60 +211,54 @@ export interface ShareholderRegistryMock extends BaseContract {
 
     SHAREHOLDER_STATUS(overrides?: CallOverrides): Promise<[string]>;
 
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getStatus(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    getStatus(account: string, overrides?: CallOverrides): Promise<[string]>;
 
     getStatusAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     initialize(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      status: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     isAtLeastAt(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      status: BytesLike,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     mock_isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      value: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      status: BytesLike,
+      account: string,
+      value: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
   };
@@ -292,60 +271,54 @@ export interface ShareholderRegistryMock extends BaseContract {
 
   SHAREHOLDER_STATUS(overrides?: CallOverrides): Promise<string>;
 
-  balanceOf(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   balanceOfAt(
-    account: PromiseOrValue<string>,
-    snapshotId: PromiseOrValue<BigNumberish>,
+    account: string,
+    snapshotId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getStatus(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  getStatus(account: string, overrides?: CallOverrides): Promise<string>;
 
   getStatusAt(
-    account: PromiseOrValue<string>,
-    snapshotId: PromiseOrValue<BigNumberish>,
+    account: string,
+    snapshotId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
   initialize(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   isAtLeast(
-    status: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+    status: BytesLike,
+    account: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   isAtLeastAt(
-    status: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    snapshotId: PromiseOrValue<BigNumberish>,
+    status: BytesLike,
+    account: string,
+    snapshotId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   mock_isAtLeast(
-    status: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    value: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    status: BytesLike,
+    account: string,
+    value: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   snapshot(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   totalSupplyAt(
-    snapshotId: PromiseOrValue<BigNumberish>,
+    snapshotId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -358,47 +331,41 @@ export interface ShareholderRegistryMock extends BaseContract {
 
     SHAREHOLDER_STATUS(overrides?: CallOverrides): Promise<string>;
 
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getStatus(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getStatus(account: string, overrides?: CallOverrides): Promise<string>;
 
     getStatusAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
     initialize(overrides?: CallOverrides): Promise<void>;
 
     isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      status: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     isAtLeastAt(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      status: BytesLike,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     mock_isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      value: PromiseOrValue<boolean>,
+      status: BytesLike,
+      account: string,
+      value: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -407,7 +374,7 @@ export interface ShareholderRegistryMock extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -426,60 +393,54 @@ export interface ShareholderRegistryMock extends BaseContract {
 
     SHAREHOLDER_STATUS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getStatus(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getStatus(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getStatusAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     initialize(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      status: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     isAtLeastAt(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      status: BytesLike,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     mock_isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      value: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      status: BytesLike,
+      account: string,
+      value: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -500,59 +461,59 @@ export interface ShareholderRegistryMock extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getStatus(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getStatusAt(
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+      status: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isAtLeastAt(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      snapshotId: PromiseOrValue<BigNumberish>,
+      status: BytesLike,
+      account: string,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     mock_isAtLeast(
-      status: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      value: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      status: BytesLike,
+      account: string,
+      value: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupplyAt(
-      snapshotId: PromiseOrValue<BigNumberish>,
+      snapshotId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

@@ -249,7 +249,7 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-] as const;
+];
 
 export class ITelediskoToken__factory {
   static readonly abi = _abi;

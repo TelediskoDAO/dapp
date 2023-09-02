@@ -20,7 +20,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface TelediskoTokenMockInterface extends utils.Interface {
@@ -36,11 +35,11 @@ export interface TelediskoTokenMockInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "balanceOfAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "mock_balanceOfAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "snapshot", values?: undefined): string;
 
@@ -85,44 +84,44 @@ export interface TelediskoTokenMock extends BaseContract {
 
   functions: {
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     mock_balanceOfAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     snapshot(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   balanceOfAt(
-    account: PromiseOrValue<string>,
-    arg1: PromiseOrValue<BigNumberish>,
+    account: string,
+    arg1: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   mock_balanceOfAt(
-    account: PromiseOrValue<string>,
-    mockResult: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    account: string,
+    mockResult: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   snapshot(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     mock_balanceOfAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
+      account: string,
+      mockResult: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -133,15 +132,15 @@ export interface TelediskoTokenMock extends BaseContract {
 
   estimateGas: {
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     mock_balanceOfAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     snapshot(overrides?: CallOverrides): Promise<BigNumber>;
@@ -149,15 +148,15 @@ export interface TelediskoTokenMock extends BaseContract {
 
   populateTransaction: {
     balanceOfAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     mock_balanceOfAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     snapshot(overrides?: CallOverrides): Promise<PopulatedTransaction>;

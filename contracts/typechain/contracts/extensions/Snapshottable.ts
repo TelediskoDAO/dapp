@@ -23,7 +23,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface SnapshottableInterface extends utils.Interface {
@@ -92,14 +91,14 @@ export interface Snapshottable extends BaseContract {
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
   snapshot(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -117,7 +116,7 @@ export interface Snapshottable extends BaseContract {
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -127,7 +126,7 @@ export interface Snapshottable extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     snapshot(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -246,7 +246,7 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-] as const;
+];
 
 export class IVoting__factory {
   static readonly abi = _abi;

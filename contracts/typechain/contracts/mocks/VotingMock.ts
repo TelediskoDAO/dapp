@@ -24,7 +24,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface VotingMockInterface extends utils.Interface {
@@ -61,51 +60,47 @@ export interface VotingMockInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "afterAddContributor",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "afterTokenTransfer",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "beforeRemoveContributor",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "canVoteAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getDelegateAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getTotalVotingPowerAt",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getVotingPowerAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "mock_canVoteAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
+    values: [string, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "mock_getDelegateAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "mock_getTotalVotingPowerAt",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "mock_getVotingPowerAt",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "snapshot", values?: undefined): string;
 
@@ -226,197 +221,197 @@ export interface VotingMock extends BaseContract {
 
   functions: {
     afterAddContributor(
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     beforeRemoveContributor(
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     canVoteAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     getDelegateAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     getTotalVotingPowerAt(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     mock_canVoteAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     mock_getDelegateAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     mock_getTotalVotingPowerAt(
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     mock_getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     snapshot(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   afterAddContributor(
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   afterTokenTransfer(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    from: string,
+    to: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   beforeRemoveContributor(
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   canVoteAt(
-    account: PromiseOrValue<string>,
-    arg1: PromiseOrValue<BigNumberish>,
+    account: string,
+    arg1: BigNumberish,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   getDelegateAt(
-    account: PromiseOrValue<string>,
-    arg1: PromiseOrValue<BigNumberish>,
+    account: string,
+    arg1: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
   getTotalVotingPowerAt(
-    arg0: PromiseOrValue<BigNumberish>,
+    arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   getVotingPowerAt(
-    account: PromiseOrValue<string>,
-    arg1: PromiseOrValue<BigNumberish>,
+    account: string,
+    arg1: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   mock_canVoteAt(
-    account: PromiseOrValue<string>,
-    mockResult: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    account: string,
+    mockResult: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   mock_getDelegateAt(
-    account: PromiseOrValue<string>,
-    mockResult: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    account: string,
+    mockResult: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   mock_getTotalVotingPowerAt(
-    mockResult: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    mockResult: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   mock_getVotingPowerAt(
-    account: PromiseOrValue<string>,
-    mockResult: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    account: string,
+    mockResult: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   snapshot(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
     afterAddContributor(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      from: string,
+      to: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     beforeRemoveContributor(
-      account: PromiseOrValue<string>,
+      account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     canVoteAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     getDelegateAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
     getTotalVotingPowerAt(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     mock_canVoteAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<boolean>,
+      account: string,
+      mockResult: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     mock_getDelegateAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<string>,
+      account: string,
+      mockResult: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     mock_getTotalVotingPowerAt(
-      mockResult: PromiseOrValue<BigNumberish>,
+      mockResult: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     mock_getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
+      account: string,
+      mockResult: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -448,66 +443,66 @@ export interface VotingMock extends BaseContract {
 
   estimateGas: {
     afterAddContributor(
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     beforeRemoveContributor(
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     canVoteAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getDelegateAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getTotalVotingPowerAt(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     mock_canVoteAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     mock_getDelegateAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     mock_getTotalVotingPowerAt(
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     mock_getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     snapshot(overrides?: CallOverrides): Promise<BigNumber>;
@@ -515,66 +510,66 @@ export interface VotingMock extends BaseContract {
 
   populateTransaction: {
     afterAddContributor(
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     afterTokenTransfer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     beforeRemoveContributor(
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     canVoteAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getDelegateAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getTotalVotingPowerAt(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      account: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     mock_canVoteAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     mock_getDelegateAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     mock_getTotalVotingPowerAt(
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     mock_getVotingPowerAt(
-      account: PromiseOrValue<string>,
-      mockResult: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      account: string,
+      mockResult: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     snapshot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
