@@ -45,33 +45,18 @@ jobs:
         run: |
           cd contracts
           git pull origin main
-          
+
       - name: Install contracts
-        working-directory: contracts
         run: |
+          cd contracts
           pnpm install
 
       - name: Compile contracts
-        working-directory: contracts
         run: |
+          cd contracts
           pnpm run compile
           cp -rv typechain ../src/contracts
           cp -rv deployments/* ../src/contracts
-
-      - name: Checkout "contracts-nkd" submodule
-        run: git submodule update --init contracts-nkd
-
-      - name: Install contracts-nkd
-        working-directory: contracts-nkd
-        run: |
-          pnpm install
-
-      - name: Compile contracts-nkd
-        working-directory: contracts-nkd
-        run: |
-          pnpm run compile
-          cp -rv typechain ../src/contracts-nkd
-          cp -rv deployments/* ../src/contracts-nkd
 
       - name: Build for production
         env:
