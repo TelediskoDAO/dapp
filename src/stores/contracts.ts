@@ -1,7 +1,6 @@
 import { derived, type Readable } from "svelte/store";
 
 import networksTeledisko from "../../contracts/deployments/networks.json";
-import networksNeoKingdom from "../../contracts-nkd/deployments/networks.json";
 
 import {
   type Voting,
@@ -15,8 +14,7 @@ import { user } from "../state/odoo";
 import { projectKey } from "./config";
 import { signer } from "./wallet";
 
-const networks =
-  projectKey === "neokingdom" ? networksNeoKingdom : networksTeledisko;
+const networks = networksTeledisko;
 
 export const tokenContract: Readable<TelediskoToken> = derived(
   signer,
