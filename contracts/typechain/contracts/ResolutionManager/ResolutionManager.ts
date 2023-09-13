@@ -24,6 +24,7 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
+  PromiseOrValue,
 } from "../../common";
 
 export interface ResolutionManagerInterface extends utils.Interface {
@@ -31,13 +32,16 @@ export interface ResolutionManagerInterface extends utils.Interface {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "addResolutionType(string,uint256,uint256,uint256,bool)": FunctionFragment;
     "approveResolution(uint256)": FunctionFragment;
-    "createResolution(string,uint256,bool)": FunctionFragment;
+    "createResolution(string,uint256,bool,address[],bytes[])": FunctionFragment;
+    "executeResolution(uint256)": FunctionFragment;
+    "getExecutionDetails(uint256)": FunctionFragment;
     "getResolutionResult(uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getVoterVote(uint256,address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize(address,address,address)": FunctionFragment;
+    "rejectResolution(uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "resolutionTypes(uint256)": FunctionFragment;
     "resolutions(uint256)": FunctionFragment;
@@ -46,7 +50,7 @@ export interface ResolutionManagerInterface extends utils.Interface {
     "setTelediskoToken(address)": FunctionFragment;
     "setVoting(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "updateResolution(uint256,string,uint256,bool)": FunctionFragment;
+    "updateResolution(uint256,string,uint256,bool,address[],bytes[])": FunctionFragment;
     "vote(uint256,bool)": FunctionFragment;
   };
 
@@ -56,12 +60,15 @@ export interface ResolutionManagerInterface extends utils.Interface {
       | "addResolutionType"
       | "approveResolution"
       | "createResolution"
+      | "executeResolution"
+      | "getExecutionDetails"
       | "getResolutionResult"
       | "getRoleAdmin"
       | "getVoterVote"
       | "grantRole"
       | "hasRole"
       | "initialize"
+      | "rejectResolution"
       | "renounceRole"
       | "resolutionTypes"
       | "resolutions"
@@ -80,76 +87,114 @@ export interface ResolutionManagerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "addResolutionType",
-    values: [string, BigNumberish, BigNumberish, BigNumberish, boolean]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<boolean>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "approveResolution",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "createResolution",
-    values: [string, BigNumberish, boolean]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<boolean>,
+      PromiseOrValue<string>[],
+      PromiseOrValue<BytesLike>[]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "executeResolution",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getExecutionDetails",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getResolutionResult",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
-    values: [BytesLike]
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "getVoterVote",
-    values: [BigNumberish, string]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "grantRole",
-    values: [BytesLike, string]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "hasRole",
-    values: [BytesLike, string]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rejectResolution",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
-    values: [BytesLike, string]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "resolutionTypes",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "resolutions",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "revokeRole",
-    values: [BytesLike, string]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setShareholderRegistry",
-    values: [string]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setTelediskoToken",
-    values: [string]
+    values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "setVoting", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "setVoting",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
-    values: [BytesLike]
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "updateResolution",
-    values: [BigNumberish, string, BigNumberish, boolean]
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<boolean>,
+      PromiseOrValue<string>[],
+      PromiseOrValue<BytesLike>[]
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "vote",
-    values: [BigNumberish, boolean]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<boolean>]
   ): string;
 
   decodeFunctionResult(
@@ -169,6 +214,14 @@ export interface ResolutionManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "executeResolution",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getExecutionDetails",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getResolutionResult",
     data: BytesLike
   ): Result;
@@ -183,6 +236,10 @@ export interface ResolutionManagerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "rejectResolution",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
@@ -220,6 +277,8 @@ export interface ResolutionManagerInterface extends utils.Interface {
     "Initialized(uint8)": EventFragment;
     "ResolutionApproved(address,uint256)": EventFragment;
     "ResolutionCreated(address,uint256)": EventFragment;
+    "ResolutionExecuted(address,uint256)": EventFragment;
+    "ResolutionRejected(address,uint256)": EventFragment;
     "ResolutionTypeCreated(address,uint256)": EventFragment;
     "ResolutionUpdated(address,uint256)": EventFragment;
     "ResolutionVoted(address,uint256,uint256,bool)": EventFragment;
@@ -232,6 +291,8 @@ export interface ResolutionManagerInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ResolutionApproved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ResolutionCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ResolutionExecuted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ResolutionRejected"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ResolutionTypeCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ResolutionUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ResolutionVoted"): EventFragment;
@@ -283,6 +344,30 @@ export type ResolutionCreatedEvent = TypedEvent<
 
 export type ResolutionCreatedEventFilter =
   TypedEventFilter<ResolutionCreatedEvent>;
+
+export interface ResolutionExecutedEventObject {
+  from: string;
+  resolutionId: BigNumber;
+}
+export type ResolutionExecutedEvent = TypedEvent<
+  [string, BigNumber],
+  ResolutionExecutedEventObject
+>;
+
+export type ResolutionExecutedEventFilter =
+  TypedEventFilter<ResolutionExecutedEvent>;
+
+export interface ResolutionRejectedEventObject {
+  from: string;
+  resolutionId: BigNumber;
+}
+export type ResolutionRejectedEvent = TypedEvent<
+  [string, BigNumber],
+  ResolutionRejectedEventObject
+>;
+
+export type ResolutionRejectedEventFilter =
+  TypedEventFilter<ResolutionRejectedEvent>;
 
 export interface ResolutionTypeCreatedEventObject {
   from: string;
@@ -388,36 +473,51 @@ export interface ResolutionManager extends BaseContract {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     addResolutionType(
-      name: string,
-      quorum: BigNumberish,
-      noticePeriod: BigNumberish,
-      votingPeriod: BigNumberish,
-      canBeNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      name: PromiseOrValue<string>,
+      quorum: PromiseOrValue<BigNumberish>,
+      noticePeriod: PromiseOrValue<BigNumberish>,
+      votingPeriod: PromiseOrValue<BigNumberish>,
+      canBeNegative: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     approveResolution(
-      resolutionId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     createResolution(
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    executeResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getExecutionDetails(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string[], string[]]>;
+
     getResolutionResult(
-      resolutionId: BigNumberish,
+      resolutionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
+    getRoleAdmin(
+      role: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     getVoterVote(
-      resolutionId: BigNumberish,
-      voter: string,
+      resolutionId: PromiseOrValue<BigNumberish>,
+      voter: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [boolean, boolean, BigNumber] & {
@@ -428,32 +528,37 @@ export interface ResolutionManager extends BaseContract {
     >;
 
     grantRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     hasRole(
-      role: BytesLike,
-      account: string,
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     initialize(
-      shareholderRegistry: string,
-      telediskoToken: string,
-      voting: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      shareholderRegistry: PromiseOrValue<string>,
+      telediskoToken: PromiseOrValue<string>,
+      voting: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    rejectResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     renounceRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     resolutionTypes(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [string, BigNumber, BigNumber, BigNumber, boolean] & {
@@ -466,93 +571,121 @@ export interface ResolutionManager extends BaseContract {
     >;
 
     resolutions(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, BigNumber, BigNumber, BigNumber, BigNumber, boolean] & {
+      [
+        string,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        boolean,
+        BigNumber,
+        BigNumber
+      ] & {
         dataURI: string;
         resolutionTypeId: BigNumber;
         approveTimestamp: BigNumber;
         snapshotId: BigNumber;
         yesVotesTotal: BigNumber;
         isNegative: boolean;
+        rejectionTimestamp: BigNumber;
+        executionTimestamp: BigNumber;
       }
     >;
 
     revokeRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     setShareholderRegistry(
-      shareholderRegistry: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     setTelediskoToken(
-      telediskoToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      telediskoToken: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     setVoting(
-      voting: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      voting: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     supportsInterface(
-      interfaceId: BytesLike,
+      interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     updateResolution(
-      resolutionId: BigNumberish,
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     vote(
-      resolutionId: BigNumberish,
-      isYes: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      isYes: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   addResolutionType(
-    name: string,
-    quorum: BigNumberish,
-    noticePeriod: BigNumberish,
-    votingPeriod: BigNumberish,
-    canBeNegative: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    name: PromiseOrValue<string>,
+    quorum: PromiseOrValue<BigNumberish>,
+    noticePeriod: PromiseOrValue<BigNumberish>,
+    votingPeriod: PromiseOrValue<BigNumberish>,
+    canBeNegative: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   approveResolution(
-    resolutionId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    resolutionId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   createResolution(
-    dataURI: string,
-    resolutionTypeId: BigNumberish,
-    isNegative: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    dataURI: PromiseOrValue<string>,
+    resolutionTypeId: PromiseOrValue<BigNumberish>,
+    isNegative: PromiseOrValue<boolean>,
+    executionTo: PromiseOrValue<string>[],
+    executionData: PromiseOrValue<BytesLike>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  executeResolution(
+    resolutionId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getExecutionDetails(
+    resolutionId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<[string[], string[]]>;
+
   getResolutionResult(
-    resolutionId: BigNumberish,
+    resolutionId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+  getRoleAdmin(
+    role: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   getVoterVote(
-    resolutionId: BigNumberish,
-    voter: string,
+    resolutionId: PromiseOrValue<BigNumberish>,
+    voter: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<
     [boolean, boolean, BigNumber] & {
@@ -563,32 +696,37 @@ export interface ResolutionManager extends BaseContract {
   >;
 
   grantRole(
-    role: BytesLike,
-    account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    role: PromiseOrValue<BytesLike>,
+    account: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   hasRole(
-    role: BytesLike,
-    account: string,
+    role: PromiseOrValue<BytesLike>,
+    account: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   initialize(
-    shareholderRegistry: string,
-    telediskoToken: string,
-    voting: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    shareholderRegistry: PromiseOrValue<string>,
+    telediskoToken: PromiseOrValue<string>,
+    voting: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  rejectResolution(
+    resolutionId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   renounceRole(
-    role: BytesLike,
-    account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    role: PromiseOrValue<BytesLike>,
+    account: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   resolutionTypes(
-    arg0: BigNumberish,
+    arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
     [string, BigNumber, BigNumber, BigNumber, boolean] & {
@@ -601,93 +739,121 @@ export interface ResolutionManager extends BaseContract {
   >;
 
   resolutions(
-    arg0: BigNumberish,
+    arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [string, BigNumber, BigNumber, BigNumber, BigNumber, boolean] & {
+    [
+      string,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      boolean,
+      BigNumber,
+      BigNumber
+    ] & {
       dataURI: string;
       resolutionTypeId: BigNumber;
       approveTimestamp: BigNumber;
       snapshotId: BigNumber;
       yesVotesTotal: BigNumber;
       isNegative: boolean;
+      rejectionTimestamp: BigNumber;
+      executionTimestamp: BigNumber;
     }
   >;
 
   revokeRole(
-    role: BytesLike,
-    account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    role: PromiseOrValue<BytesLike>,
+    account: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   setShareholderRegistry(
-    shareholderRegistry: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    shareholderRegistry: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   setTelediskoToken(
-    telediskoToken: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    telediskoToken: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   setVoting(
-    voting: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    voting: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   supportsInterface(
-    interfaceId: BytesLike,
+    interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   updateResolution(
-    resolutionId: BigNumberish,
-    dataURI: string,
-    resolutionTypeId: BigNumberish,
-    isNegative: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    resolutionId: PromiseOrValue<BigNumberish>,
+    dataURI: PromiseOrValue<string>,
+    resolutionTypeId: PromiseOrValue<BigNumberish>,
+    isNegative: PromiseOrValue<boolean>,
+    executionTo: PromiseOrValue<string>[],
+    executionData: PromiseOrValue<BytesLike>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   vote(
-    resolutionId: BigNumberish,
-    isYes: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    resolutionId: PromiseOrValue<BigNumberish>,
+    isYes: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     addResolutionType(
-      name: string,
-      quorum: BigNumberish,
-      noticePeriod: BigNumberish,
-      votingPeriod: BigNumberish,
-      canBeNegative: boolean,
+      name: PromiseOrValue<string>,
+      quorum: PromiseOrValue<BigNumberish>,
+      noticePeriod: PromiseOrValue<BigNumberish>,
+      votingPeriod: PromiseOrValue<BigNumberish>,
+      canBeNegative: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     approveResolution(
-      resolutionId: BigNumberish,
+      resolutionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     createResolution(
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    executeResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getExecutionDetails(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string[], string[]]>;
+
     getResolutionResult(
-      resolutionId: BigNumberish,
+      resolutionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+    getRoleAdmin(
+      role: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     getVoterVote(
-      resolutionId: BigNumberish,
-      voter: string,
+      resolutionId: PromiseOrValue<BigNumberish>,
+      voter: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [boolean, boolean, BigNumber] & {
@@ -698,32 +864,37 @@ export interface ResolutionManager extends BaseContract {
     >;
 
     grantRole(
-      role: BytesLike,
-      account: string,
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     hasRole(
-      role: BytesLike,
-      account: string,
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     initialize(
-      shareholderRegistry: string,
-      telediskoToken: string,
-      voting: string,
+      shareholderRegistry: PromiseOrValue<string>,
+      telediskoToken: PromiseOrValue<string>,
+      voting: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    rejectResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     renounceRole(
-      role: BytesLike,
-      account: string,
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     resolutionTypes(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [string, BigNumber, BigNumber, BigNumber, boolean] & {
@@ -736,66 +907,82 @@ export interface ResolutionManager extends BaseContract {
     >;
 
     resolutions(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, BigNumber, BigNumber, BigNumber, BigNumber, boolean] & {
+      [
+        string,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        boolean,
+        BigNumber,
+        BigNumber
+      ] & {
         dataURI: string;
         resolutionTypeId: BigNumber;
         approveTimestamp: BigNumber;
         snapshotId: BigNumber;
         yesVotesTotal: BigNumber;
         isNegative: boolean;
+        rejectionTimestamp: BigNumber;
+        executionTimestamp: BigNumber;
       }
     >;
 
     revokeRole(
-      role: BytesLike,
-      account: string,
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setShareholderRegistry(
-      shareholderRegistry: string,
+      shareholderRegistry: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setTelediskoToken(
-      telediskoToken: string,
+      telediskoToken: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setVoting(voting: string, overrides?: CallOverrides): Promise<void>;
+    setVoting(
+      voting: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     supportsInterface(
-      interfaceId: BytesLike,
+      interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     updateResolution(
-      resolutionId: BigNumberish,
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
+      resolutionId: PromiseOrValue<BigNumberish>,
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     vote(
-      resolutionId: BigNumberish,
-      isYes: boolean,
+      resolutionId: PromiseOrValue<BigNumberish>,
+      isYes: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
     "DelegateLostVotingPower(address,uint256,uint256)"(
-      from?: string | null,
-      resolutionId?: BigNumberish | null,
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null,
       amount?: null
     ): DelegateLostVotingPowerEventFilter;
     DelegateLostVotingPower(
-      from?: string | null,
-      resolutionId?: BigNumberish | null,
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null,
       amount?: null
     ): DelegateLostVotingPowerEventFilter;
 
@@ -803,85 +990,103 @@ export interface ResolutionManager extends BaseContract {
     Initialized(version?: null): InitializedEventFilter;
 
     "ResolutionApproved(address,uint256)"(
-      from?: string | null,
-      resolutionId?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
     ): ResolutionApprovedEventFilter;
     ResolutionApproved(
-      from?: string | null,
-      resolutionId?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
     ): ResolutionApprovedEventFilter;
 
     "ResolutionCreated(address,uint256)"(
-      from?: string | null,
-      resolutionId?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
     ): ResolutionCreatedEventFilter;
     ResolutionCreated(
-      from?: string | null,
-      resolutionId?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
     ): ResolutionCreatedEventFilter;
 
+    "ResolutionExecuted(address,uint256)"(
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
+    ): ResolutionExecutedEventFilter;
+    ResolutionExecuted(
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
+    ): ResolutionExecutedEventFilter;
+
+    "ResolutionRejected(address,uint256)"(
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
+    ): ResolutionRejectedEventFilter;
+    ResolutionRejected(
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
+    ): ResolutionRejectedEventFilter;
+
     "ResolutionTypeCreated(address,uint256)"(
-      from?: string | null,
-      typeIndex?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      typeIndex?: PromiseOrValue<BigNumberish> | null
     ): ResolutionTypeCreatedEventFilter;
     ResolutionTypeCreated(
-      from?: string | null,
-      typeIndex?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      typeIndex?: PromiseOrValue<BigNumberish> | null
     ): ResolutionTypeCreatedEventFilter;
 
     "ResolutionUpdated(address,uint256)"(
-      from?: string | null,
-      resolutionId?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
     ): ResolutionUpdatedEventFilter;
     ResolutionUpdated(
-      from?: string | null,
-      resolutionId?: BigNumberish | null
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null
     ): ResolutionUpdatedEventFilter;
 
     "ResolutionVoted(address,uint256,uint256,bool)"(
-      from?: string | null,
-      resolutionId?: BigNumberish | null,
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null,
       votingPower?: null,
       isYes?: null
     ): ResolutionVotedEventFilter;
     ResolutionVoted(
-      from?: string | null,
-      resolutionId?: BigNumberish | null,
+      from?: PromiseOrValue<string> | null,
+      resolutionId?: PromiseOrValue<BigNumberish> | null,
       votingPower?: null,
       isYes?: null
     ): ResolutionVotedEventFilter;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
-      role?: BytesLike | null,
-      previousAdminRole?: BytesLike | null,
-      newAdminRole?: BytesLike | null
+      role?: PromiseOrValue<BytesLike> | null,
+      previousAdminRole?: PromiseOrValue<BytesLike> | null,
+      newAdminRole?: PromiseOrValue<BytesLike> | null
     ): RoleAdminChangedEventFilter;
     RoleAdminChanged(
-      role?: BytesLike | null,
-      previousAdminRole?: BytesLike | null,
-      newAdminRole?: BytesLike | null
+      role?: PromiseOrValue<BytesLike> | null,
+      previousAdminRole?: PromiseOrValue<BytesLike> | null,
+      newAdminRole?: PromiseOrValue<BytesLike> | null
     ): RoleAdminChangedEventFilter;
 
     "RoleGranted(bytes32,address,address)"(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
+      role?: PromiseOrValue<BytesLike> | null,
+      account?: PromiseOrValue<string> | null,
+      sender?: PromiseOrValue<string> | null
     ): RoleGrantedEventFilter;
     RoleGranted(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
+      role?: PromiseOrValue<BytesLike> | null,
+      account?: PromiseOrValue<string> | null,
+      sender?: PromiseOrValue<string> | null
     ): RoleGrantedEventFilter;
 
     "RoleRevoked(bytes32,address,address)"(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
+      role?: PromiseOrValue<BytesLike> | null,
+      account?: PromiseOrValue<string> | null,
+      sender?: PromiseOrValue<string> | null
     ): RoleRevokedEventFilter;
     RoleRevoked(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
+      role?: PromiseOrValue<BytesLike> | null,
+      account?: PromiseOrValue<string> | null,
+      sender?: PromiseOrValue<string> | null
     ): RoleRevokedEventFilter;
   };
 
@@ -889,115 +1094,134 @@ export interface ResolutionManager extends BaseContract {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     addResolutionType(
-      name: string,
-      quorum: BigNumberish,
-      noticePeriod: BigNumberish,
-      votingPeriod: BigNumberish,
-      canBeNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      name: PromiseOrValue<string>,
+      quorum: PromiseOrValue<BigNumberish>,
+      noticePeriod: PromiseOrValue<BigNumberish>,
+      votingPeriod: PromiseOrValue<BigNumberish>,
+      canBeNegative: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     approveResolution(
-      resolutionId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     createResolution(
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    executeResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getExecutionDetails(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getResolutionResult(
-      resolutionId: BigNumberish,
+      resolutionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getRoleAdmin(
-      role: BytesLike,
+      role: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getVoterVote(
-      resolutionId: BigNumberish,
-      voter: string,
+      resolutionId: PromiseOrValue<BigNumberish>,
+      voter: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     grantRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     hasRole(
-      role: BytesLike,
-      account: string,
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     initialize(
-      shareholderRegistry: string,
-      telediskoToken: string,
-      voting: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      shareholderRegistry: PromiseOrValue<string>,
+      telediskoToken: PromiseOrValue<string>,
+      voting: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    rejectResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     renounceRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     resolutionTypes(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     resolutions(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     revokeRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setShareholderRegistry(
-      shareholderRegistry: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setTelediskoToken(
-      telediskoToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      telediskoToken: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setVoting(
-      voting: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      voting: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     supportsInterface(
-      interfaceId: BytesLike,
+      interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     updateResolution(
-      resolutionId: BigNumberish,
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     vote(
-      resolutionId: BigNumberish,
-      isYes: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      isYes: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
@@ -1007,115 +1231,134 @@ export interface ResolutionManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     addResolutionType(
-      name: string,
-      quorum: BigNumberish,
-      noticePeriod: BigNumberish,
-      votingPeriod: BigNumberish,
-      canBeNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      name: PromiseOrValue<string>,
+      quorum: PromiseOrValue<BigNumberish>,
+      noticePeriod: PromiseOrValue<BigNumberish>,
+      votingPeriod: PromiseOrValue<BigNumberish>,
+      canBeNegative: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     approveResolution(
-      resolutionId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     createResolution(
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    executeResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getExecutionDetails(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getResolutionResult(
-      resolutionId: BigNumberish,
+      resolutionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getRoleAdmin(
-      role: BytesLike,
+      role: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getVoterVote(
-      resolutionId: BigNumberish,
-      voter: string,
+      resolutionId: PromiseOrValue<BigNumberish>,
+      voter: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     grantRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     hasRole(
-      role: BytesLike,
-      account: string,
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      shareholderRegistry: string,
-      telediskoToken: string,
-      voting: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      shareholderRegistry: PromiseOrValue<string>,
+      telediskoToken: PromiseOrValue<string>,
+      voting: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rejectResolution(
+      resolutionId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     renounceRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     resolutionTypes(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     resolutions(
-      arg0: BigNumberish,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     revokeRole(
-      role: BytesLike,
-      account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      role: PromiseOrValue<BytesLike>,
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setShareholderRegistry(
-      shareholderRegistry: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setTelediskoToken(
-      telediskoToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      telediskoToken: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setVoting(
-      voting: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      voting: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(
-      interfaceId: BytesLike,
+      interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     updateResolution(
-      resolutionId: BigNumberish,
-      dataURI: string,
-      resolutionTypeId: BigNumberish,
-      isNegative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      dataURI: PromiseOrValue<string>,
+      resolutionTypeId: PromiseOrValue<BigNumberish>,
+      isNegative: PromiseOrValue<boolean>,
+      executionTo: PromiseOrValue<string>[],
+      executionData: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     vote(
-      resolutionId: BigNumberish,
-      isYes: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      resolutionId: PromiseOrValue<BigNumberish>,
+      isYes: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }
