@@ -66,6 +66,7 @@ export const resolutionContract: Readable<ResolutionManager> = derived(
         const chainId = await $signer.getChainId();
         const address = networks[chainId.toString()]["ResolutionManager"];
         const contract = ResolutionManager__factory.connect(address, $signer);
+        console.log("contract: ", contract);
         set(contract);
       }
     })();
